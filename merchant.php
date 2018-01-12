@@ -83,7 +83,7 @@ class merchant extends ecjia_merchant {
 		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('售后列表'));
 		$this->assign('ur_here', '售后列表');
 
-		$refund_list = $this->refund_list($_SESSION['store_id']);
+		$refund_list = $this->refund_list();
 		$this->assign('refund_list', $refund_list);
 		
 		$this->assign('search_action', RC_Uri::url('refund/merchant/init'));
@@ -93,39 +93,61 @@ class merchant extends ecjia_merchant {
 	/**
 	 * 获取优惠买单规则列表
 	 */
-	private function refund_list($store_id) {
-		$db_refund_order = RC_DB::table('refund_order');
-	
-		$filter['keywords'] = empty($_GET['keywords']) ? '' : trim($_GET['keywords']);
-		if ($filter['keywords']) {
-			$db_refund_order->where('title', 'like', '%'.mysql_like_quote($filter['keywords']).'%');
+	private function refund_list() {
+		$db_refund_view = RC_DB::table('refund_order as ro')
+			->leftJoin('users as u', RC_DB::raw('ro.user_id'), '=', RC_DB::raw('u.user_id'))
+			->leftJoin('back_goods as bg', RC_DB::raw('ro.refund_id'), '=', RC_DB::raw('bg.back_id'));
+		
+		$db_refund_view->where(RC_DB::raw('ro.store_id'), $_SESSION['store_id']);
+		$filter['start_date']= $_GET['start_date'];
+		$filter['end_date']  = $_GET['end_date'];
+		if(!empty($filter['start_date']) && !empty($filter['start_date'])) {
+			$filter['start_date']	= RC_Time::local_strtotime($filter['start_date']);
+			$filter['end_date']		= RC_Time::local_strtotime($filter['end_date']);
+			$db_refund_view->where('add_time', '>=', $filter['start_date']);
+			$db_refund_view->where('add_time', '<', $filter['end_date'] + 86400);
 		}
 		
-		$filter['status'] = empty($_GET['status']) ? '' : trim($_GET['status']);
-		if ($filter['status']) {
-			$db_quickpay_activity->where('status', $filter['status']);
+		$filter['keywords']  = trim($_GET['keywords']);
+		if ($filter['keywords']) {
+			$db_refund_view ->whereRaw('(u.user_name  like  "%'.mysql_like_quote($filter['keywords']).'%"  or bg.goods_name like "%'.mysql_like_quote($filter['keywords']).'%")');
 		}
-	
-		$db_refund_order->where('store_id', $store_id);
-	
-		$count = $db_refund_order->count();
-		$page = new ecjia_merchant_page($count,10, 5);
-		$data = $db_refund_order
-		->selectRaw('id,title,activity_type,start_time,end_time')
-		->orderby('id', 'asc')
+		
+		$filter['status']    = intval($_GET['status']);
+		if ($filter['status']) {
+			$db_refund_view ->where('status', $filter['status']);
+		}
+		
+		$filter['refund_type'] = trim($_GET['refund_type']);
+		$refund_count = $db_refund_view->select(RC_DB::raw('count(*) as count'),
+				RC_DB::raw('SUM(IF(ro.refund_type = "refund", 1, 0)) as refund'),
+				RC_DB::raw('SUM(IF(ro.refund_type = "return", 1, 0)) as return_refund'))->first();
+		
+		if ($filter['refund_type'] == 'refund') {
+			$db_refund_view->where(RC_DB::raw('ro.refund_type'), 'refund');
+		} 
+		if ($filter['refund_type'] == 'return') {
+			$db_refund_view->where(RC_DB::raw('ro.refund_type'), 'return');
+		}
+		
+		$count = $db_refund_view->count();
+		$page = new ecjia_page($count, 10, 5);
+		
+		$data = $db_refund_view
+		->selectRaw('ro.refund_id,ro.refund_sn,ro.refund_type,ro.order_sn,ro.money_paid,ro.add_time,ro.status,ro.refund_status')
+		->orderby(RC_DB::raw('ro.refund_id'), 'desc')
 		->take(10)
 		->skip($page->start_id-1)
 		->get();
-		$res = array();
+		
+		$list = array();
 		if (!empty($data)) {
 			foreach ($data as $row) {
-				$row['start_time'] = RC_Time::local_date(ecjia::config('date_format'), $row['start_time']);
-				$row['end_time'] = RC_Time::local_date(ecjia::config('date_format'), $row['end_time']);
-				$res[] = $row;
+				$row['add_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
+				$list[] = $row;
 			}
 		}
-	
-		return array('list' => $res, 'filter' => $filter, 'page' => $page->show(2), 'desc' => $page->page_desc());
+		return array('list' => $list, 'filter' => $filter, 'page' => $page->show(5), 'desc' => $page->page_desc(), 'count' => $refund_count);
 	}
 }
 

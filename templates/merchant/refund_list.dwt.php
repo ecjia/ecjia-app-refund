@@ -21,24 +21,24 @@ ecjia.merchant.refund_list.init();
 	    <div class="panel">
 	     	<div class="panel-body panel-body-small">
         		<ul class="nav nav-pills pull-left">
-        			<li class="{if $smarty.get.refund_type eq ''}active{/if}">
-        				<a class="data-pjax" href='{url path="refund/merchant/init" args="{if $smarty.get.keywords}&keywords={$smarty.get.keywords}{/if}{if $smarty.get.status}&status={$smarty.get.status}{/if}"}'>
+        			<li class="{if $filter.refund_type eq ''}active{/if}">
+        				<a class="data-pjax" href='{url path="refund/merchant/init" args="{if $filter.keywords}&keywords={$filter.keywords}{/if}{if $filter.status}&status={$filter.status}{/if}"}'>
 	        				全部
 	        				<span class="badge badge-info">
 	        					{if $refund_list.count.count}{$refund_list.count.count}{else}0{/if}
 	        				</span> 
         				</a>
         			</li>
-        			<li class="{if $smarty.get.refund_type eq 'refund'}active{/if}">
-        				<a class="data-pjax" href='{url path="refund/merchant/init" args="refund_type=refund{if $smarty.get.keywords}&keywords={$smarty.get.keywords}{/if}{if $smarty.get.status}&status={$smarty.get.status}{/if}"}'>
+        			<li class="{if $filter.refund_type eq 'refund'}active{/if}">
+        				<a class="data-pjax" href='{url path="refund/merchant/init" args="refund_type=refund{if $filter.keywords}&keywords={$filter.keywords}{/if}{if $filter.status}&status={$filter.status}{/if}"}'>
         					仅退款
         					<span class="badge badge-info">{if $refund_list.count.refund}{$refund_list.count.refund}{else}0{/if}</span>
         				</a>
         			</li>
-        			<li class="{if $smarty.get.refund_type eq 'return'}active{/if}">
-        				<a class="data-pjax" href='{url path="refund/merchant/init" args="refund_type=return{if $smarty.get.keywords}&keywords={$smarty.get.keywords}{/if}"}{if $smarty.get.status}&status={$smarty.get.status}{/if}'>
+        			<li class="{if $filter.refund_type eq 'return'}active{/if}">
+        				<a class="data-pjax" href='{url path="refund/merchant/init" args="refund_type=return{if $filter.keywords}&keywords={$filter.keywords}{/if}"}{if $filter.status}&status={$filter.status}{/if}'>
         				退货退款
-        				<span class="badge badge-info">{if $refund_list.count.return}{$refund_list.count.return}{else}0{/if}</span>
+        				<span class="badge badge-info">{if $refund_list.count.return_refund}{$refund_list.count.return_refund}{else}0{/if}</span>
         				</a>
         			</li>
         		</ul>
@@ -56,16 +56,16 @@ ecjia.merchant.refund_list.init();
 
 						<div class="form-group">
 							<select class="w130" name="status">
-								<option value="-1">请选择...</option>
-								<option value="0" {if $smarty.get.status eq 0}selected{/if}>处理状态</option>
-								<option value="1" {if $smarty.get.status eq 1}selected{/if}>同意</option>
-								<option value="10" {if $smarty.get.status eq 10}selected{/if}>已取消</option>
-								<option value="11" {if $smarty.get.status eq 11}selected{/if}>不同意</option>
+								<option value="">处理状态</option>
+								<option value="0" {if $filter.status eq 0}selected{/if}>待审核</option>
+								<option value="1" {if $filter.status eq 1}selected{/if}>同意</option>
+								<option value="10" {if $filter.status eq 10}selected{/if}>已取消</option>
+								<option value="11" {if $filter.status eq 11}selected{/if}>不同意</option>
 							</select>
 						</div>
 
 						<div class="form-group">
-							<input type="text" class="form-control" style="width: 200px;" name="keywords" value="{$smarty.get.keywords}" placeholder="请输入商品名称或者用户名">
+							<input type="text" class="form-control" style="width: 200px;" name="keywords" value="{$filter.keywords}" placeholder="请输入商品名称或者用户名">
 						</div>
 						
 						<button class="btn btn-primary screen-btn" type="button"><i class="fa fa-search"></i> 搜索 </button>
