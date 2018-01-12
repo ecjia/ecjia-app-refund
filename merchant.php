@@ -54,8 +54,23 @@ class merchant extends ecjia_merchant {
 
 	public function __construct() {
 		parent::__construct();
+		RC_Script::enqueue_script('jquery-form');
+		RC_Script::enqueue_script('smoke');
+		RC_Style::enqueue_style('uniform-aristo');
+		
+		RC_Script::enqueue_script('bootstrap-editable-script', dirname(RC_App::app_dir_url(__FILE__)) . '/merchant/statics/assets/bootstrap-fileupload/bootstrap-fileupload.js', array());
+		RC_Style::enqueue_style('bootstrap-fileupload', dirname(RC_App::app_dir_url(__FILE__)) . '/merchant/statics/assets/bootstrap-fileupload/bootstrap-fileupload.css', array(), false, false);
+		
+		//时间控件
+		RC_Style::enqueue_style('datepicker', RC_Uri::admin_url('statics/lib/datepicker/datepicker.css'));
+		RC_Style::enqueue_style('datetimepicker', RC_Uri::admin_url('statics/lib/datepicker/bootstrap-datetimepicker.min.css'));
+		RC_Script::enqueue_script('bootstrap-datepicker', RC_Uri::admin_url('statics/lib/datepicker/bootstrap-datepicker.min.js'));
+		RC_Script::enqueue_script('bootstrap-datetimepicker', RC_Uri::admin_url('statics/lib/datepicker/bootstrap-datetimepicker.js'));
 
-		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('优惠活动管理'), RC_Uri::url('favourable/merchant/init')));
+		RC_Script::enqueue_script('mh_refund', RC_App::apps_url('statics/js/mh_refund.js', __FILE__));
+		RC_Style::enqueue_style('mh_refund', RC_App::apps_url('statics/css/mh_refund.css', __FILE__), array(), false, false);
+
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('订单管理', RC_Uri::url('orders/merchant/init')));
 		ecjia_merchant_screen::get_current_screen()->set_parentage('refund', 'refund/merchant.php');
 	}
 
@@ -65,15 +80,53 @@ class merchant extends ecjia_merchant {
 	public function init() {
 		$this->admin_priv('refund_manage');
 
-		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here(RC_Lang::get('favourable::favourable.favourable_list')));
+		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('售后列表'));
+		$this->assign('ur_here', '售后列表');
+
+		$refund_list = $this->refund_list($_SESSION['store_id']);
+		$this->assign('refund_list', $refund_list);
 		
-
-		$this->assign('ur_here', RC_Lang::get('favourable::favourable.favourable_list'));
-		$this->assign('action_link', array('href' => RC_Uri::url('favourable/merchant/add'), 'text' => RC_Lang::get('favourable::favourable.add_favourable')));
-
+		$this->assign('search_action', RC_Uri::url('refund/merchant/init'));
 		$this->display('refund_list.dwt');
 	}
-
+	
+	/**
+	 * 获取优惠买单规则列表
+	 */
+	private function refund_list($store_id) {
+		$db_refund_order = RC_DB::table('refund_order');
+	
+		$filter['keywords'] = empty($_GET['keywords']) ? '' : trim($_GET['keywords']);
+		if ($filter['keywords']) {
+			$db_refund_order->where('title', 'like', '%'.mysql_like_quote($filter['keywords']).'%');
+		}
+		
+		$filter['status'] = empty($_GET['status']) ? '' : trim($_GET['status']);
+		if ($filter['status']) {
+			$db_quickpay_activity->where('status', $filter['status']);
+		}
+	
+		$db_refund_order->where('store_id', $store_id);
+	
+		$count = $db_refund_order->count();
+		$page = new ecjia_merchant_page($count,10, 5);
+		$data = $db_refund_order
+		->selectRaw('id,title,activity_type,start_time,end_time')
+		->orderby('id', 'asc')
+		->take(10)
+		->skip($page->start_id-1)
+		->get();
+		$res = array();
+		if (!empty($data)) {
+			foreach ($data as $row) {
+				$row['start_time'] = RC_Time::local_date(ecjia::config('date_format'), $row['start_time']);
+				$row['end_time'] = RC_Time::local_date(ecjia::config('date_format'), $row['end_time']);
+				$res[] = $row;
+			}
+		}
+	
+		return array('list' => $res, 'filter' => $filter, 'page' => $page->show(2), 'desc' => $page->page_desc());
+	}
 }
 
 //end
