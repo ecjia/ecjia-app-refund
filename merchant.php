@@ -116,9 +116,9 @@ class merchant extends ecjia_merchant {
 		if ($filter['keywords']) {
 			$db_refund_view ->whereRaw('(u.user_name  like  "%'.mysql_like_quote($filter['keywords']).'%"  or bg.goods_name like "%'.mysql_like_quote($filter['keywords']).'%")');
 		}
-		$filter['status'] = intval($_GET['status']);
-		if ($filter['status']) {
-			$db_refund_view ->where('status', $filter['status']);
+		$status = $_GET['status'];
+		if (!empty($status) || $status == '0') {
+			$db_refund_view ->where('status', $status);
 		}
 		
 		$filter['refund_type'] = trim($_GET['refund_type']);

@@ -56,11 +56,11 @@ ecjia.merchant.refund_list.init();
 
 						<div class="form-group">
 							<select class="w130" name="status">
-								<option value="">处理状态</option>
-								<option value="0" {if $filter.status eq 0}selected{/if}>待审核</option>
-								<option value="1" {if $filter.status eq 1}selected{/if}>同意</option>
-								<option value="10" {if $filter.status eq 10}selected{/if}>已取消</option>
-								<option value="11" {if $filter.status eq 11}selected{/if}>不同意</option>
+								<option value="" {if $smarty.get.status eq '' and $smarty.get.status neq 0}selected{/if}>处理状态</option>
+								<option value="0" {if $smarty.get.status neq '' and $smarty.get.status eq 0}selected{/if}>待审核</option>
+								<option value="1" {if $smarty.get.status eq 1}selected{/if}>同意</option>
+								<option value="10" {if $smarty.get.status eq 10}selected{/if}>已取消</option>
+								<option value="11" {if $smarty.get.status eq 11}selected{/if}>不同意</option>
 							</select>
 						</div>
 
