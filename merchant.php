@@ -85,6 +85,7 @@ class merchant extends ecjia_merchant {
 
 		$refund_list = $this->refund_list();
 		$this->assign('refund_list', $refund_list);
+		$this->assign('filter', $refund_list['filter']);
 		
 		$this->assign('search_action', RC_Uri::url('refund/merchant/init'));
 		$this->display('refund_list.dwt');
@@ -115,8 +116,7 @@ class merchant extends ecjia_merchant {
 		if ($filter['keywords']) {
 			$db_refund_view ->whereRaw('(u.user_name  like  "%'.mysql_like_quote($filter['keywords']).'%"  or bg.goods_name like "%'.mysql_like_quote($filter['keywords']).'%")');
 		}
-		
-		$filter['status']    = intval($_GET['status']);
+		$filter['status'] = intval($_GET['status']);
 		if ($filter['status']) {
 			$db_refund_view ->where('status', $filter['status']);
 		}
