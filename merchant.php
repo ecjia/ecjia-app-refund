@@ -99,6 +99,10 @@ class merchant extends ecjia_merchant {
 			->leftJoin('back_goods as bg', RC_DB::raw('ro.refund_id'), '=', RC_DB::raw('bg.back_id'));
 		
 		$db_refund_view->where(RC_DB::raw('ro.store_id'), $_SESSION['store_id']);
+		
+		$filter ['sort_by'] 	= trim($_REQUEST ['sort_by']);
+		$filter ['sort_order'] 	= trim($_REQUEST ['sort_order']);
+		
 		$filter['start_date']= $_GET['start_date'];
 		$filter['end_date']  = $_GET['end_date'];
 		if(!empty($filter['start_date']) && !empty($filter['start_date'])) {
@@ -132,10 +136,9 @@ class merchant extends ecjia_merchant {
 		
 		$count = $db_refund_view->count();
 		$page = new ecjia_page($count, 10, 5);
-		
 		$data = $db_refund_view
 		->selectRaw('ro.refund_id,ro.refund_sn,ro.refund_type,ro.order_sn,ro.money_paid,ro.add_time,ro.status,ro.refund_status')
-		->orderby(RC_DB::raw('ro.refund_id'), 'desc')
+		->orderby($filter['sort_by'], $filter ['sort_order'])
 		->take(10)
 		->skip($page->start_id-1)
 		->get();

@@ -77,12 +77,12 @@ ecjia.merchant.refund_list.init();
 				<section class="panel">
 					 <table class="table table-striped table-hide-edit">
 				        <thead>
-        					<tr>
+        					<tr data-sorthref='{url path="refund/merchant/init"}'>
         						<th class="w200">退款编号</th>
         						<th class="w100">退款方式</th>
         						<th class="w200">订单编号</th>
         						<th class="w150">退款金额</th>
-        						<th class="w200" data-toggle="sortby" data-sortby="goods_id">申请时间</th>
+        						<th class="w200" data-toggle="sortby" data-sortby="add_time">申请时间</th>
         						<th class="w100">处理状态</th>
         						<th class="w100">平台确认</th>
         					</tr>
