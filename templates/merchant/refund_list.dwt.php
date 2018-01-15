@@ -65,7 +65,7 @@ ecjia.merchant.refund_list.init();
 						</div>
 
 						<div class="form-group">
-							<input type="text" class="form-control" style="width: 200px;" name="keywords" value="{$filter.keywords}" placeholder="请输入商品名称或者用户名">
+							<input type="text" class="form-control" style="width: 200px;" name="keywords" value="{$filter.keywords}" placeholder="请输入订单编号或退款编号">
 						</div>
 						
 						<button class="btn btn-primary screen-btn" type="button"><i class="fa fa-search"></i> 搜索 </button>

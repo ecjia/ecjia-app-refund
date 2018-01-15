@@ -95,10 +95,8 @@ class merchant extends ecjia_merchant {
 	 * 获取优惠买单规则列表
 	 */
 	private function refund_list() {
-		$db_refund_view = RC_DB::table('refund_order as ro')
-			->leftJoin('users as u', RC_DB::raw('ro.user_id'), '=', RC_DB::raw('u.user_id'))
-			->leftJoin('back_goods as bg', RC_DB::raw('ro.refund_id'), '=', RC_DB::raw('bg.back_id'));
-		
+		$db_refund_view = RC_DB::table('refund_order as ro');
+				
 		$db_refund_view->where(RC_DB::raw('ro.store_id'), $_SESSION['store_id']);
 		
 		$filter ['sort_by'] 	= empty ($_REQUEST ['sort_by']) 	? RC_DB::raw('ro.refund_id') 	: trim($_REQUEST ['sort_by']);
@@ -114,7 +112,7 @@ class merchant extends ecjia_merchant {
 		
 		$filter['keywords']  = trim($_GET['keywords']);
 		if ($filter['keywords']) {
-			$db_refund_view ->whereRaw('(u.user_name  like  "%'.mysql_like_quote($filter['keywords']).'%"  or bg.goods_name like "%'.mysql_like_quote($filter['keywords']).'%")');
+			$db_refund_view ->whereRaw('(order_sn  like  "%'.mysql_like_quote($filter['keywords']).'%"  or refund_sn like "%'.mysql_like_quote($filter['keywords']).'%")');
 		}
 		$status = $_GET['status'];
 		if (!empty($status) || $status == '0') {
