@@ -99,7 +99,7 @@ class merchant extends ecjia_merchant {
 				
 		$db_refund_view->where(RC_DB::raw('ro.store_id'), $_SESSION['store_id']);
 		
-		$filter ['sort_by'] 	= empty ($_REQUEST ['sort_by']) 	? RC_DB::raw('ro.refund_id') 	: trim($_REQUEST ['sort_by']);
+		$filter ['sort_by'] 	= empty ($_REQUEST ['sort_by']) 	? 'refund_id'	: trim($_REQUEST ['sort_by']);
 		$filter ['sort_order'] 	= empty ($_REQUEST ['sort_order']) 	? 'desc' 				: trim($_REQUEST ['sort_order']);
 		$filter['start_date']= $_GET['start_date'];
 		$filter['end_date']  = $_GET['end_date'];
@@ -134,8 +134,8 @@ class merchant extends ecjia_merchant {
 		$count = $db_refund_view->count();
 		$page = new ecjia_page($count, 10, 5);
 		$data = $db_refund_view
-		->selectRaw('ro.refund_id,ro.refund_sn,ro.refund_type,ro.order_sn,ro.money_paid,ro.add_time,ro.status,ro.refund_status')
-		->orderby($filter['sort_by'], $filter ['sort_order'])
+		->selectRaw('refund_id,refund_sn,refund_type,order_sn,money_paid,add_time,status,refund_status')
+		->orderby($filter['sort_by'], $filter['sort_order'])
 		->take(10)
 		->skip($page->start_id-1)
 		->get();
