@@ -93,7 +93,12 @@ ecjia.merchant.refund_list.init();
     						<td class="hide-edit-area">
     							{$order.refund_sn}
     							<div class="edit-list">
-    								<a target="_blank" href='{url path="refund/merchant/detail" args="refund_id={$order.refund_id}"}' title="查看详情">{t}查看详情{/t}</a>
+    								{if $order.refund_type eq 'refund'}
+    									<a target="_blank" href='{url path="refund/merchant/refund_detail" args="refund_id={$order.refund_id}"}' title="查看详情">{t}查看详情{/t}</a>
+    								{else}
+    									<a target="_blank" href='{url path="refund/merchant/return_detail" args="refund_id={$order.refund_id}"}' title="查看详情">{t}查看详情{/t}</a>
+    								{/if}
+    								
     							</div>
     						</td>
     						<td>

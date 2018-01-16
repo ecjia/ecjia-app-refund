@@ -92,6 +92,34 @@ class merchant extends ecjia_merchant {
 	}
 	
 	/**
+	 * 仅退款查看详情
+	 */
+	public function refund_detail() {
+		$this->admin_priv('refund_manage');
+	
+		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('退款服务'));
+		$this->assign('ur_here', '退款服务');
+		$refund_id = intval($_GET['refund_id']);
+		
+		
+	
+		$this->display('refund_detail.dwt');
+	}
+	
+	/**
+	 * 退款退货详情
+	 */
+	public function return_detail() {
+		$this->admin_priv('refund_manage');
+	
+		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('退货退款服务'));
+		$this->assign('ur_here', '退货退款服务');
+		$refund_id = intval($_GET['refund_id']);
+		
+		$this->display('return_detail.dwt');
+	}
+	
+	/**
 	 * 获取优惠买单规则列表
 	 */
 	private function refund_list() {
