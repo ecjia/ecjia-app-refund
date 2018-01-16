@@ -8,6 +8,8 @@
 	margin:20px 0 0 20px;
 }
 
+
+
 .mer-content{
 	margin-left: -15px;
     margin-right: -15px;
@@ -26,8 +28,32 @@
     padding-right: 15px;
 	margin-bottom: 10px;
 }
+.goods-content{
+	margin-top: 20px;
+}
 .mer-btn{
 	margin-left: 12.667%;
 	margin-top:10px;
 }
+
+.goods-img{
+	float: left;
+}
+.goods-img img{
+	width:50px;
+	height:50px;
+}
+.goods-desc{
+	display: inline-block;
+	margin-left:10px;
+}
+.goods-content span {
+    float: right;
+}
+
+.goods-info{
+	height:50px;
+	margin-bottom:10px;
+}
+
 
