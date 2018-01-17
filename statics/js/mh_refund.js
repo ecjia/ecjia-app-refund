@@ -38,6 +38,19 @@
 			});
         }
     };
+    
+    app.refund_info = {
+        init: function () {
+            $("#order-info").click(function(){
+            	$(".order-info").toggle();
+            });
+            
+            $("#address-info").click(function(){
+            	$(".address-info").toggle();
+            });
+        }
+    };
+    
 })(ecjia.merchant, jQuery);
  
 // end

@@ -105,6 +105,8 @@ class merchant extends ecjia_merchant {
 		$refund_img_list = RC_DB::table('term_attachment')->where('object_id', $refund_info['refund_id'])->where('object_app', 'ecjia.refund')->where('object_group','refund')->select('file_path')->get();
 		$this->assign('refund_img_list', $refund_img_list);
 		$this->assign('refund_info', $refund_info);
+		
+		
 		$this->display('refund_detail.dwt');
 	}
 	

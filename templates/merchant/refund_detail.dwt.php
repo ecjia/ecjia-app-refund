@@ -3,7 +3,7 @@
 
 <!-- {block name="footer"} -->
 <script type="text/javascript">
-	ecjia.merchant.mh_refund.refund_info();
+	ecjia.merchant.refund_info.init();
 </script>
 <!-- {/block} -->
 
@@ -25,10 +25,13 @@
 				<p>退款原因：{if $refund_info.refund_reason eq 1}暂时不想购买了{elseif $refund_info.refund_reason eq 2}忘记使⽤优惠券{elseif $refund_info.refund_reason eq 3}商家缺货， 不想买了{elseif $refund_info.refund_reason eq 4}商家服务态度有问题{elseif $refund_info.refund_reason eq 5}商家⻓时间未发货{elseif $refund_info.refund_reason eq 6}信息填写有误， 重新购买{else}暂无原因{/if}</p>
 				<p>退款金额：{$refund_info.money_paid}</p>
 				<p>退款说明：{$refund_info.refund_content}</p>
-				<p>上传凭证： 
-				<!-- {foreach from=$refund_img_list item=list} -->
-                <img src="{RC_Upload::upload_url()}/{$list.file_path}">
-                <!-- {/foreach} --></p>
+				{if $refund_img_list}
+					<p>上传凭证： 
+					<!-- {foreach from=$refund_img_list item=list} -->
+	                <img src="{RC_Upload::upload_url()}/{$list.file_path}">
+	                <!-- {/foreach} --></p>
+				{/if}
+				
 			</div>
         </section>
         
@@ -67,9 +70,19 @@
                 <p>运费：¥&nbsp;0.00</p>
                 <p>订单总额：¥&nbsp;57.60</p>
                 <hr>
-                <p>订单编号：8372814709 <span><a>查看更多</a></span></p>
+                <p>订单编号：8372814709 <span><a id="order-info" href="javascript:;">查看更多</a></span></p>
+                <div class="order-info" style="display: none;">
+	                <p>支付方式：支付宝</p>
+	                <p>下单时间：2017-14-04 17:01:23</p>
+	                <p>付款时间：2017-14-05 17:01:23</p>
+                </div>
+               
                 <hr>
-                <p>收货人：送钱 <span><a>查看更多</a></span></p>
+                <p>收货人：宋倩倩 <span><a id="address-info" href="javascript:;">查看更多</a></span></p>
+                <div class="address-info" style="display: none;">
+	                <p>收货地址：普陀区中山北路3553</p>
+	                <p>联系电话：13764274559</p>
+                </div>
 	        </div>
         </div>
 	</div>
