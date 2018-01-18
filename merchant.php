@@ -96,10 +96,11 @@ class merchant extends ecjia_merchant {
 	 */
 	public function refund_detail() {
 		$this->admin_priv('refund_manage');
-	
 		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('退款服务'));
 		$this->assign('ur_here', '退款服务');
+		
 		$refund_id = intval($_GET['refund_id']);
+		$this->assign('refund_id', $refund_id);
 		
 		$refund_info = RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
 		$refund_img_list = RC_DB::table('term_attachment')->where('object_id', $refund_info['refund_id'])->where('object_app', 'ecjia.refund')->where('object_group','refund')->select('file_path')->get();
@@ -127,8 +128,44 @@ class merchant extends ecjia_merchant {
 		}
 		$this->assign('goods_list', $goods_list);
 		
+		$this->assign('form_action', RC_Uri::url('refund/merchant/merchant_check'));
 		
 		$this->display('refund_detail.dwt');
+	}
+	
+	/**
+	 * 商家处理是否同意用户申请的退款
+	 */
+	public function merchant_check() {
+		$this->admin_priv('refund_manage');
+		
+		$type = trim($_POST['type']);
+		$refund_id	= $_POST['refund_id'];
+		$action_note= $_POST['action_note'];
+		if(empty($action_note)){
+			return $this->showmessage('请输入操作备注', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+		}
+		
+		if($type == 'agree') {
+			$status = 1;
+		} else {
+			$status = 11;
+		}
+		RC_DB::table('refund_order')->where('refund_id', $refund_id)->update(array('status' => $status));
+		
+		//退货单操作表新增操作数据
+		$data = array(
+			'refund_id' 	=> $refund_id,
+			'action_user_type'	=>	'merchant',
+			'action_user_id'	=>  $_SESSION['staff_id'],
+			'action_user_name'	=>	$_SESSION['staff_name'],
+			'status'		    =>  $status,
+			'action_note'		=>  $action_note,
+			'log_time'			=> RC_Time::gmtime(),
+		);
+		RC_DB::table('refund_order_action')->insertGetId($data);
+		
+		return $this->showmessage('操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
 	}
 	
 	/**

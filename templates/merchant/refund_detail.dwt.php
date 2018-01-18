@@ -39,21 +39,26 @@
         
         <section class="panel panel-body">
 			<h4>商家退款操作</h4>
-			<form class="form-horizontal" action="{$from_action}" method="post" name="theForm">
+			<form class="form-horizontal" action="{$form_action}" method="post" name="theForm">
 				 <div class="mer-content">
                      <h5 class="mer-title">操作备注：</h5>
                      <div class="mer-content-textarea">
-                          <textarea class="form-control" id="mer_content" name="mer_content" ></textarea>
+                          <textarea class="form-control" id="action_note" name="action_note" ></textarea>
                      </div>
                  </div>
 				 <div class="mer-btn">
-			   		<input class="btn btn-info" type="submit" value="同意"/>
-			   		<input class="btn btn-info" type="submit" value="不同意"/>
+				 	<input type="hidden" id="refund_id" value="{$refund_id}"  />
+				 	<a style="cursor: pointer;"  class="btn btn-primary change_status" data-type='agree' data-href='{url path="refund/merchant/merchant_check"}' >
+						同意
+					</a>
+					
+					<a style="cursor: pointer;"  class="btn btn-primary change_status" data-type='disagree' data-href='{url path="refund/merchant/merchant_check"}' >
+						不同意
+					</a>
 			     </div>
 			</form>
         </section>
     </div>
-    
     
     <div class="col-lg-4">
         <div class="panel panel-body">

@@ -48,7 +48,22 @@
             $("#address-info").click(function(){
             	$(".address-info").toggle();
             });
-        }
+            app.refund_info.mer_check();
+        },
+        
+        mer_check: function () {
+	    	$('.change_status').on('click', function() {
+				var $this = $(this);
+				var url = $this.attr('data-href');
+				var type = $this.attr('data-type');
+				var action_note = $("#action_note").val();
+				var refund_id = $("#refund_id").val();
+				var option = {'type' : type, 'action_note' : action_note,'refund_id' : refund_id};
+				$.post(url, option, function(data){
+					ecjia.merchant.showmessage(data);
+				})
+			});
+        },
     };
     
 })(ecjia.merchant, jQuery);
