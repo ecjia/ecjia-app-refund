@@ -103,13 +103,20 @@ class merchant extends ecjia_merchant {
 		$this->assign('refund_id', $refund_id);
 		
 		$refund_info = RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
-		$refund_img_list = RC_DB::table('term_attachment')->where('object_id', $refund_info['refund_id'])->where('object_app', 'ecjia.refund')->where('object_group','refund')->select('file_path')->get();
-		$this->assign('refund_img_list', $refund_img_list);
 		$this->assign('refund_info', $refund_info);
 		
-		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->select('shipping_fee','order_sn','money_paid','pay_name','pay_time','add_time','consignee','district','street','mobile')->first();
-		$order_info['district']      = ecjia_region::getRegionName($order_info['district']);
-		$order_info['street']        = ecjia_region::getRegionName($order_info['street']);
+		$action_info = RC_DB::TABLE('refund_order_action')->where('refund_id', $refund_info['refund_id'])->where('status', $refund_info['status'])->select('action_note','action_user_name','log_time')->first();
+		$action_info['log_time'] = RC_Time::local_date(ecjia::config('time_format'), $action_info['log_time']);
+		$this->assign('action_info', $action_info);
+	
+		$refund_img_list = RC_DB::table('term_attachment')->where('object_id', $refund_info['refund_id'])->where('object_app', 'ecjia.refund')->where('object_group','refund')->select('file_path')->get();
+		$this->assign('refund_img_list', $refund_img_list);
+		
+		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->select('shipping_fee','order_sn','money_paid','pay_name','pay_time','add_time','consignee','province','city','district','street','mobile')->first();
+		$order_info['province']	= ecjia_region::getRegionName($order_info['province']);
+		$order_info['city']     = ecjia_region::getRegionName($order_info['city']);
+		$order_info['district'] = ecjia_region::getRegionName($order_info['district']);
+		$order_info['street']   = ecjia_region::getRegionName($order_info['street']);
 		$order_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['add_time']);
 		$order_info['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']);
 		$this->assign('order_info', $order_info);
@@ -127,7 +134,7 @@ class merchant extends ecjia_merchant {
 			}
 		}
 		$this->assign('goods_list', $goods_list);
-		
+	
 		$this->assign('form_action', RC_Uri::url('refund/merchant/merchant_check'));
 		
 		$this->display('refund_detail.dwt');
@@ -165,7 +172,7 @@ class merchant extends ecjia_merchant {
 		);
 		RC_DB::table('refund_order_action')->insertGetId($data);
 		
-		return $this->showmessage('操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+		return $this->showmessage('操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS,array('pjaxurl' => RC_Uri::url('refund/merchant/refund_detail', array('refund_id' => $refund_id))));
 	}
 	
 	/**
@@ -185,9 +192,10 @@ class merchant extends ecjia_merchant {
 	 * 获取优惠买单规则列表
 	 */
 	private function refund_list() {
-		$db_refund_view = RC_DB::table('refund_order as ro');
+		$db_refund_view = RC_DB::table('refund_order');
 				
-		$db_refund_view->where(RC_DB::raw('ro.store_id'), $_SESSION['store_id']);
+		$db_refund_view->where(RC_DB::raw('store_id'), $_SESSION['store_id']);
+		$db_refund_view->where(RC_DB::raw('status'), '<>', 10);
 		
 		$filter ['sort_by'] 	= empty ($_REQUEST ['sort_by']) 	? 'refund_id'	: trim($_REQUEST ['sort_by']);
 		$filter ['sort_order'] 	= empty ($_REQUEST ['sort_order']) 	? 'desc' 				: trim($_REQUEST ['sort_order']);
@@ -211,14 +219,14 @@ class merchant extends ecjia_merchant {
 		
 		$filter['refund_type'] = trim($_GET['refund_type']);
 		$refund_count = $db_refund_view->select(RC_DB::raw('count(*) as count'),
-				RC_DB::raw('SUM(IF(ro.refund_type = "refund", 1, 0)) as refund'),
-				RC_DB::raw('SUM(IF(ro.refund_type = "return", 1, 0)) as return_refund'))->first();
+				RC_DB::raw('SUM(IF(refund_type = "refund", 1, 0)) as refund'),
+				RC_DB::raw('SUM(IF(refund_type = "return", 1, 0)) as return_refund'))->first();
 		
 		if ($filter['refund_type'] == 'refund') {
-			$db_refund_view->where(RC_DB::raw('ro.refund_type'), 'refund');
+			$db_refund_view->where(RC_DB::raw('refund_type'), 'refund');
 		} 
 		if ($filter['refund_type'] == 'return') {
-			$db_refund_view->where(RC_DB::raw('ro.refund_type'), 'return');
+			$db_refund_view->where(RC_DB::raw('refund_type'), 'return');
 		}
 		
 		$count = $db_refund_view->count();

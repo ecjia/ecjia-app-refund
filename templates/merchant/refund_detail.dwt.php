@@ -37,27 +37,39 @@
 			</div>
         </section>
         
-        <section class="panel panel-body">
-			<h4>商家退款操作</h4>
-			<form class="form-horizontal" action="{$form_action}" method="post" name="theForm">
-				 <div class="mer-content">
-                     <h5 class="mer-title">操作备注：</h5>
-                     <div class="mer-content-textarea">
-                          <textarea class="form-control" id="action_note" name="action_note" ></textarea>
-                     </div>
-                 </div>
-				 <div class="mer-btn">
-				 	<input type="hidden" id="refund_id" value="{$refund_id}"  />
-				 	<a style="cursor: pointer;"  class="btn btn-primary change_status" data-type='agree' data-href='{url path="refund/merchant/merchant_check"}' >
-						同意
-					</a>
-					
-					<a style="cursor: pointer;"  class="btn btn-primary change_status" data-type='disagree' data-href='{url path="refund/merchant/merchant_check"}' >
-						不同意
-					</a>
-			     </div>
-			</form>
-        </section>
+        {if $refund_info.status eq '1' or $refund_info.status eq '11'}
+	        <section class="panel panel-body">
+				<h4>商家退款意见</h4>
+				<div class="mer_check">
+					<p>处理状态：{if $refund_info.status eq '1'}同意{elseif $refund_info.status eq '11'}不同意{/if}</p>
+					<p>商家备注：{$action_info.action_note}</p>
+					<p>操作人：{$action_info.action_user_name}</p>
+					<p>处理时间：{$action_info.log_time}</p>
+				</div>
+	        </section>
+        {else}
+	        <section class="panel panel-body">
+				<h4>商家退款操作</h4>
+				<form class="form-horizontal" action="{$form_action}" method="post" name="theForm">
+					 <div class="mer-content">
+	                     <h5 class="mer-title">操作备注：</h5>
+	                     <div class="mer-content-textarea">
+	                          <textarea class="form-control" id="action_note" name="action_note" ></textarea>
+	                     </div>
+	                 </div>
+					 <div class="mer-btn">
+					 	<input type="hidden" id="refund_id" value="{$refund_id}"  />
+					 	<a style="cursor: pointer;"  class="btn btn-primary change_status" data-type='agree' data-href='{url path="refund/merchant/merchant_check"}' >
+							同意
+						</a>
+						
+						<a style="cursor: pointer;"  class="btn btn-primary change_status" data-type='disagree' data-href='{url path="refund/merchant/merchant_check"}' >
+							不同意
+						</a>
+				     </div>
+				</form>
+	        </section>
+        {/if}
     </div>
     
     <div class="col-lg-4">
@@ -88,7 +100,7 @@
                 <hr>
                 <p>收货人：{$order_info.consignee}<span><a id="address-info" href="javascript:;">查看更多</a></span></p>
                 <div class="address-info" style="display: none;">
-	                <p>收货地址：{$order_info.district}{$order_info.street}</p>
+	                <p>收货地址：{$order_info.province}{$order_info.city}{$order_info.district}{$order_info.street}</p>
 	                <p>联系电话：{$order_info.mobile}</p>
                 </div>
 	        </div>
