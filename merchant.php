@@ -107,6 +107,7 @@ class merchant extends ecjia_merchant {
 		$this->assign('refund_info', $refund_info);
 		
 		
+		
 		$this->display('refund_detail.dwt');
 	}
 	
