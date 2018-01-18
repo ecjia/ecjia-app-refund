@@ -106,9 +106,11 @@ class merchant extends ecjia_merchant {
 		$this->assign('refund_img_list', $refund_img_list);
 		$this->assign('refund_info', $refund_info);
 		
-		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->select('shipping_fee','order_sn','money_paid','pay_name','pay_time','add_time','consignee','district','street')->first();
+		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->select('shipping_fee','order_sn','money_paid','pay_name','pay_time','add_time','consignee','district','street','mobile')->first();
 		$order_info['district']      = ecjia_region::getRegionName($order_info['district']);
 		$order_info['street']        = ecjia_region::getRegionName($order_info['street']);
+		$order_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['add_time']);
+		$order_info['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']);
 		$this->assign('order_info', $order_info);
 		
 		$goods_list = RC_DB::TABLE('order_goods')->where('order_id', $refund_info['order_id'])->select('goods_id', 'goods_name' ,'goods_price','goods_number')->get();
