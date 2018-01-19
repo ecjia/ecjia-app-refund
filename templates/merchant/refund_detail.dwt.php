@@ -87,11 +87,11 @@
 	        <section class="panel panel-body">
 				<h4>商城平台退款详情</h4>
 				<div class="adm_check">
-					<p>退款方式：</p>
-					<p>应退款金额：</p>
-					<p>积分：</p>
-					<p>实际退款金额：</p>
-					<p>退款时间：</p>
+					<p>退款方式：{$payrecord_info.back_pay_name}</p>
+					<p>应退款金额：- ¥ {$payrecord_info.back_money_paid}</p>
+					<p>积分：- {$payrecord_info.back_integral}</p>
+					<p>实际退款金额：- ¥ {$payrecord_info.back_money_paid}</p>
+					<p>退款时间：{$payrecord_info.back_time}</p>
 				</div>
 	       </section>
         {/if}

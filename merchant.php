@@ -147,7 +147,9 @@ class merchant extends ecjia_merchant {
 		}
 	
 		//平台打款信息
-		
+		$payrecord_info = RC_DB::table('refund_payrecord')->where('refund_id', $refund_info['refund_id'])->first();
+		$payrecord_info['back_time'] = RC_Time::local_date(ecjia::config('time_format'), $action_mer_msg['back_time']);
+		$this->assign('payrecord_info', $payrecord_info);
 		
 		
 		$this->assign('form_action', RC_Uri::url('refund/merchant/merchant_check'));
@@ -167,8 +169,7 @@ class merchant extends ecjia_merchant {
 		if(empty($action_note)){
 			return $this->showmessage('请输入操作备注', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
-		
-		
+	
 		if($type == 'agree') {//商家同意
 			$status = 1;
 			$refund_status = 1;
