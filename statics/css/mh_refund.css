@@ -73,6 +73,16 @@
 	margin:20px 0 0 20px;
 }
 
+.adm_check{
+	border: 1px solid #CACACA;
+	border-radius:5px;
+	height:220px;
+	margin-top:20px;
+}
+.adm_check p{
+	margin:20px 0 0 20px;
+}
+
 
 
 .refund-time-base {

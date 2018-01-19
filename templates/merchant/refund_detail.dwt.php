@@ -44,9 +44,9 @@
 				<h4>商家退款意见</h4>
 				<div class="mer_check">
 					<p>处理状态：{if $refund_info.status eq '1'}同意{elseif $refund_info.status eq '11'}不同意{/if}</p>
-					<p>商家备注：{$action_info.action_note}</p>
-					<p>操作人：{$action_info.action_user_name}</p>
-					<p>处理时间：{$action_info.log_time}</p>
+					<p>商家备注：{$action_mer_msg.action_note}</p>
+					<p>操作人：{$action_mer_msg.action_user_name}</p>
+					<p>处理时间：{$action_mer_msg.log_time}</p>
 				</div>
 	        </section>
         {else}
@@ -71,6 +71,29 @@
 				     </div>
 				</form>
 	        </section>
+        {/if}
+        
+        {if $refund_info.refund_status eq '2'}
+	        <section class="panel panel-body">
+				<h4>商城平台退款审核</h4>
+				<div class="mer_check">
+					<p>平台确认：已退款</p>
+					<p>平台备注：{$action_admin_msg.action_note}</p>
+					<p>操作人：{$action_admin_msg.action_user_name}</p>
+					<p>处理时间：{$action_admin_msg.log_time}</p>
+				</div>
+	        </section>
+		        
+	        <section class="panel panel-body">
+				<h4>商城平台退款详情</h4>
+				<div class="adm_check">
+					<p>退款方式：</p>
+					<p>应退款金额：</p>
+					<p>积分：</p>
+					<p>实际退款金额：</p>
+					<p>退款时间：</p>
+				</div>
+	       </section>
         {/if}
     </div>
     
