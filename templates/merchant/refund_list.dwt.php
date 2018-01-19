@@ -113,7 +113,7 @@ ecjia.merchant.refund_list.init();
     							{if $order.status eq 0}待审核{elseif $order.status eq 1}同意{elseif $order.status eq 10}已取消{else}不同意{/if}
 							</td>
 							<td>
-								{if $order.refund_status eq 0}无{elseif $order.status eq 1}待处理{else}已打款{/if}
+								{if $order.refund_status eq 1}待处理{elseif $order.refund_status eq 2}已打款{else}无{/if}
 							</td>
     					</tr>
     					<!-- {foreachelse}-->

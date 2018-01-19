@@ -8,6 +8,8 @@
 <!-- {/block} -->
 
 <!-- {block name="home-content"} -->
+<!-- #BeginLibraryItem "/library/refund_step.lbi" --><!-- #EndLibraryItem -->
+
 <div class="page-header">
 	<div class="pull-left">
 		<h2><!-- {if $ur_here}{$ur_here}{/if} --></h2>
