@@ -48,11 +48,9 @@
             $("#address-info").click(function(){
             	$(".address-info").toggle();
             });
-            app.refund_info.mer_check();
-        },
-        
-        mer_check: function () {
-	    	$('.change_status').on('click', function() {
+            
+            $('.change_status').on('click', function(e) {
+            	e.preventDefault();
 				var $this = $(this);
 				var url = $this.attr('data-href');
 				var type = $this.attr('data-type');
@@ -75,11 +73,24 @@
                 $("#address-info").click(function(){
                 	$(".address-info").toggle();
                 });
-                app.refund_info.mer_check();
-            },
-            
-            mer_check: function () {
-    	    	$('.change_status_disagree').on('click', function() {
+                
+	            $("#modal").on('click', function (e) {
+	            	e.preventDefault();
+                    $("#note_btn").on('click', function (e) {
+ 	                	e.preventDefault();
+ 	                	var action_note = $("#action_note").val();
+ 	 	                var refund_id   = $("#refund_id").val();
+ 	                    var url = $("form[name='actionForm']").attr('action');
+ 	                    var option = {'type' : 'agree','refund_id' : refund_id, 'action_note' : action_note};
+ 	                    $.post(url, option, function (data) {
+ 	                         ecjia.merchant.showmessage(data);
+ 	                         location.href = data.url;
+ 	                    }, 'json');
+ 	                });
+				});
+                
+               	$('.change_status_disagree').on('click', function(e) {
+    	    		e.preventDefault();
     				var $this = $(this);
     				var url = $this.attr('data-href');
     				var action_note = $("#action_note").val();
