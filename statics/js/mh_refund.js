@@ -66,6 +66,32 @@
         },
     };
     
+    app.return_info = {
+            init: function () {
+                $("#order-info").click(function(){
+                	$(".order-info").toggle();
+                });
+                
+                $("#address-info").click(function(){
+                	$(".address-info").toggle();
+                });
+                app.refund_info.mer_check();
+            },
+            
+            mer_check: function () {
+    	    	$('.change_status_disagree').on('click', function() {
+    				var $this = $(this);
+    				var url = $this.attr('data-href');
+    				var action_note = $("#action_note").val();
+    				var refund_id = $("#refund_id").val();
+    				var option = {'type' : 'disagree', 'action_note' : action_note,'refund_id' : refund_id};
+    				$.post(url, option, function(data){
+    					ecjia.merchant.showmessage(data);
+    				})
+    			});
+            },
+        };
+    
 })(ecjia.merchant, jQuery);
  
 // end

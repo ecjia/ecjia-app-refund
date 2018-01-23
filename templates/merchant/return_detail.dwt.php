@@ -3,12 +3,12 @@
 
 <!-- {block name="footer"} -->
 <script type="text/javascript">
-	ecjia.merchant.refund_info.init();
+	ecjia.merchant.return_info.init();
 </script>
 <!-- {/block} -->
 
 <!-- {block name="home-content"} -->
-<!-- #BeginLibraryItem "/library/refund_step.lbi" --><!-- #EndLibraryItem -->
+<!-- #BeginLibraryItem "/library/return_step.lbi" --><!-- #EndLibraryItem -->
 
 <div class="page-header">
 	<div class="pull-left">
@@ -20,7 +20,7 @@
 <div class="row" id="home-content">
     <div class="col-lg-8">
         <section class="panel panel-body">
-            <h4>买家退款申请</h4>
+            <h4>买家退货退款申请</h4>
 			<div class="refund_content">
 				<p>退款编号：{$refund_info.refund_sn}</p>
 				<p>申请人：{$refund_info.user_name}</p>
@@ -51,7 +51,7 @@
 	        </section>
         {else}
 	        <section class="panel panel-body">
-				<h4>商家退款操作</h4>
+				<h4>商家退货退款操作</h4>
 				 <div class="mer-content">
                      <h5 class="mer-title">操作备注：</h5>
                      <div class="mer-content-textarea">
@@ -60,11 +60,8 @@
                  </div>
 				 <div class="mer-btn">
 				 	<input type="hidden" id="refund_id" value="{$refund_id}"  />
-				 	<a style="cursor: pointer;"  class="btn btn-primary change_status" data-type='agree' data-href='{url path="refund/merchant/merchant_check_refund"}' >
-						同意
-					</a>
-					
-					<a style="cursor: pointer;"  class="btn btn-primary change_status" data-type='disagree' data-href='{url path="refund/merchant/merchant_check_refund"}' >
+				 	<a style="cursor: pointer;" class="btn btn-primary" href="#actionmodal" data-toggle="modal" id="modal">同意</a>
+					<a style="cursor: pointer;"  class="btn btn-primary change_status_disagree" data-href='{url path="refund/merchant/merchant_check_return"}' >
 						不同意
 					</a>
 			     </div>

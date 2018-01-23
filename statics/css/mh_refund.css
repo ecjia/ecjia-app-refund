@@ -85,6 +85,7 @@
 
 
 
+
 .refund-time-base {
 	text-algin: center;
 }
@@ -108,31 +109,24 @@
 	line-height: 34px;
 	background: url("../images/order-time-base-admin.png") no-repeat scroll 50% -102px;
 }
-
-
 .refund-time-base .step-first .step-done .step-no {
 	background-position: 50% -204px;
 }
 .refund-time-base .step-first .step-cur .step-no {
 	background-position: 50% -34px;
 }
-
 .refund-time-base .step-done .step-no {
 	background-position: 50% -170px;
 }
 .refund-time-base .step-cur .step-no {
 	background-position: 50% 0;
 }
-
-
 .refund-time-base .step-last .step-no {
 	background-position: 50% -136px;
 }
 .refund-time-base .step-last .step-cur .step-no {
 	background-position: 50% -68px;
 }
-
-
 .refund-time-base .step-failed {
     margin-top: 10px;
     color: #fff;
@@ -162,3 +156,93 @@
 
 
 
+
+.return-time-base {
+	text-algin: center;
+}
+.return-time-base ul {
+	margin: 0px auto;
+	overflow: hidden;
+	padding: 0;
+}
+.return-time-base ul li {
+	list-style: none;
+	margin-left: 0 !important;
+	text-align: center;
+	width: 19.11111%;
+	float: left;
+}
+.return-time-base .step-no {
+	margin-top: 10px;
+	color: #fff;
+	font-size: 18px;
+	height: 34px;
+	line-height: 34px;
+	background: url("../images/order-time-base-admin.png") no-repeat scroll 50% -102px;
+}
+.return-time-base .step-first .step-done .step-no {
+	background-position: 50% -204px;
+}
+.return-time-base .step-first .step-cur .step-no {
+	background-position: 50% -34px;
+}
+.return-time-base .step-done .step-no {
+	background-position: 50% -170px;
+}
+.return-time-base .step-cur .step-no {
+	background-position: 50% 0;
+}
+.return-time-base .step-last .step-no {
+	background-position: 50% -136px;
+}
+.return-time-base .step-last .step-cur .step-no {
+	background-position: 50% -68px;
+}
+.return-time-base .step-failed {
+    margin-top: 10px;
+    color: #fff;
+    font-size: 18px;
+    height: 34px;
+    line-height: 34px;
+    background: url("../images/order-time-base-red-admin.png") no-repeat scroll 50% -102px;
+}
+.return-time-base .step-first .step-done .step-failed {
+    background-position: 50% -204px;
+}
+.return-time-base .step-first .step-cur .step-failed {
+    background-position: 50% -34px;
+}
+.return-time-base .step-done .step-failed {
+    background-position: 50% -170px;
+}
+.return-time-base .step-cur .step-failed {
+    background-position: 50% 0;
+}
+.return-time-base .step-last .step-failed {
+    background-position: 50% -136px;
+}
+.return-time-base .step-last .step-cur .step-failed {
+    background-position: 50% -68px;
+}
+
+
+
+strong{
+	margin-left:5px;
+}
+
+small{
+	 color: #737373;
+}
+.return_shipping_content{
+	color: #737373;
+	margin-left:30px;
+}
+.return-btn{
+	text-align:center;
+}
+.return_shipping_content p{
+	margin-bottom:0px;
+	font-size: 12px;
+	
+}
