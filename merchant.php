@@ -312,24 +312,32 @@ class merchant extends ecjia_merchant {
 	 */
 	public function merchant_check_return() {
 		$this->admin_priv('refund_manage');
+		
 		$type = trim($_POST['type']);
-		$refund_id	= $_POST['refund_id'];
+		$refund_id	= $_POST['refund_id'];		
 		$action_note= $_POST['action_note'];
 		if(empty($action_note)){
 			return $this->showmessage('请输入操作备注', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
 		
 		if($type == 'agree') {
-			$status = 1;
+			$status = 1; 
+			$return_shipping_range= $_POST['return_shipping_range'];
+			if(empty($return_shipping_range)) {
+				return $this->showmessage('请选择返还方式', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+			} else {
+				$return_shipping_range = implode(",", $return_shipping_range);
+			}
+			
 		} else {
 			$status = 11;
 		}
-		RC_DB::table('refund_order')->where('refund_id', $refund_id)->update(array('status' => $status,'update_time'=>RC_Time::gmtime()));
+		RC_DB::table('refund_order')->where('refund_id', $refund_id)->update(array('status' => $status, 'return_shipping_range' => $return_shipping_range, 'update_time'=>RC_Time::gmtime()));
 		
 		//商家审核操作记录
 		$data = array(
 			'refund_id' 	=> $refund_id,
-			'action_user_type'	=>	'merchant',
+			'action_user_type'	=>  'merchant',
 			'action_user_id'	=>  $_SESSION['staff_id'],
 			'action_user_name'	=>	$_SESSION['staff_name'],
 			'status'		    =>  $status,
@@ -337,13 +345,7 @@ class merchant extends ecjia_merchant {
 			'log_time'			=>  RC_Time::gmtime(),
 		);
 		RC_DB::table('refund_order_action')->insertGetId($data);
-		
-		if ($type == 'agree') {
-			return $this->showmessage('操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('url' => RC_Uri::url('refund/merchant/return_detail', array('refund_id' => $refund_id))));
-		} else {
-			return $this->showmessage('操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('refund/merchant/return_detail', array('refund_id' => $refund_id))));
-		}
-			
+		return $this->showmessage('操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('refund/merchant/return_detail', array('refund_id' => $refund_id))));
 	}
 	
 	/**

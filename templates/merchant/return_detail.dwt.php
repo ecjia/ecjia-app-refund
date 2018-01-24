@@ -18,7 +18,7 @@
 </div>
 
 <div class="row" id="home-content">		
-<div class="success-msg"></div>
+
 	<div id="actionmodal" class="modal fade">
         <div class="modal-dialog" style="margin-top: 200px;">
             <div class="modal-content">
@@ -28,17 +28,19 @@
                 </div>
                 
                 <div class="modal-body">
-                    <form class="form-horizontal" method="post" name="actionForm" id="actionForm" action='{url path="refund/merchant/merchant_check_return"}'>
+                	  <div class="success-msg"></div>
+		              <div class="error-msg"></div>
+                      <form class="form-horizontal" method="post" name="actionForm" id="actionForm" action='{url path="refund/merchant/merchant_check_return"}'>
 						<div class="form-group refund-label">
 							<div class="controls col-lg-9">
-								<input name="return_shipping_range[]" id="home" type="checkbox"> 
+								<input name="return_shipping_range" id="home" value="home" type="checkbox"> 
 								<label for="home"><strong>上门取货</strong></label><small>（由商家联系配送员上门取货）</small>
 							</div>
 						</div>
 						
 						<div class="form-group refund-label">
 							<div class="controls col-lg-9">
-								<input name="return_shipping_range[]" id="express" type="checkbox"> 
+								<input name="return_shipping_range" id="express" value="express" type="checkbox"> 
 								<label for="express"><strong>自选快递</strong></label><small>（由用户自选第三方快递公司配送）</small>
 								<div class="return_shipping_content">
 									<p>收件人：{$return_shipping_content.staff_name} &nbsp;&nbsp;&nbsp;手机：{$return_shipping_content.staff_mobile}</p>
@@ -49,7 +51,7 @@
 						
 						<div class="form-group refund-label">
 							<div class="controls col-lg-9">
-								<input name="return_shipping_range[]" id="shop" type="checkbox"> 
+								<input name="return_shipping_range" id="shop" value="shop" type="checkbox"> 
 								<label for="shop"><strong>到店退货</strong></label><small>（由用户到门店线下退货）</small>
 								<div class="return_shipping_content">
 									<p>店铺名称：{$return_shipping_content.store_name} &nbsp;&nbsp;&nbsp;电话：{$return_shipping_content.shop_kf_mobile}</p>
@@ -108,9 +110,9 @@
                      </div>
                  </div>
 				 <div class="mer-btn">
-				 	<input type="hidden" id="refund_id" value="{$refund_id}"  />
 				 	<a style="cursor: pointer;" class="btn btn-primary" href="#actionmodal" data-toggle="modal" id="modal">同意</a>
 				 	
+				 	<input type="hidden" id="refund_id" value="{$refund_id}"  />
 					<a style="cursor: pointer;"  class="btn btn-primary change_status_disagree" data-href='{url path="refund/merchant/merchant_check_return"}' >
 						不同意
 					</a>

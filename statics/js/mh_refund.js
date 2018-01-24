@@ -74,22 +74,7 @@
                 	$(".address-info").toggle();
                 });
                 
-	            $("#modal").on('click', function (e) {
-	            	e.preventDefault();
-                    $("#note_btn").on('click', function (e) {
- 	                	e.preventDefault();
- 	                	var action_note = $("#action_note").val();
- 	 	                var refund_id   = $("#refund_id").val();
- 	                    var url = $("form[name='actionForm']").attr('action');
- 	                    var option = {'type' : 'agree','refund_id' : refund_id, 'action_note' : action_note};
- 	                    $.post(url, option, function (data) {
- 	                         ecjia.merchant.showmessage(data);
- 	                         location.href = data.url;
- 	                    }, 'json');
- 	                });
-				});
-                
-               	$('.change_status_disagree').on('click', function(e) {
+                $('.change_status_disagree').on('click', function(e) {
     	    		e.preventDefault();
     				var $this = $(this);
     				var url = $this.attr('data-href');
@@ -100,6 +85,27 @@
     					ecjia.merchant.showmessage(data);
     				})
     			});
+                
+                $("#note_btn").on('click', function (e) {
+                	e.preventDefault();
+                    var url = $("form[name='actionForm']").attr('action');
+                    var action_note = $("#action_note").val();
+    				var refund_id = $("#refund_id").val();
+    				var arr = new Array();
+  			　　　　  $("input[name=return_shipping_range]:checked").each(function (key, value) {
+  			　　　　　　	arr[key] = $(value).val();
+  			　　　　  });
+                    var option = {'type' : 'agree','action_note' : action_note,'refund_id' : refund_id,'return_shipping_range':arr};
+                    $.post(url, option, function (data) {
+                         if (data.state == 'success') {
+							$('#actionmodal').modal('hide');
+							ecjia.merchant.showmessage(data);
+						 } else {
+							var $info = $('<div class="staticalert alert alert-danger ui_showmessage"><a data-dismiss="alert" class="close">×</a>' + data.message + '</div>');
+							$info.appendTo('.error-msg').delay(5000).hide(0);
+						 }
+                    }, 'json');
+                });
             },
         };
     
