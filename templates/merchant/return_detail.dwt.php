@@ -155,7 +155,7 @@
 		           	</div>
 	           		<div class="goods-desc">
 	           			 <p>{$list.goods_name}</p>
-	           			 <p>¥&nbsp;{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.goods_number}</p>
+	           			 <p>¥&nbsp;{$list.shop_price}&nbsp;&nbsp;&nbsp;x1</p>
 	           		</div>
            		</div>
            		 <!-- {/foreach} -->

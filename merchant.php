@@ -104,8 +104,12 @@ class merchant extends ecjia_merchant {
 		
 		//退款订单信息
 		$refund_info = RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
-		$refund_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $refund_info['add_time']);
-		$refund_info['refund_time'] = RC_Time::local_date(ecjia::config('time_format'), $refund_info['refund_time']);
+		if ($refund_info['add_time']) {
+			$refund_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $refund_info['add_time']);
+		}
+		if ($refund_info['refund_time']) {
+			$refund_info['refund_time'] = RC_Time::local_date(ecjia::config('time_format'), $refund_info['refund_time']);
+		}
 		$this->assign('refund_info', $refund_info);
 		
 		//退款上传凭证素材
@@ -118,8 +122,12 @@ class merchant extends ecjia_merchant {
 		$order_info['city']     = ecjia_region::getRegionName($order_info['city']);
 		$order_info['district'] = ecjia_region::getRegionName($order_info['district']);
 		$order_info['street']   = ecjia_region::getRegionName($order_info['street']);
-		$order_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['add_time']);
-		$order_info['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']);
+		if ($order_info['add_time']) {
+			$order_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['add_time']);
+		}
+		if ($order_info['pay_time']) {
+			$order_info['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']);
+		}
 		$this->assign('order_info', $order_info);
 		
 		$goods_list = RC_DB::TABLE('order_goods')->where('order_id', $refund_info['order_id'])->select('goods_id', 'goods_name' ,'goods_price','goods_number')->get();
@@ -138,17 +146,25 @@ class merchant extends ecjia_merchant {
 		
 		//商家审核操作记录
 		$action_mer_msg = RC_DB::TABLE('refund_order_action')->where('refund_id', $refund_info['refund_id'])->where('status', $refund_info['status'])->select('action_note','action_user_name','log_time')->first();
-		$action_mer_msg['log_time'] = RC_Time::local_date(ecjia::config('time_format'), $action_mer_msg['log_time']);
+		if ($action_mer_msg['log_time']) {
+			$action_mer_msg['log_time'] = RC_Time::local_date(ecjia::config('time_format'), $action_mer_msg['log_time']);
+		}
 		$this->assign('action_mer_msg', $action_mer_msg);
-		if($refund_info['refund_status'] == '2'){
+		
+		//商家审核操作记录
+		if ($refund_info['refund_status'] == '2') {
 			$action_admin_msg = RC_DB::TABLE('refund_order_action')->where('refund_id', $refund_info['refund_id'])->where('refund_status', $refund_info['refund_status'])->select('action_note','action_user_name','log_time')->first();
-			$action_admin_msg['log_time'] = RC_Time::local_date(ecjia::config('time_format'), $action_admin_msg['log_time']);
+			if ($action_admin_msg['log_time']) {
+				$action_admin_msg['log_time'] = RC_Time::local_date(ecjia::config('time_format'), $action_admin_msg['log_time']);
+			}
 			$this->assign('action_admin_msg', $action_admin_msg);
 		}
 	
 		//平台打款信息
 		$payrecord_info = RC_DB::table('refund_payrecord')->where('refund_id', $refund_info['refund_id'])->first();
-		$payrecord_info['back_time'] = RC_Time::local_date(ecjia::config('time_format'), $action_mer_msg['back_time']);
+		if ($action_mer_msg['back_time']) {
+			$payrecord_info['back_time'] = RC_Time::local_date(ecjia::config('time_format'), $action_mer_msg['back_time']);
+		}
 		$this->assign('payrecord_info', $payrecord_info);
 		
 		$this->assign('form_action', RC_Uri::url('refund/merchant/merchant_check_refund'));
@@ -165,11 +181,11 @@ class merchant extends ecjia_merchant {
 		$type = trim($_POST['type']);
 		$refund_id	= $_POST['refund_id'];
 		$action_note= $_POST['action_note'];
-		if(empty($action_note)){
+		if (empty($action_note)) {
 			return $this->showmessage('请输入操作备注', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
 	
-		if($type == 'agree') {//商家同意
+		if ($type == 'agree') {//商家同意
 			$status = 1;
 			$refund_status = 1;
 			$refund_info = RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
@@ -245,8 +261,12 @@ class merchant extends ecjia_merchant {
 		
 		//退款订单信息
 		$refund_info = RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
-		$refund_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $refund_info['add_time']);
-		$refund_info['refund_time'] = RC_Time::local_date(ecjia::config('time_format'), $refund_info['refund_time']);
+		if ($refund_info['add_time']) {
+			$refund_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $refund_info['add_time']);
+		}
+		if ($refund_info['refund_time']) {
+			$refund_info['refund_time'] = RC_Time::local_date(ecjia::config('time_format'), $refund_info['refund_time']);
+		}
 		$this->assign('refund_info', $refund_info);
 		
 		//退款上传凭证素材
@@ -259,14 +279,19 @@ class merchant extends ecjia_merchant {
 		$order_info['city']     = ecjia_region::getRegionName($order_info['city']);
 		$order_info['district'] = ecjia_region::getRegionName($order_info['district']);
 		$order_info['street']   = ecjia_region::getRegionName($order_info['street']);
-		$order_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['add_time']);
-		$order_info['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']);
+		if ($order_info['add_time']) {
+			$order_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['add_time']);
+		}
+		if ($order_info['pay_time']) {
+			$order_info['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']);
+		}
 		$this->assign('order_info', $order_info);
 		
 		//back_goods表商品信息
 		$goods_list	= RC_DB::table('back_goods')->where('back_id', $refund_info['refund_id'])->get();
 		foreach ($goods_list as $key => $val) {
 			$goods_list[$key]['image']  = RC_DB::TABLE('goods')->where('goods_id', $val['goods_id'])->pluck('goods_thumb');
+			$goods_list[$key]['shop_price']  = RC_DB::TABLE('goods')->where('goods_id', $val['goods_id'])->pluck('shop_price');
 		}
 		$disk = RC_Filesystem::disk();
 		foreach ($goods_list as $key => $val) {
@@ -280,17 +305,24 @@ class merchant extends ecjia_merchant {
 		
 		//商家审核操作记录
 		$action_mer_msg = RC_DB::TABLE('refund_order_action')->where('refund_id', $refund_info['refund_id'])->where('status', $refund_info['status'])->select('action_note','action_user_name','log_time')->first();
-		$action_mer_msg['log_time'] = RC_Time::local_date(ecjia::config('time_format'), $action_mer_msg['log_time']);
+		if ($action_mer_msg['log_time']) {
+			$action_mer_msg['log_time'] = RC_Time::local_date(ecjia::config('time_format'), $action_mer_msg['log_time']);
+		}
 		$this->assign('action_mer_msg', $action_mer_msg);
-		if($refund_info['refund_status'] == '2'){
+		
+		if ($refund_info['refund_status'] == '2') {
 			$action_admin_msg = RC_DB::TABLE('refund_order_action')->where('refund_id', $refund_info['refund_id'])->where('refund_status', $refund_info['refund_status'])->select('action_note','action_user_name','log_time')->first();
-			$action_admin_msg['log_time'] = RC_Time::local_date(ecjia::config('time_format'), $action_admin_msg['log_time']);
+			if ($action_admin_msg['log_time']) {
+				$action_admin_msg['log_time'] = RC_Time::local_date(ecjia::config('time_format'), $action_admin_msg['log_time']);
+			}
 			$this->assign('action_admin_msg', $action_admin_msg);
 		}
 		
 		//平台打款信息
 		$payrecord_info = RC_DB::table('refund_payrecord')->where('refund_id', $refund_info['refund_id'])->first();
-		$payrecord_info['back_time'] = RC_Time::local_date(ecjia::config('time_format'), $action_mer_msg['back_time']);
+		if ($action_mer_msg['back_time']) {
+			$payrecord_info['back_time'] = RC_Time::local_date(ecjia::config('time_format'), $action_mer_msg['back_time']);
+		}
 		$this->assign('payrecord_info', $payrecord_info);
 		
 		$this->assign('form_action', RC_Uri::url('refund/merchant/merchant_check_return'));
@@ -316,14 +348,13 @@ class merchant extends ecjia_merchant {
 		$type = trim($_POST['type']);
 		$refund_id	= $_POST['refund_id'];		
 		$action_note= $_POST['action_note'];
-		if(empty($action_note)){
+		if (empty($action_note)) {
 			return $this->showmessage('请输入操作备注', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
-		
-		if($type == 'agree') {
+		if ($type == 'agree') {
 			$status = 1; 
 			$return_shipping_range= $_POST['return_shipping_range'];
-			if(empty($return_shipping_range)) {
+			if (empty($return_shipping_range)) {
 				return $this->showmessage('请选择返还方式', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 			} else {
 				$return_shipping_range = implode(",", $return_shipping_range);
@@ -361,7 +392,7 @@ class merchant extends ecjia_merchant {
 		$filter ['sort_order'] 	= empty ($_REQUEST ['sort_order']) 	? 'desc' 				: trim($_REQUEST ['sort_order']);
 		$filter['start_date']= $_GET['start_date'];
 		$filter['end_date']  = $_GET['end_date'];
-		if(!empty($filter['start_date']) && !empty($filter['start_date'])) {
+		if (!empty($filter['start_date']) && !empty($filter['start_date'])) {
 			$filter['start_date']	= RC_Time::local_strtotime($filter['start_date']);
 			$filter['end_date']		= RC_Time::local_strtotime($filter['end_date']);
 			$db_refund_view->where('add_time', '>=', $filter['start_date']);
