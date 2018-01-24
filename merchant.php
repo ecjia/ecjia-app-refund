@@ -79,7 +79,6 @@ class merchant extends ecjia_merchant {
 	 */
 	public function init() {
 		$this->admin_priv('refund_manage');
-
 		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('售后列表'));
 		$this->assign('ur_here', '售后列表');
 
@@ -151,7 +150,7 @@ class merchant extends ecjia_merchant {
 		}
 		$this->assign('action_mer_msg', $action_mer_msg);
 		
-		//商家审核操作记录
+		//平台审核操作记录
 		if ($refund_info['refund_status'] == '2') {
 			$action_admin_msg = RC_DB::TABLE('refund_order_action')->where('refund_id', $refund_info['refund_id'])->where('refund_status', $refund_info['refund_status'])->select('action_note','action_user_name','log_time')->first();
 			if ($action_admin_msg['log_time']) {
@@ -267,6 +266,20 @@ class merchant extends ecjia_merchant {
 		if ($refund_info['refund_time']) {
 			$refund_info['refund_time'] = RC_Time::local_date(ecjia::config('time_format'), $refund_info['refund_time']);
 		}
+		if ($refund_info['return_shipping_range']) {
+			$return_shipping_range = explode(",",$refund_info['return_shipping_range']);
+			foreach($return_shipping_range as $key=>$val){
+				if($val == 'home'){
+					$return_shipping_range[$key] ='上门取货';
+				} elseif($val == 'express'){
+					$return_shipping_range[$key] ='自选快递';
+				} elseif($val == 'shop'){
+					$return_shipping_range[$key] ='到店退货';
+				}
+			}
+			$range = implode(" ",$return_shipping_range);
+		}
+		$this->assign('range', $range);
 		$this->assign('refund_info', $refund_info);
 		
 		//退款上传凭证素材
@@ -310,6 +323,7 @@ class merchant extends ecjia_merchant {
 		}
 		$this->assign('action_mer_msg', $action_mer_msg);
 		
+		//平台审核操作记录
 		if ($refund_info['refund_status'] == '2') {
 			$action_admin_msg = RC_DB::TABLE('refund_order_action')->where('refund_id', $refund_info['refund_id'])->where('refund_status', $refund_info['refund_status'])->select('action_note','action_user_name','log_time')->first();
 			if ($action_admin_msg['log_time']) {

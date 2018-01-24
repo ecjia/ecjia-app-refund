@@ -92,10 +92,11 @@
         
         {if $refund_info.status eq '1' or $refund_info.status eq '11'}
 	        <section class="panel panel-body">
-				<h4>商家退款意见</h4>
-				<div class="mer_check">
+				<h4>商家退货退款意见</h4>
+				<div class="return_mer_check">
 					<p>处理状态：{if $refund_info.status eq '1'}同意{elseif $refund_info.status eq '11'}不同意{/if}</p>
 					<p>商家备注：{$action_mer_msg.action_note}</p>
+					<p>可用退货方式：{$range}</p>
 					<p>操作人：{$action_mer_msg.action_user_name}</p>
 					<p>处理时间：{$action_mer_msg.log_time}</p>
 				</div>
