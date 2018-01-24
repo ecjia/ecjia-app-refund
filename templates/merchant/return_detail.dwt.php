@@ -90,6 +90,7 @@
 			</div>
         </section>
         
+        
         {if $refund_info.status eq '1' or $refund_info.status eq '11'}
 	        <section class="panel panel-body">
 				<h4>商家退货退款意见</h4>
@@ -121,6 +122,34 @@
 	        </section>
         {/if}
         
+        <!-- 商家已发货 -->
+        {if $refund_info.return_status eq '2'}
+         	<section class="panel panel-body">
+				<h4>商家确认收货操作</h4>
+				 <div class="mer-content">
+                     <h5 class="mer-title">操作备注：</h5>
+                     <div class="mer-content-textarea">
+                          <textarea class="form-control" id="action_note" name="action_note" ></textarea>
+                     </div>
+                 </div>
+				 <div class="mer-btn">
+				 	<input type="hidden" id="refund_id" value="{$refund_id}"  />
+					<a style="cursor: pointer;"  class="btn btn-primary" >
+						确认收货
+					</a>
+					
+					<a style="cursor: pointer;"  class="btn btn-primary" >
+						拒绝收货
+					</a>
+					
+					<a style="cursor: pointer;"  class="btn btn-primary" >
+						未收到货
+					</a>
+			     </div>
+	        </section>
+        {/if}
+        
+        <!-- 平台已打款 -->
         {if $refund_info.refund_status eq '2'}
 	        <section class="panel panel-body">
 				<h4>商城平台退款审核</h4>

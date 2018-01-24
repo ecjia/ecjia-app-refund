@@ -87,6 +87,7 @@ class merchant extends ecjia_merchant {
 		$this->assign('filter', $refund_list['filter']);
 		
 		$this->assign('search_action', RC_Uri::url('refund/merchant/init'));
+		
 		$this->display('refund_list.dwt');
 	}
 	
@@ -265,6 +266,9 @@ class merchant extends ecjia_merchant {
 		}
 		if ($refund_info['refund_time']) {
 			$refund_info['refund_time'] = RC_Time::local_date(ecjia::config('time_format'), $refund_info['refund_time']);
+		}
+		if ($refund_info['return_time']) {
+			$refund_info['return_time'] = RC_Time::local_date(ecjia::config('time_format'), $refund_info['return_time']);
 		}
 		if ($refund_info['return_shipping_range']) {
 			$return_shipping_range = explode(",",$refund_info['return_shipping_range']);
