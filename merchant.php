@@ -195,7 +195,7 @@ class merchant extends ecjia_merchant {
 				'refund_id'	=>	$refund_info['refund_id'],
 				'refund_sn'	=>	$refund_info['refund_sn'],
 				'refund_type'	=>	$refund_info['refund_type'],
-				'goods_amount'	=>	$refund_info['goods_amount'],//
+				'goods_amount'	=>	$refund_info['goods_amount'],
 				'back_pay_code'	=>	$refund_info['pay_code'],
 				'back_pay_name'	=>	$refund_info['pay_name'],
 				'back_pay_fee'	=>	$refund_info['pay_fee'],
@@ -412,7 +412,7 @@ class merchant extends ecjia_merchant {
 					'refund_id'	=>	$refund_info['refund_id'],
 					'refund_sn'	=>	$refund_info['refund_sn'],
 					'refund_type'	=>	$refund_info['refund_type'],
-					'goods_amount'	=>	$refund_info['goods_amount'],//
+					'goods_amount'	=>	$refund_info['goods_amount'],
 					'back_pay_code'	=>	$refund_info['pay_code'],
 					'back_pay_name'	=>	$refund_info['pay_name'],
 					'back_pay_fee'	=>	$refund_info['pay_fee'],
