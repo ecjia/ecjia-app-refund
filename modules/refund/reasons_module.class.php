@@ -47,92 +47,29 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 订单售后
+ * 取消订单和售后原因
+ * @author zrl
  */
-class order_refund {
-	/**
-	 * 获取取消订单和售后原因
-	 */
-	 public static function get_reason($options){
-	 	$reason = '';
-	 	if (!empty($options['type']) && !empty($options['reason_id'])) {
-	 		$reason_list = self::reason_list($options['type']);
-	 		if (!empty($reason_list)) {
-	 			foreach ($reason_list as $val) {
-	 				if ($options['reason_id'] == $val['reason_id']) {
-	 					$reason = $val['reason_name'];
-	 				}
-	 			}
-	 		}
-	 	}
+class reasons_module extends api_front implements api_interface {
+    public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {
+    
+    	$this->authSession();
+    	if ($_SESSION['user_id'] <= 0) {
+    		return new ecjia_error(100, 'Invalid session');
+    	}
 		
-		return $reason;
-	}
-	
-	
-	/**
-	 * 获取取消订单和售后原因
-	 */
-	public static function reason_list($type){
-		$reason_list = array();
-		if (!empty($type)) {
-			$data = RC_Loader::load_app_config('refund_reasons', 'refund');
-			if ($type == 'cancel') {
-				$reason_list = $data['cancelorder'];
-			} elseif ($type == 'afterservice') {
-				$reason_list = $data['afterservice'];
-			}
+		$type = $this->requestData('type', '');
+		$type_array = array('cancel', 'afterservice');
+		
+		if (empty($type) || !in_array($type, $type_array)) {
+			return new ecjia_error('invalid_parameter', RC_Lang::get('orders::order.invalid_parameter'));
 		}
-	
-		return $reason_list;
-	}
-	
-	
-	/**
-	 * 获取售后申请图片
-	 */
-	public static function get_return_images($refund_id){
-		$data = array();
-		if (!empty($refund_id)) {
-			$db = RC_DB::table('term_attachment');
-			$return_images = $db->where('object_app', 'ecjia.refund')
-								->where('object_group', 'refund')
-								->where('object_id', $refund_id)
-								->lists('file_path');
-			
-			if (!empty($return_images)) {
-				foreach ($return_images as $val) {
-					if (!empty($val)) {
-						$data[] = RC_Upload::upload_url($val);
-					}
-				}
-			}
-		}
+		
+		RC_Loader::load_app_class('order_refund', 'refund', false);
+		
+		$data = order_refund::reason_list($type);
+		
 		return $data;
 	}
-
-	
-	/**
-	 * 售后申请操作记录
-	 */
-	public static function refund_order_action($options){
-		$data = array(
-        		'refund_id' 		=> $options['refund_id'],
-        		'action_user_type'	=> $options['action_user_type'],
-        		'action_user_id'	=> $options['action_user_id'],
-        		'action_user_name'  => $options['action_user_name'],
-        		'status'			=> $options['status'],
-        		'refund_status'		=> $options['refund_status'],
-        		'return_status'		=> $options['return_status'],
-        		'action_note'		=> $options['action_note'],
-		   		'log_time'			=> RC_Time::gmtime()
-         );
-		
-		$action_id = RC_DB::table('refund_order_action')->insertGetId($data);
-		
-		return $action_id;
-	}
-}	
-
-
+}
 // end

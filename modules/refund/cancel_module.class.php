@@ -47,92 +47,54 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 订单售后
+ * 撤销售后申请
+ * @author 
+ * zrl
  */
-class order_refund {
-	/**
-	 * 获取取消订单和售后原因
-	 */
-	 public static function get_reason($options){
-	 	$reason = '';
-	 	if (!empty($options['type']) && !empty($options['reason_id'])) {
-	 		$reason_list = self::reason_list($options['type']);
-	 		if (!empty($reason_list)) {
-	 			foreach ($reason_list as $val) {
-	 				if ($options['reason_id'] == $val['reason_id']) {
-	 					$reason = $val['reason_name'];
-	 				}
-	 			}
-	 		}
-	 	}
+class cancel_module extends api_front implements api_interface {
+    public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {	
+    	$this->authSession();
+    	$user_id = $_SESSION['user_id'];
+    	if ($user_id < 1 ) {
+    	    return new ecjia_error(100, 'Invalid session');
+    	}
+    	
+		$refund_sn	= trim($this->requestData('refund_sn', ''));
 		
-		return $reason;
-	}
-	
-	
-	/**
-	 * 获取取消订单和售后原因
-	 */
-	public static function reason_list($type){
-		$reason_list = array();
-		if (!empty($type)) {
-			$data = RC_Loader::load_app_config('refund_reasons', 'refund');
-			if ($type == 'cancel') {
-				$reason_list = $data['cancelorder'];
-			} elseif ($type == 'afterservice') {
-				$reason_list = $data['afterservice'];
-			}
+		
+		if (empty($refund_sn)) {
+			return new ecjia_error('invalid_parameter', RC_Lang::get('orders::order.invalid_parameter'));
 		}
-	
-		return $reason_list;
-	}
-	
-	
-	/**
-	 * 获取售后申请图片
-	 */
-	public static function get_return_images($refund_id){
-		$data = array();
-		if (!empty($refund_id)) {
-			$db = RC_DB::table('term_attachment');
-			$return_images = $db->where('object_app', 'ecjia.refund')
-								->where('object_group', 'refund')
-								->where('object_id', $refund_id)
-								->lists('file_path');
-			
-			if (!empty($return_images)) {
-				foreach ($return_images as $val) {
-					if (!empty($val)) {
-						$data[] = RC_Upload::upload_url($val);
-					}
-				}
-			}
+		
+		$refund_info = RC_DB::table('refund_order')->where('refund_sn', $refund_sn)->first();
+		if (empty($refund_info)) {
+			return new ecjia_error('not_exists_info', '不存在的信息！');
 		}
-		return $data;
-	}
-
-	
-	/**
-	 * 售后申请操作记录
-	 */
-	public static function refund_order_action($options){
-		$data = array(
-        		'refund_id' 		=> $options['refund_id'],
-        		'action_user_type'	=> $options['action_user_type'],
-        		'action_user_id'	=> $options['action_user_id'],
-        		'action_user_name'  => $options['action_user_name'],
-        		'status'			=> $options['status'],
-        		'refund_status'		=> $options['refund_status'],
-        		'return_status'		=> $options['return_status'],
-        		'action_note'		=> $options['action_note'],
-		   		'log_time'			=> RC_Time::gmtime()
-         );
 		
-		$action_id = RC_DB::table('refund_order_action')->insertGetId($data);
 		
-		return $action_id;
+		if (($refund_info['status'] == Ecjia\App\Refund\RefundStatus::REFUSED) || (($refund_info['status'] == Ecjia\App\Refund\RefundStatus::AGREE) && Ecjia\App\Refund\RefundStatus::TRANSFERED)) {
+			return new ecjia_error('cannot_cancel', '当前售后申请不可撤销！');
+		}
+		
+		$cancel_status = Ecjia\App\Refund\RefundStatus::CANCELED;
+		
+        RC_DB::table('refund_order')->where('refund_sn', $refund_sn)->update(array('status' => $cancel_status));
+        
+        RC_Loader::load_app_class('order_refund', 'refund', false);
+        
+        $refund_order_action = array(
+        		'refund_id' 		=> $refund_info['refund_id'],
+        		'action_user_type'	=> 'user',
+        		'action_user_id'	=> $refund_info['user_id'],
+        		'action_user_name'  => '买家',
+        		'status'			=> 10,
+        		'refund_status'		=> $refund_info['refund_status'],
+        		'return_status'		=> $refund_info['return_status'],
+        		'action_note'		=> ''
+        );
+        order_refund::refund_order_action($refund_order_action);
+        return array();
 	}
-}	
-
+}
 
 // end

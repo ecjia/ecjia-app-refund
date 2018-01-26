@@ -44,95 +44,27 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-defined('IN_ECJIA') or exit('No permission resources.');
 
-/**
- * 订单售后
- */
-class order_refund {
-	/**
-	 * 获取取消订单和售后原因
-	 */
-	 public static function get_reason($options){
-	 	$reason = '';
-	 	if (!empty($options['type']) && !empty($options['reason_id'])) {
-	 		$reason_list = self::reason_list($options['type']);
-	 		if (!empty($reason_list)) {
-	 			foreach ($reason_list as $val) {
-	 				if ($options['reason_id'] == $val['reason_id']) {
-	 					$reason = $val['reason_name'];
-	 				}
-	 			}
-	 		}
-	 	}
+
+//取消订单原因和退款原因
+return array(
+    'cancelorder' => array(
+    				array('reason_id' => 1,'reason_name' => '暂时不想购买了'),
+    				array('reason_id' => 2,'reason_name' => '忘记使用优惠券'),
+    				array('reason_id' => 3,'reason_name' => '商家缺货，不想买了'),
+    				array('reason_id' => 4,'reason_name' => '商家服务态度有问题'),
+    				array('reason_id' => 5,'reason_name' => '商家长时间未发货'),
+    				array('reason_id' => 6,'reason_name' => '信息填写有误，重新购买')
+    	
+	),
+	'afterservice'	=> array(
+					array('reason_id' => 11,'reason_name' => '商品质量问题'),
+					array('reason_id' => 12,'reason_name' => '发错货'),
+					array('reason_id' => 13,'reason_name' => '缺斤少两'),
+					array('reason_id' => 14,'reason_name' => '外表损伤（包装，商品等）'),
+					array('reason_id' => 15,'reason_name' => '未在时效内送达'),
+					array('reason_id' => 16,'reason_name' => '误购')
+	)
+	
 		
-		return $reason;
-	}
-	
-	
-	/**
-	 * 获取取消订单和售后原因
-	 */
-	public static function reason_list($type){
-		$reason_list = array();
-		if (!empty($type)) {
-			$data = RC_Loader::load_app_config('refund_reasons', 'refund');
-			if ($type == 'cancel') {
-				$reason_list = $data['cancelorder'];
-			} elseif ($type == 'afterservice') {
-				$reason_list = $data['afterservice'];
-			}
-		}
-	
-		return $reason_list;
-	}
-	
-	
-	/**
-	 * 获取售后申请图片
-	 */
-	public static function get_return_images($refund_id){
-		$data = array();
-		if (!empty($refund_id)) {
-			$db = RC_DB::table('term_attachment');
-			$return_images = $db->where('object_app', 'ecjia.refund')
-								->where('object_group', 'refund')
-								->where('object_id', $refund_id)
-								->lists('file_path');
-			
-			if (!empty($return_images)) {
-				foreach ($return_images as $val) {
-					if (!empty($val)) {
-						$data[] = RC_Upload::upload_url($val);
-					}
-				}
-			}
-		}
-		return $data;
-	}
-
-	
-	/**
-	 * 售后申请操作记录
-	 */
-	public static function refund_order_action($options){
-		$data = array(
-        		'refund_id' 		=> $options['refund_id'],
-        		'action_user_type'	=> $options['action_user_type'],
-        		'action_user_id'	=> $options['action_user_id'],
-        		'action_user_name'  => $options['action_user_name'],
-        		'status'			=> $options['status'],
-        		'refund_status'		=> $options['refund_status'],
-        		'return_status'		=> $options['return_status'],
-        		'action_note'		=> $options['action_note'],
-		   		'log_time'			=> RC_Time::gmtime()
-         );
-		
-		$action_id = RC_DB::table('refund_order_action')->insertGetId($data);
-		
-		return $action_id;
-	}
-}	
-
-
-// end
+);
