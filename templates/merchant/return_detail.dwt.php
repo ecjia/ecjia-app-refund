@@ -94,10 +94,12 @@
         {if $refund_info.status eq '1' or $refund_info.status eq '11'}
 	        <section class="panel panel-body">
 				<h4>商家退货退款意见</h4>
-				<div class="return_mer_check">
+				<div class="{if $range}return_mer_check{else}mer_check{/if}">
 					<p>处理状态：{if $refund_info.status eq '1'}同意{elseif $refund_info.status eq '11'}不同意{/if}</p>
 					<p>商家备注：{$action_mer_msg.action_note}</p>
-					<p>可用退货方式：{$range}</p>
+					{if $range}
+						<p>可用退货方式：{$range}</p>
+					{/if}
 					<p>操作人：{$action_mer_msg.action_user_name}</p>
 					<p>处理时间：{$action_mer_msg.log_time}</p>
 				</div>
@@ -134,15 +136,11 @@
                  </div>
 				 <div class="mer-btn">
 				 	<input type="hidden" id="refund_id" value="{$refund_id}"  />
-					<a style="cursor: pointer;"  class="btn btn-primary" >
+				 	<a style="cursor: pointer;"  class="btn btn-primary confirm_change_status" data-type='get' data-href='{url path="refund/merchant/merchant_confirm"}' >
 						确认收货
 					</a>
 					
-					<a style="cursor: pointer;"  class="btn btn-primary" >
-						拒绝收货
-					</a>
-					
-					<a style="cursor: pointer;"  class="btn btn-primary" >
+					<a style="cursor: pointer;"  class="btn btn-primary confirm_change_status" data-type='noget' data-href='{url path="refund/merchant/merchant_confirm"}' >
 						未收到货
 					</a>
 			     </div>

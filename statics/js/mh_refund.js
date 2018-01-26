@@ -74,6 +74,7 @@
                 	$(".address-info").toggle();
                 });
                 
+                //商家审核不通过
                 $('.change_status_disagree').on('click', function(e) {
     	    		e.preventDefault();
     				var $this = $(this);
@@ -86,6 +87,7 @@
     				})
     			});
                 
+                //商家审核通过并设置退还方式范围
                 $("#note_btn").on('click', function (e) {
                 	e.preventDefault();
                     var url = $("form[name='actionForm']").attr('action');
@@ -106,6 +108,20 @@
 						 }
                     }, 'json');
                 });
+                
+                //商家确认收货
+                $('.confirm_change_status').on('click', function(e) {
+                	e.preventDefault();
+    				var $this = $(this);
+    				var url = $this.attr('data-href');
+    				var type = $this.attr('data-type');
+    				var action_note = $("#action_note").val();
+    				var refund_id = $("#refund_id").val();
+    				var option = {'type' : type, 'action_note' : action_note,'refund_id' : refund_id};
+    				$.post(url, option, function(data){
+    					ecjia.merchant.showmessage(data);
+    				})
+    			});
             },
         };
     
