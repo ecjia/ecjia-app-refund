@@ -96,12 +96,12 @@
 				<h4>商家退货退款意见</h4>
 				<div class="{if $range}return_mer_check{else}mer_check{/if}">
 					<p>处理状态：{if $refund_info.status eq '1'}同意{elseif $refund_info.status eq '11'}不同意{/if}</p>
-					<p>商家备注：{$action_mer_msg.action_note}</p>
+					<p>商家备注：{$action_mer_msg_return.action_note}</p>
 					{if $range}
 						<p>可用退货方式：{$range}</p>
 					{/if}
-					<p>操作人：{$action_mer_msg.action_user_name}</p>
-					<p>处理时间：{$action_mer_msg.log_time}</p>
+					<p>操作人：{$action_mer_msg_return.action_user_name}</p>
+					<p>处理时间：{$action_mer_msg_return.log_time}</p>
 				</div>
 	        </section>
         {else}
@@ -149,10 +149,10 @@
 	    	 <section class="panel panel-body">
 				<h4>商家确认收货意见</h4>
 				<div class="mer_check">
-					<p>处理状态：{if $refund_info.status eq '1'}同意{elseif $refund_info.status eq '11'}不同意{/if}</p>
-					<p>商家备注：{$action_mer_msg.action_note}</p>
-					<p>操作人：{$action_mer_msg.action_user_name}</p>
-					<p>处理时间：{$action_mer_msg.log_time}</p>
+					<p>处理状态：{if $refund_info.return_status eq '3'}确认收货{elseif $refund_info.return_status eq '11'}未收到货{/if}</p>
+					<p>商家备注：{$action_mer_msg_confirm.action_note}</p>
+					<p>操作人：{$action_mer_msg_confirm.action_user_name}</p>
+					<p>处理时间：{$action_mer_msg_confirm.log_time}</p>
 				</div>
 	        </section>    
         {/if}

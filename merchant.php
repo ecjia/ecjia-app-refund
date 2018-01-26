@@ -79,6 +79,7 @@ class merchant extends ecjia_merchant {
 	 */
 	public function init() {
 		$this->admin_priv('refund_manage');
+		
 		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('售后列表'));
 		$this->assign('ur_here', '售后列表');
 
@@ -312,11 +313,13 @@ class merchant extends ecjia_merchant {
 		$this->assign('goods_list', $goods_list);
 		
 		//商家审核操作记录
-		$action_mer_msg = RC_DB::TABLE('refund_order_action')->where('refund_id', $refund_info['refund_id'])->where('status', $refund_info['status'])->select('action_note','action_user_name','log_time')->first();
-		if ($action_mer_msg['log_time']) {
-			$action_mer_msg['log_time'] = RC_Time::local_date(ecjia::config('time_format'), $action_mer_msg['log_time']);
+		$action_mer_msg = RC_DB::TABLE('refund_order_action')->where('refund_id', $refund_info['refund_id'])->select('status','refund_status','return_status','action_note','action_user_name','log_time')->get();
+		foreach ($action_mer_msg as $key=>$val) {
+			$action_mer_msg[$key]['log_time']  = RC_Time::local_date('Y-m-d H:i:s', $val['log_time']);
 		}
-		$this->assign('action_mer_msg', $action_mer_msg);
+		$this->assign('action_mer_msg_return', $action_mer_msg[0]);
+		$this->assign('action_mer_msg_confirm', $action_mer_msg[1]);
+		
 		
 		//平台审核操作记录
 		if ($refund_info['refund_status'] == '2') {

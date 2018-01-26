@@ -12,21 +12,25 @@
 			<li>
 				<div class="{if $refund_info.status eq '1' and $refund_info.return_shipping_range neq ''}step-done{elseif $refund_info.status eq '11'}step-cur{/if}">
 					<div class="step-no">{if $refund_info.return_shipping_range eq ''}2{/if}</div>
-					<div class="m_t5">商家处理退款申请<br>{if $action_mer_msg.log_time}{$action_mer_msg.log_time}{/if}</div>
+					<div class="m_t5">商家处理退款申请<br>{if $action_mer_msg_return.log_time}{$action_mer_msg_return.log_time}{/if}</div>
 				</div>
 			</li>
 			
 			<li>
-				<div class="{if $refund_info.return_shipping_range neq '' and $refund_info.return_status eq '2'}step-done{elseif $refund_info.return_shipping_range neq ''}step-cur{/if}">
-					<div class="step-no">{if $refund_info.return_status neq '2'}3{/if}</div>
+				<div class="{if $refund_info.return_shipping_range neq '' and $refund_info.return_status gt '0'}step-done{elseif $refund_info.return_shipping_range neq ''}step-cur{/if}">
+					<div class="step-no">{if $refund_info.return_status eq '0'}3{/if}</div>
 					<div class="m_t5">买家退货给商家<br>{if $refund_info.return_time}{$refund_info.return_time}{/if}<br></div>
 				</div>
 			</li>
 			
 			<li>
-				<div class="{if $refund_info.return_status eq '2'}step-cur{/if}">
-					<div class="step-no">{if $refund_info.refund_status neq '2'}4{/if}</div>
-					<div class="m_t5">商家确认收货<br></div>
+				<div class="{if $refund_info.return_status eq '3' and $refund_info.refund_status eq '2'}step-done{elseif $refund_info.return_status gt '0'}step-cur{/if}">
+				    {if $refund_info.return_status eq '11'}
+				    	<div class="step-failed">{if $refund_info.refund_status neq '2'}4{/if}</div>
+				    {else}
+				    	<div class="step-no">{if $refund_info.refund_status neq '2'}4{/if}</div>
+				    {/if}
+					<div class="m_t5">商家确认收货<br>{if $action_mer_msg_confirm.log_time}{$action_mer_msg_confirm.log_time}{/if}</div>
 				</div>
 			</li>
 
