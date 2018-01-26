@@ -49,7 +49,7 @@ namespace Ecjia\App\Refund;
 /**
  * 退款有关状态处理（退款状态、打款状态、退货状态）
  */
-class Refund_status
+class RefundStatus
 {
 	
     const UNCHECK 	 	 = 0;//退款申请(待审核)
