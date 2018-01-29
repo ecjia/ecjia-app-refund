@@ -1,0 +1,130 @@
+<?php defined('IN_ECJIA') or exit('No permission resources.');?>
+<!-- {extends file="ecjia.dwt.php"} -->
+
+<!-- {block name="footer"} -->
+<script type="text/javascript">
+    ecjia.admin.refund_info.init();
+</script>
+<!-- {/block} -->
+
+<!-- {block name="main_content"} -->
+<div>
+	<h3 class="heading">
+		<!-- {if $ur_here}{$ur_here}{/if} -->
+		{if $action_link}
+		<a class="btn plus_or_reply data-pjax" href="{$action_link.href}" id="sticky_a"><i class="fontello-icon-reply"></i> {$action_link.text}</a>
+		{/if}
+	</h3>
+</div>
+
+<!-- #BeginLibraryItem "/library/refund_step.lbi" --><!-- #EndLibraryItem -->
+
+<form class="form-horizontal comment_info" action="{$form_action}" method="post" name="theForm" enctype="multipart/form-data" data-edit-url="{RC_Uri::url('goods/admin_category/edit')}">
+	<div class="row-fluid editpage-rightbar">
+	
+		<div class="left-bar move-mod">
+			<div class="foldable-list move-mod-group" >
+				<div class="accordion-group">
+					<div class="accordion-heading">
+						<a class="accordion-toggle collapsed move-mod-head" data-toggle="collapse" data-target="#refund_content">
+							<strong>买家退款申请</strong>
+						</a>
+					</div>
+					<div class="accordion-body in collapse" id="refund_content">
+						<div class="refund_content">
+							<p>退款编号：{$refund_info.refund_sn}</p>
+							<p>申请人：{$refund_info.user_name}</p>
+							<p>退款原因：{if $refund_info.refund_reason eq 1}暂时不想购买了{elseif $refund_info.refund_reason eq 2}忘记使⽤优惠券{elseif $refund_info.refund_reason eq 3}商家缺货， 不想买了{elseif $refund_info.refund_reason eq 4}商家服务态度有问题{elseif $refund_info.refund_reason eq 5}商家⻓时间未发货{elseif $refund_info.refund_reason eq 6}信息填写有误， 重新购买{else}暂无原因{/if}</p>
+							<p>退款金额：{$refund_info.money_paid}</p>
+							<p>退款说明：{$refund_info.refund_content}</p>
+							<p>上传凭证： 
+								{if $refund_img_list}
+								<!-- {foreach from=$refund_img_list item=list} -->
+				                <img src="{RC_Upload::upload_url()}/{$list.file_path}">
+				                <!-- {/foreach} -->
+				                {else}
+				            	<img src="{RC_Uri::admin_url('statics/images/nopic.png')}">
+								{/if}
+			                </p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="right-bar move-mod">
+			<div class="foldable-list move-mod-group edit-page" >
+				<div class="accordion-group">
+					<div class="accordion-heading">
+						<a class="accordion-toggle collapsed move-mod-head" data-toggle="collapse" data-target="#refund_mer_content">
+							<strong>店铺信息</strong>
+						</a>
+					</div>
+					<div class="accordion-body in in_visable collapse" id="refund_mer_content">
+						<div class="accordion-inner">
+						   <div class="merchant_content">
+								<div class="list-top">
+									<img src="{if $mer_info.img}{RC_Upload::upload_url()}/{$mer_info.img}{else}{RC_Uri::admin_url('statics/images/nopic.png')}{/if}"><span>{$mer_info.merchants_name}</span>
+								</div>
+								<div class="list-mid">
+									<p><font class="ecjiafc-red">{$mer_info.count.refund_count}</font><br>仅退款</p>
+									<p><font class="ecjiafc-red">{$mer_info.count.return_count}</font><br>退款退货</p>
+								</div>
+								
+								<div class="list-bot">
+									<div><label>营业时间：</label>{$mer_info.shop_trade_time.start}-{$mer_info.shop_trade_time.end}</div>
+									<div><label>商家电话：</label>{$mer_info.shop_kf_mobile}</div>
+									<div><label>商家地址：</label>{$mer_info.address}</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="foldable-list move-mod-group" >
+				<div class="accordion-group">
+					<div class="accordion-heading">
+						<a class="accordion-toggle collapsed move-mod-head" data-toggle="collapse" data-target="#refund_goods_content">
+							<strong>商品相关信息</strong>
+						</a>
+					</div>
+					<div class="accordion-body in collapse reply_admin_list" id="refund_goods_content">
+						<div class="accordion-inner">
+						 	<div class="goods-content">
+				           		<!-- {foreach from=$goods_list item=list} -->
+				           		<div class="goods-info">
+				           			<div class="goods-img">
+					           			<img src="{$list.image}">
+						           	</div>
+					           		<div class="goods-desc">
+					           			 <p>{$list.goods_name}</p>
+					           			 <p>¥&nbsp;{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.goods_number}</p>
+					           		</div>
+				           		</div>
+				           		 <!-- {/foreach} -->
+				           		<hr>
+				                <p>运费：¥&nbsp;{$order_info.shipping_fee}</p>
+				                <p>订单总额：¥&nbsp;{$order_info.money_paid}</p>
+				                <hr>
+				                <p>订单编号：{$order_info.order_sn} <span><a id="order-info" href="javascript:;">查看更多</a></span></p>
+				                <div class="order-info" style="display: none;">
+					                <p>支付方式：{$order_info.pay_name}</p>
+					                <p>下单时间：{$order_info.add_time}</p>
+					                <p>付款时间：{$order_info.pay_time}</p>
+				                </div>
+				                <hr>
+				                <p>收货人：{$order_info.consignee}<span><a id="address-info" href="javascript:;">查看更多</a></span></p>
+				                <div class="address-info" style="display: none;">
+					                <p>收货地址：{$order_info.province}{$order_info.city}{$order_info.district}{$order_info.street}</p>
+					                <p>联系电话：{$order_info.mobile}</p>
+				                </div>
+					        </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+<!-- {/block} -->
