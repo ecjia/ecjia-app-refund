@@ -46,18 +46,15 @@
 //
 defined('IN_ECJIA') or exit('No permission resources.');
 
-/**
- * 后台权限API
- * @author songqianqian
- */
-class refund_merchant_purview_api extends Component_Event_Api {
-    
-	public function call(&$options) {
-		$purviews = array(
-			array('action_name' => '退货退款管理', 	'action_code' => 'refund_manage', 	'relevance' => ''),
-		);
-		return $purviews;
+class refund_admin_plugin {
+	
+	static public function refund_admin_menu_api($menus) {
+	    $menu = ecjia_admin::make_admin_menu('1_refund_list', '售后列表', RC_Uri::url('refund/admin/init'), 6)->add_purview('refund_manage');
+	    $menus->add_submenu($menu);
+	    return $menus;
 	}
 }
+
+RC_Hook::add_filter('orders_admin_menu_api', array('refund_admin_plugin', 'refund_admin_menu_api'));
 
 // end
