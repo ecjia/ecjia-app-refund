@@ -51,7 +51,7 @@ defined('IN_ECJIA') or exit('No permission resources.');
  */
 class order_refund {
 	/**
-	 * 获取取消订单和售后原因
+	 * 获取取消订单和售后原因单个
 	 */
 	 public static function get_reason($options){
 	 	$reason = '';
@@ -71,7 +71,7 @@ class order_refund {
 	
 	
 	/**
-	 * 获取取消订单和售后原因
+	 * 获取取消订单和售后原因列表
 	 */
 	public static function reason_list($type){
 		$reason_list = array();
@@ -141,6 +141,34 @@ class order_refund {
 		/* 选择一个随机的方案 */
 		$str = date('Ymd') . str_pad(mt_rand(1, 9999999), 5, '0', STR_PAD_LEFT);
 		return $str;
+	}
+	
+	/**
+	 * 获取某个订单的售后申请信息
+	 * @return  array
+	 */
+	public static function currorder_refund_info($order_id) {
+		$refund_info = array();
+		
+		if (!empty($order_id)) {
+			$refund_info = RC_DB::table('refund_order')->where('order_id', $order_id)->first();
+		}
+		
+		return $refund_info;
+	}
+	
+	/**
+	 * 获取某个订单的订单商品
+	 * @return  array
+	 */
+	public static function currorder_goods_list($order_id) {
+		$list = array();
+	
+		if (!empty($order_id)) {
+			$list = RC_DB::table('order_goods')->where('order_id', $order_id)->get();
+		}
+	
+		return $list;
 	}
 }	
 
