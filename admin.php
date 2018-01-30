@@ -170,11 +170,6 @@ class admin extends ecjia_admin {
 		}
 		$this->assign('goods_list', $goods_list);
 	
-		
-		
-
-		
-		
 		//商家审核操作记录
 		$action_mer_msg = RC_DB::TABLE('refund_order_action')->where('refund_id', $refund_info['refund_id'])->where('status', $refund_info['status'])->select('action_note','action_user_name','log_time')->first();
 		if ($action_mer_msg['log_time']) {
@@ -197,8 +192,6 @@ class admin extends ecjia_admin {
 			$payrecord_info['back_time'] = RC_Time::local_date(ecjia::config('time_format'), $payrecord_info['back_time']);
 		}
 		$this->assign('payrecord_info', $payrecord_info);
-	
-		$this->assign('form_action', RC_Uri::url('refund/merchant/merchant_check_refund'));
 	
 		$this->display('refund_detail.dwt');
 	}
@@ -300,8 +293,6 @@ class admin extends ecjia_admin {
 			$payrecord_info['back_time'] = RC_Time::local_date(ecjia::config('time_format'), $payrecord_info['back_time']);
 		}
 		$this->assign('payrecord_info', $payrecord_info);
-	
-		$this->assign('form_action', RC_Uri::url('refund/merchant/merchant_check_return'));
 	
 		//读取有关返回方式的信息（店长信息和店铺信息）
 		$return_shipping_content['staff_name']  = $_SESSION['staff_name'];
