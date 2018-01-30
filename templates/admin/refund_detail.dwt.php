@@ -11,9 +11,6 @@
 <div>
 	<h3 class="heading">
 		<!-- {if $ur_here}{$ur_here}{/if} -->
-		{if $action_link}
-		<a class="btn plus_or_reply data-pjax" href="{$action_link.href}" id="sticky_a"><i class="fontello-icon-reply"></i> {$action_link.text}</a>
-		{/if}
 	</h3>
 </div>
 
@@ -49,6 +46,65 @@
 						</div>
 					</div>
 				</div>
+				
+				{if $refund_info.status eq '1' or $refund_info.status eq '11'}
+					<div class="accordion-group">
+						<div class="accordion-heading">
+							<a class="accordion-toggle collapsed move-mod-head" data-toggle="collapse" data-target="#mer_content">
+								<strong>商家退款意见</strong>
+							</a>
+						</div>
+						<div class="accordion-body in collapse" id="mer_content">
+							<div class="refund_content">
+								<p>处理状态：{if $refund_info.status eq '1'}同意{elseif $refund_info.status eq '11'}不同意{/if}</p>
+								<p>商家备注：{$action_mer_msg.action_note}</p>
+								<p>操作人：{$action_mer_msg.action_user_name}</p>
+								<p>处理时间：{$action_mer_msg.log_time}</p>
+							</div>
+						</div>
+					</div>
+					{if $refund_info.status eq '1' and $refund_info.refund_status neq '2'}
+						<div style="margin-top: 20px;">
+							退款操作：<a href='{url path="refund/admin/init"}' class="data-pjax"><button class="btn btn-gebo" type="button">去退款</button>  </a>     
+						</div>
+					{/if}
+				{/if}
+				
+								
+				{if $refund_info.refund_status eq '2' }
+					<div class="accordion-group">
+						<div class="accordion-heading">
+							<a class="accordion-toggle collapsed move-mod-head" data-toggle="collapse" data-target="#admin_content">
+								<strong>商城平台退款审核</strong>
+							</a>
+						</div>
+						<div class="accordion-body in collapse" id="admin_content">
+							<div class="refund_content">
+								<p>平台确认：已退款</p>
+								<p>平台备注：{$action_admin_msg.action_note}</p>
+								<p>操作人：{$action_admin_msg.action_user_name}</p>
+								<p>处理时间：{$action_admin_msg.log_time}</p>
+							</div>
+						</div>
+					</div>
+					
+					<div class="accordion-group">
+						<div class="accordion-heading">
+							<a class="accordion-toggle collapsed move-mod-head" data-toggle="collapse" data-target="#admin_content">
+								<strong>商城平台退款详情</strong>
+							</a>
+						</div>
+						<div class="accordion-body in collapse" id="admin_content">
+							<div class="refund_content">
+								<p>退款方式：{$payrecord_info.back_pay_name}</p>
+								<p>应退款金额：- ¥ {$payrecord_info.back_money_paid}</p>
+								<p>积分：- {$payrecord_info.back_integral}</p>
+								<p>实际退款金额：- ¥ {$payrecord_info.back_money_paid}</p>
+								<p>退款时间：{$payrecord_info.back_time}</p>
+							</div>
+						</div>
+					</div>
+				{/if}
 			</div>
 		</div>
 		
