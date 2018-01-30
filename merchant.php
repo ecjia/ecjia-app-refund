@@ -220,7 +220,7 @@ class merchant extends ecjia_merchant {
 			$status = 11;
 			$refund_status = 0;
 		}
-		RC_DB::table('refund_order')->where('refund_id', $refund_id)->update(array('status' => $status,'refund_status' => $refund_status,'update_time'=>RC_Time::gmtime()));
+		RC_DB::table('refund_order')->where('refund_id', $refund_id)->update(array('status' => $status,'refund_status' => $refund_status));
 		
 		$data = array(
 			'refund_id' 	=> $refund_id,
@@ -371,7 +371,7 @@ class merchant extends ecjia_merchant {
 		} else {
 			$status = 11;
 		}
-		RC_DB::table('refund_order')->where('refund_id', $refund_id)->update(array('status' => $status, 'return_shipping_range' => $return_shipping_range, 'update_time'=>RC_Time::gmtime()));
+		RC_DB::table('refund_order')->where('refund_id', $refund_id)->update(array('status' => $status, 'return_shipping_range' => $return_shipping_range));
 		
 		//商家审核操作记录
 		$data = array(
@@ -436,7 +436,7 @@ class merchant extends ecjia_merchant {
 			$return_status = 11;
 			$refund_status = 0;
 		}
-		RC_DB::table('refund_order')->where('refund_id', $refund_id)->update(array('return_status' => $return_status,'refund_status' => $refund_status,'update_time'=>RC_Time::gmtime()));
+		RC_DB::table('refund_order')->where('refund_id', $refund_id)->update(array('return_status' => $return_status,'refund_status' => $refund_status));
 		
 		$data = array(
 			'refund_id' 	=> $refund_id,
