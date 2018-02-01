@@ -17,14 +17,14 @@
 			</li>
 			
 			<li>
-				<div class="{if $refund_info.return_status eq '3' or $refund_info.return_status eq '11'}step-done{elseif $refund_info.return_status eq '2'}step-cur{/if}">
-					<div class="step-no">{if $refund_info.return_status neq '3'}3{/if}</div>
+				<div class="{if $refund_info.return_status gt '2'}step-done{elseif $refund_info.return_status eq '2'}step-cur{/if}">
+					<div class="step-no">{if $refund_info.return_status lt '3'}3{/if}</div>
 					<div class="m_t5">买家退货给商家<br>{if $refund_info.return_time}{$refund_info.return_time}{/if}<br></div>
 				</div>
 			</li>
 			
 			<li>
-				<div class="{if $refund_info.refund_status eq '2'}step-done{elseif $refund_info.return_status eq '3' or $refund_info.return_status eq '11'}step-cur{/if}">
+				<div class="{if $refund_info.refund_status eq '2'}step-done{elseif $refund_info.return_status gt '2'}step-cur{/if}">
 				    {if $refund_info.return_status eq '11'}
 				    	<div class="step-failed">{if $refund_info.refund_status neq '2'}4{/if}</div>
 				    {else}
