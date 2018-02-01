@@ -3,7 +3,7 @@
 
 <!-- {block name="footer"} -->
 <script type="text/javascript">
-    ecjia.admin.refund_info.init();
+    ecjia.admin.return_info.init();
 </script>
 <!-- {/block} -->
 
@@ -14,7 +14,7 @@
 	</h3>
 </div>
 
-<!-- #BeginLibraryItem "/library/refund_step.lbi" --><!-- #EndLibraryItem -->
+<!-- #BeginLibraryItem "/library/return_step.lbi" --><!-- #EndLibraryItem -->
 
 <div class="row-fluid editpage-rightbar">
 	<div class="left-bar move-mod">
@@ -22,7 +22,7 @@
 			<div class="accordion-group">
 				<div class="accordion-heading">
 					<a class="accordion-toggle collapsed move-mod-head" data-toggle="collapse" data-target="#refund_content">
-						<strong>买家退款申请</strong>
+						<strong>买家退货退款申请</strong>
 					</a>
 				</div>
 				<div class="accordion-body in collapse" id="refund_content">
@@ -49,22 +49,48 @@
 				<div class="accordion-group">
 					<div class="accordion-heading">
 						<a class="accordion-toggle collapsed move-mod-head" data-toggle="collapse" data-target="#mer_content">
-							<strong>商家退款意见</strong>
+							<strong>商家退货退款意见</strong>
 						</a>
 					</div>
 					<div class="accordion-body in collapse" id="mer_content">
 						<div class="refund_content">
 							<p>处理状态：{if $refund_info.status eq '1'}同意{elseif $refund_info.status eq '11'}不同意{/if}</p>
-							<p>商家备注：{$action_mer_msg.action_note}</p>
-							<p>操作人：{$action_mer_msg.action_user_name}</p>
-							<p>处理时间：{$action_mer_msg.log_time}</p>
+							<p>商家备注：{$action_mer_msg_return.action_note}</p>
+							{if $range}
+								<p>可用退货方式：{$range}</p>
+							{/if}
+							<p>操作人：{$action_mer_msg_return.action_user_name}</p>
+							<p>处理时间：{$action_mer_msg_return.log_time}</p>
 						</div>
 					</div>
 				</div>
-			
 			{/if}
 			
-							
+			<!-- 商家已发货 -->
+		    {if $refund_info.return_status eq '3' or $refund_info.return_status eq '11'}
+		    	<div class="accordion-group">
+					<div class="accordion-heading">
+						<a class="accordion-toggle collapsed move-mod-head" data-toggle="collapse" data-target="#mer_content">
+							<strong>商家确认收货意见</strong>
+						</a>
+					</div>
+					<div class="accordion-body in collapse" id="mer_content">
+						<div class="refund_content">
+							<p>处理状态：{if $refund_info.return_status eq '3'}确认收货{elseif $refund_info.return_status eq '11'}未收到货{/if}</p>
+							<p>商家备注：{$action_mer_msg_confirm.action_note}</p>
+							<p>操作人：{$action_mer_msg_confirm.action_user_name}</p>
+							<p>处理时间：{$action_mer_msg_confirm.log_time}</p>
+						</div>
+					</div>
+				</div>  
+				{if $refund_info.return_status eq '3' and $refund_info.refund_status eq '1'}
+					<div style="margin-top: 20px;">
+						退款操作：<a href='{url path="refund/admin_payrecord/init"}' class="data-pjax"><button class="btn btn-gebo" type="button">去退款</button>  </a>     
+					</div>
+				{/if}
+	        {/if}
+			
+			<!-- 平台已打款 -->			
 			{if $refund_info.refund_status eq '2' }
 				<div class="accordion-group">
 					<div class="accordion-heading">
