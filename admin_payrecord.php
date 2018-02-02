@@ -93,8 +93,11 @@ class admin_payrecord extends ecjia_admin {
 		$this->assign('ur_here', '交易退款');
 		
 		$data = $this->payrecord_list();
-		$this->assign('data', $data);
+		if(empty($data['filter']['back_type'])) {
+			$data['filter']['back_type'] = 'wait';
+		}
 		$this->assign('filter', $data['filter']);
+		$this->assign('data', $data);
 		
 		$this->assign('search_action', RC_Uri::url('refund/admin_payrecord/init'));
 		
@@ -109,7 +112,6 @@ class admin_payrecord extends ecjia_admin {
 		
 	}
 
-	
 	/**
 	 * 获取交易退款列表
 	 */
@@ -117,16 +119,13 @@ class admin_payrecord extends ecjia_admin {
 		$db_refund_view = RC_DB::table('refund_payrecord as rp')
 		->leftJoin('store_franchisee as s', RC_DB::raw('s.store_id'), '=', RC_DB::raw('rp.store_id'));
 		
-		$filter['sort_by'] 		= empty ($_REQUEST ['sort_by']) 	? 'id'		: trim($_REQUEST ['sort_by']);
-		$filter['sort_order'] 	= empty ($_REQUEST ['sort_order']) 	? 'desc'    : trim($_REQUEST ['sort_order']);
-		
 		$filter['start_date']= $_GET['start_date'];
 		$filter['end_date']  = $_GET['end_date'];
 		if (!empty($filter['start_date']) && !empty($filter['end_date'])) {
 			$filter['start_date']	= RC_Time::local_strtotime($filter['start_date']);
 			$filter['end_date']		= RC_Time::local_strtotime($filter['end_date']);
-			$db_refund_view->where('back_time', '>=', $filter['start_date']);
-			$db_refund_view->where('back_time', '<', $filter['end_date'] + 86400);
+			$db_refund_view->where('add_time', '>=', $filter['start_date']);
+			$db_refund_view->where('add_time', '<', $filter['end_date'] + 86400);
 		}
 		
 		$filter['keywords']  = trim($_GET['keywords']);
@@ -140,23 +139,22 @@ class admin_payrecord extends ecjia_admin {
 		}
 	
 		$filter['back_type'] = trim($_GET['back_type']);
-		$refund_count = $db_refund_view->select(RC_DB::raw('count(*) as count'),
-				RC_DB::raw('SUM(IF(back_type = "", 1, 0)) as wait'),
-				RC_DB::raw('SUM(IF(back_type != "", 1, 0)) as have'))->first();
+		$refund_count = $db_refund_view->select(
+				RC_DB::raw('SUM(IF(back_time = 0, 1, 0)) as wait'),
+				RC_DB::raw('SUM(IF(back_time > 0, 1, 0)) as have'))->first();
 		
-		if ($filter['back_type'] == 'wait') {
-			$db_refund_view->whereNotNull(RC_DB::raw('back_type'));
+		if ($filter['back_type'] == 'wait' || $filter['back_type'] == '') {
+			$db_refund_view->whereNull(RC_DB::raw('back_type'));
 		}
 		
 		if ($filter['back_type'] == 'have') {
-			$db_refund_view->whereNull(RC_DB::raw('back_type'));
+			$db_refund_view->whereNotNull(RC_DB::raw('back_type'));
 		} 
-		
 		$count = $db_refund_view->count();
 		$page = new ecjia_page($count, 10, 5);
 		$data = $db_refund_view
 		->select('id','order_sn','refund_sn','refund_type','back_type','back_money_paid','back_time','add_time',RC_DB::raw('s.merchants_name'))
-		->orderby($filter['sort_by'], $filter['sort_order'])
+		->orderby('id', 'DESC')
 		->take(10)
 		->skip($page->start_id-1)
 		->get();

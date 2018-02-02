@@ -18,14 +18,14 @@
 <div class="row-fluid">
 	<ul class="nav nav-pills">
 		<li class="{if $filter.back_type eq 'wait'}active{/if}">
-			<a class="data-pjax" href='{url path="refund/admin/init" args="back_type=wait{if $filter.keywords}&keywords={$filter.keywords}{/if}{if $filter.refund_type}&status={$filter.refund_status}{/if}"}'>
-				待退款<span class="badge badge-info">{if $data.count.refund}{$data.count.refund}{else}0{/if}</span>
+			<a class="data-pjax" href='{url path="refund/admin_payrecord/init" args="back_type=wait{if $filter.keywords}&keywords={$filter.keywords}{/if}{if $filter.refund_type}&status={$filter.refund_status}{/if}"}'>
+				待退款<span class="badge badge-info">{if $data.count.wait}{$data.count.wait}{else}0{/if}</span>
 			</a>
 		</li>
 		
-		<li class="{if $filter.refund_type eq 'return'}active{/if}">
+		<li class="{if $filter.back_type eq 'have'}active{/if}">
 			<a class="data-pjax" href='{url path="refund/admin_payrecord/init" args="back_type=have{if $filter.keywords}&keywords={$filter.keywords}{/if}"}{if $filter.refund_type}&status={$filter.refund_status}{/if}'>
-				已退款<span class="badge badge-info">{if $data.count.return_refund}{$data.count.return_refund}{else}0{/if}</span>
+				已退款<span class="badge badge-info">{if $data.count.have}{$data.count.have}{else}0{/if}</span>
 			</a>
 		</li>
 	</ul>
@@ -53,15 +53,16 @@
 	<div class="span12">
 		<table class="table table-striped smpl_tbl table-hide-edit">
 			<thead>
-				<tr data-sorthref='{url path="refund/admin/init"}'>
-				    <th class="w150">退款编号</th>
+				<tr>
+				    <th class="w100">退款编号</th>
 				    <th class="w150">商家名称</th>
-				    <th class="w150">订单编号</th>
+				    <th class="w100">订单编号</th>
 				    <th class="w50">申请类型</th>
 				    <th class="w50">退款金额</th>
-				    {if $list.back_type}
-				    <th class="w50">退款方式</th>
-				    <th class="w150" data-toggle="sortby" data-sortby="add_time">退款时间</th>
+				    <th class="w150">申请时间</th>
+				    {if $smarty.get.back_type eq 'have'}
+					    <th class="w50">退款方式</th>
+					    <th class="w150">退款时间</th>
 				    {/if}
 				    <th class="w50">处理状态</th>
 			  	</tr>
@@ -80,7 +81,8 @@
     				{if $list.refund_type eq 'refund'}仅退款{else}退货退款{/if}
     			</td>
 		      	<td>¥ {$list.back_money_paid}</td>
-		      	{if $list.back_type}
+		      	<td>{$list.add_time}</td>
+		      	{if $smarty.get.back_type eq 'have'}
 			      	<td>{if $list.back_type eq 'original'}原路退回{elseif $list.back_type eq 'surplus'}退回余额{/if}</td>
 			      	<td>{$list.back_time}</td>
 		      	{/if}
@@ -89,7 +91,7 @@
 				</td>
 		    </tr>
 		    <!-- {foreachelse} -->
-	        <tr><td class="no-records" {if $list.back_type}colspan="8"{else}colspan="6"{/if}>{lang key='system::system.no_records'}</td></tr>
+	        <tr><td class="no-records" {if $smarty.get.back_type eq 'have'}colspan="9"{else}colspan="7"{/if}>{lang key='system::system.no_records'}</td></tr>
 			<!-- {/foreach} -->
             </tbody>
          </table>

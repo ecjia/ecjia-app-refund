@@ -27,13 +27,12 @@
 					}
 				}
 				
-				if (refund_status != '') {
+				if (refund_type != '') {
 	                url += '&refund_type=' + refund_type;
 	            }
                 if (keywords != '') {
                     url += '&keywords=' + keywords;
                 }
-				
 				ecjia.pjax(url);
 			});
         }
