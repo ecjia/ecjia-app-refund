@@ -320,7 +320,7 @@ class admin extends ecjia_admin {
 		
 		$filter['start_date']= $_GET['start_date'];
 		$filter['end_date']  = $_GET['end_date'];
-		if (!empty($filter['start_date']) && !empty($filter['start_date'])) {
+		if (!empty($filter['start_date']) && !empty($filter['end_date'])) {
 			$filter['start_date']	= RC_Time::local_strtotime($filter['start_date']);
 			$filter['end_date']		= RC_Time::local_strtotime($filter['end_date']);
 			$db_refund_view->where('add_time', '>=', $filter['start_date']);

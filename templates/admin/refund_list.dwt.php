@@ -26,13 +26,13 @@
 			</a>
 		</li>
 		<li class="{if $filter.refund_type eq 'refund'}active{/if}">
-			<a class="data-pjax" href='{url path="refund/admin/init" args="refund_type=refund{if $filter.keywords}&keywords={$filter.keywords}{/if}{if $filter.refund_status}&status={$filter.refund_status}{/if}"}'>
+			<a class="data-pjax" href='{url path="refund/admin/init" args="refund_type=refund{if $filter.keywords}&keywords={$filter.keywords}{/if}{if $filter.refund_status}&refund_status={$filter.refund_status}{/if}"}'>
 				仅退款
 				<span class="badge badge-info">{if $data.count.refund}{$data.count.refund}{else}0{/if}</span>
 			</a>
 		</li>
 		<li class="{if $filter.refund_type eq 'return'}active{/if}">
-			<a class="data-pjax" href='{url path="refund/admin/init" args="refund_type=return{if $filter.keywords}&keywords={$filter.keywords}{/if}"}{if $filter.refund_status}&status={$filter.refund_status}{/if}'>
+			<a class="data-pjax" href='{url path="refund/admin/init" args="refund_type=return{if $filter.keywords}&keywords={$filter.keywords}{/if}"}{if $filter.refund_status}&refund_status={$filter.refund_status}{/if}'>
 			退货退款
 			<span class="badge badge-info">{if $data.count.return_refund}{$data.count.return_refund}{else}0{/if}</span>
 			</a>

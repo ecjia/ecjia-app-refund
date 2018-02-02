@@ -11,7 +11,7 @@
 				var url				= $("form[name='searchForm']").attr('action');
 				var start_date		= $("input[name='start_date']").val();
 				var end_date		= $("input[name='end_date']").val(); 
-				var refund_status = $("select[name='refund_status']").val();
+				var refund_type = $("select[name='refund_type']").val();
 				var keywords = $("input[name='keywords']").val();
 				
 				if (start_date != '' && end_date !='') {
@@ -28,7 +28,7 @@
 				}
 				
 				if (refund_status != '') {
-	                url += '&refund_status=' + refund_status;
+	                url += '&refund_type=' + refund_type;
 	            }
                 if (keywords != '') {
                     url += '&keywords=' + keywords;
