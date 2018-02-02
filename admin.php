@@ -77,6 +77,7 @@ class admin extends ecjia_admin {
 		RC_Script::enqueue_script('bootstrap-datetimepicker', RC_Uri::admin_url('statics/lib/datepicker/bootstrap-datetimepicker.js'));
 
 		RC_Script::enqueue_script('admin_refund', RC_App::apps_url('statics/js/admin_refund.js', __FILE__));
+		RC_Script::enqueue_script('admin_payrecord', RC_App::apps_url('statics/js/admin_payrecord.js', __FILE__));
 		RC_Style::enqueue_style('admin_refund', RC_App::apps_url('statics/css/admin_refund.css', __FILE__));
 		
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('售后列表', RC_Uri::url('refund/admin/init')));

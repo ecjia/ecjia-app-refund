@@ -61,10 +61,14 @@
 						</div>
 					</div>
 				</div>
-			
+				
+				{if $refund_info.status eq '1' and $refund_info.refund_status neq '2'}
+                    <div style="margin-top: 20px;">
+                        	退款操作：<a href='{url path="refund/admin_payrecord/init"}' class="data-pjax"><button class="btn btn-gebo" type="button">去退款</button>  </a>     
+                    </div>
+                {/if}
 			{/if}
-			
-							
+						
 			{if $refund_info.refund_status eq '2' }
 				<div class="accordion-group">
 					<div class="accordion-heading">
