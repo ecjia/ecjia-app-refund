@@ -110,7 +110,15 @@
 				 <div class="mer-content">
                      <h5 class="mer-title">操作备注：</h5>
                      <div class="mer-content-textarea">
-                          <textarea class="form-control" id="action_note" name="action_note" ></textarea>
+                          <textarea class="form-control" id="action_note" name="action_note" style="margin-bottom: 10px;"></textarea>
+                          <select name="mer_reply_content" id="mer_reply_content" class="form-control" >
+	                        <option value="">请选择……</option>
+							<option value="1">同意，对不起，由于我们的问题给您添麻烦了，我们会尽快处理您的申请！</option>
+							<option value="2">请选择以下快递方式，将发票和商品一并寄回，注明亲的详细地址和联系方式，结算好运费，我们收到后会尽快处理您的申请！</option>
+							<option value="3">亲，7天内是可以无条件退款，质量问题您退货单邮费是由我们为您承担，如果是非质量问题，您退回的邮费是由您承担的哦！</option>
+							<option value="4">不同意，经我们核实该订单不属于我们售后的范围，如有问题，请联系客服。</option>
+						  </select>
+						  <span class="help-block">可使用快捷用语</span>
                      </div>
                  </div>
 				 <div class="mer-btn">
@@ -131,7 +139,15 @@
 				 <div class="mer-content">
                      <h5 class="mer-title">操作备注：</h5>
                      <div class="mer-content-textarea">
-                          <textarea class="form-control" id="action_note" name="action_note" ></textarea>
+                          <textarea class="form-control" id="action_note" name="action_note" style="margin-bottom: 10px;"></textarea>
+                          <select name="mer_confirm" id="mer_confirm" class="form-control" >
+	                        <option value="">请选择……</option>
+							<option value="1">商品已验收，我们会尽快给您退款，祝您生活愉快！</option>
+							<option value="2">亲, 您好, 您的包裹我们已经收到了呢，我们将尽快退款给您，祝您购物愉快~</option>
+							<option value="3">商品未收到，请您确认快递信息是否正确。</option>
+							<option value="4">亲，您的包裹我们还没有收到呢，我们会联系物流查询一下具体是什么原因异常，请耐心等待！</option>
+						  </select>
+						  <span class="help-block">可使用快捷用语</span>
                      </div>
                  </div>
 				 <div class="mer-btn">
@@ -139,7 +155,6 @@
 				 	<a style="cursor: pointer;"  class="btn btn-primary confirm_change_status" data-type='get' data-href='{url path="refund/merchant/merchant_confirm"}' >
 						确认收货
 					</a>
-					
 					<a style="cursor: pointer;"  class="btn btn-primary confirm_change_status" data-type='noget' data-href='{url path="refund/merchant/merchant_confirm"}' >
 						未收到货
 					</a>

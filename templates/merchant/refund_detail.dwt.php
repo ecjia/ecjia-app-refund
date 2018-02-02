@@ -52,18 +52,26 @@
         {else}
 	        <section class="panel panel-body">
 				<h4>商家退款操作</h4>
-				 <div class="mer-content">
+				<div class="mer-content">
                      <h5 class="mer-title">操作备注：</h5>
                      <div class="mer-content-textarea">
-                          <textarea class="form-control" id="action_note" name="action_note" ></textarea>
+                        <textarea class="form-control" id="action_note" name="action_note" style="margin-bottom: 10px;"></textarea>
+                        <select name="mer_reply_content" id="mer_reply_content" class="form-control" >
+	                        <option value="">请选择……</option>
+							<option value="1">同意，对不起，由于我们的问题给您添麻烦了，我们会尽快处理您的申请！</option>
+							<option value="2">请选择以下快递方式，将发票和商品一并寄回，注明亲的详细地址和联系方式，结算好运费，我们收到后会尽快处理您的申请！</option>
+							<option value="3">亲，7天内是可以无条件退款，质量问题您退货单邮费是由我们为您承担，如果是非质量问题，您退回的邮费是由您承担的哦！</option>
+							<option value="4">不同意，经我们核实该订单不属于我们售后的范围，如有问题，请联系客服。</option>
+						</select>
+						<span class="help-block">可使用快捷用语</span>
                      </div>
                  </div>
+                 
 				 <div class="mer-btn">
 				 	<input type="hidden" id="refund_id" value="{$refund_id}"  />
 				 	<a style="cursor: pointer;"  class="btn btn-primary change_status" data-type='agree' data-href='{url path="refund/merchant/merchant_check_refund"}' >
 						同意
 					</a>
-					
 					<a style="cursor: pointer;"  class="btn btn-primary change_status" data-type='disagree' data-href='{url path="refund/merchant/merchant_check_refund"}' >
 						不同意
 					</a>

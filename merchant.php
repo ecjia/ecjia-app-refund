@@ -179,7 +179,7 @@ class merchant extends ecjia_merchant {
 		
 		$type = trim($_POST['type']);
 		$refund_id	= $_POST['refund_id'];
-		$action_note= $_POST['action_note'];
+		$action_note= trim($_POST['action_note']);
 		if (empty($action_note)) {
 			return $this->showmessage('请输入操作备注', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
@@ -355,7 +355,7 @@ class merchant extends ecjia_merchant {
 		
 		$type = trim($_POST['type']);
 		$refund_id	= $_POST['refund_id'];		
-		$action_note= $_POST['action_note'];
+		$action_note= trim($_POST['action_note']);
 		if (empty($action_note)) {
 			return $this->showmessage('请输入操作备注', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
@@ -396,7 +396,7 @@ class merchant extends ecjia_merchant {
 	
 		$type = trim($_POST['type']);
 		$refund_id	= $_POST['refund_id'];
-		$action_note= $_POST['action_note'];
+		$action_note= trim($_POST['action_note']);
 		if (empty($action_note)) {
 			return $this->showmessage('请输入操作备注', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}

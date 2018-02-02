@@ -49,6 +49,16 @@
             	$(".address-info").toggle();
             });
             
+         	$("#mer_reply_content").change(function () {
+    		    var reply_text = $("#mer_reply_content option:selected").text();
+    		    var reply_val  = $("#mer_reply_content option:selected").val();
+        		if (reply_text != '' && reply_val !=''){
+	           		 $('#action_note').val(reply_text);
+        		} else {
+        			 $('#action_note').val('');
+        		}
+        	})
+        	
             $('.change_status').on('click', function(e) {
             	e.preventDefault();
 				var $this = $(this);
@@ -73,6 +83,16 @@
                 $("#address-info").click(function(){
                 	$(".address-info").toggle();
                 });
+                
+                $("#mer_reply_content").change(function () {
+        		    var reply_text = $("#mer_reply_content option:selected").text();
+        		    var reply_val  = $("#mer_reply_content option:selected").val();
+            		if (reply_text != '' && reply_val !=''){
+    	           		 $('#action_note').val(reply_text);
+            		} else {
+            			 $('#action_note').val('');
+            		}
+            	})
                 
                 //商家审核不通过
                 $('.change_status_disagree').on('click', function(e) {
@@ -108,6 +128,16 @@
 						 }
                     }, 'json');
                 });
+                
+                $("#mer_confirm").change(function () {
+        		    var confirm_text = $("#mer_confirm option:selected").text();
+        		    var confirm_val  = $("#mer_confirm option:selected").val();
+            		if (confirm_text != '' && confirm_val !=''){
+    	           		 $('#action_note').val(confirm_text);
+            		} else {
+            			 $('#action_note').val('');
+            		}
+            	})
                 
                 //商家确认收货
                 $('.confirm_change_status').on('click', function(e) {
