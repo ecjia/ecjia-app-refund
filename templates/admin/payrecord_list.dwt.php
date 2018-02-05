@@ -72,7 +72,7 @@
 		      	<td class="hide-edit-area">
 					{$list.refund_sn}
 		     	  	<div class="edit-list">
-						<a target="_blank" href='{url path="refund/admin_payrecord/detail" args="id={$list.id}"}' title="查看详情">{t}查看详情{/t}</a>
+						<a target="_blank" href='{url path="refund/admin_payrecord/detail" args="refund_id={$list.refund_id}"}' title="查看详情">{t}查看详情{/t}</a>
 		    	  	</div>
 		      	</td>
 		      	<td>{$list.merchants_name}</td>

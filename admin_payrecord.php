@@ -110,6 +110,66 @@ class admin_payrecord extends ecjia_admin {
 	public function detail() {
 		$this->admin_priv('payrecord_manage');
 		
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('退款详情'));
+		$this->assign('ur_here', '退款详情');
+		
+		$refund_id = intval($_GET['refund_id']);
+		$this->assign('refund_id', $refund_id);
+		
+		//退款订单信息
+		$refund_info = RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
+		$this->assign('refund_info', $refund_info);
+		
+		//退款上传凭证素材
+		$refund_img_list = RC_DB::table('term_attachment')->where('object_id', $refund_info['refund_id'])->where('object_app', 'ecjia.refund')->where('object_group','refund')->select('file_path')->get();
+		$this->assign('refund_img_list', $refund_img_list);
+		
+		//退款有关下单信息
+		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->select('shipping_fee','order_sn','money_paid','pay_name','pay_time','add_time','consignee','province','city','district','street','mobile')->first();
+		$order_info['province']	= ecjia_region::getRegionName($order_info['province']);
+		$order_info['city']     = ecjia_region::getRegionName($order_info['city']);
+		$order_info['district'] = ecjia_region::getRegionName($order_info['district']);
+		$order_info['street']   = ecjia_region::getRegionName($order_info['street']);
+		if ($order_info['add_time']) {
+			$order_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['add_time']);
+		}
+		if ($order_info['pay_time']) {
+			$order_info['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']);
+		}
+		$this->assign('order_info', $order_info);
+		
+		//打款表信息
+		$payrecord_info = RC_DB::table('refund_payrecord')->where('refund_id', $refund_id)->first();
+		if ($payrecord_info['add_time']) {
+			$payrecord_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $payrecord_info['add_time']);
+		}
+		$this->assign('payrecord_info', $payrecord_info);
+		
+		
+		
+		
+		
+		$this->assign('form_action', RC_Uri::url('refund/admin_payrecord/update'));
+		
+		$this->display('payrecord_detail.dwt');
+		
+	}
+	
+	
+	/**
+	 * 处理打款逻辑
+	 */
+	public function update() {
+		$this->admin_priv('payrecord_manage');
+	
+		$id = intval($_POST['id']);
+		
+		$data = array(
+
+		);
+	
+		RC_DB::table('refund_payrecord')->where('id', $id)->update($data);
+		return $this->showmessage('编辑优惠买单规则成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/admin/edit', array('id' => $id ,'store_id' => $store_id))));
 	}
 
 	/**
@@ -153,7 +213,7 @@ class admin_payrecord extends ecjia_admin {
 		$count = $db_refund_view->count();
 		$page = new ecjia_page($count, 10, 5);
 		$data = $db_refund_view
-		->select('id','order_sn','refund_sn','refund_type','back_type','back_money_paid','back_time','add_time',RC_DB::raw('s.merchants_name'))
+		->select('id','order_sn','refund_sn','refund_id','refund_type','back_type','back_money_paid','back_time','add_time',RC_DB::raw('s.merchants_name'))
 		->orderby('id', 'DESC')
 		->take(10)
 		->skip($page->start_id-1)
