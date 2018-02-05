@@ -40,21 +40,32 @@
     
     app.payrecord_info = {
             init: function () {
-                //平台进行打款
-                $('.confirm_change_status').on('click', function(e) {
-                	e.preventDefault();
-    				var $this = $(this);
-    				var url = $this.attr('data-href');
-    				var type = $this.attr('data-type');
-    				var action_note = $("#action_note").val();
-    				var refund_id = $("#refund_id").val();
-    				var option = {'type' : type, 'action_note' : action_note,'refund_id' : refund_id};
-    				$.post(url, option, function(data){
-    					ecjia.admin.showmessage(data);
-    				})
-    			});
-            },
-        };
+    	        var $form = $("form[name='theForm']");
+    	        var option = {
+    	            rules: {
+    	            	back_content: {
+    	                    required: true
+    	                }
+    	            },
+    	            messages: {
+    	            	back_content: {
+    	                	required: "请输入操作备注"
+    	                }
+    	            },
+    	            submitHandler: function () {
+    	                $form.ajaxSubmit({
+    	                    dataType: "json",
+    	                    success: function (data) {
+    	                        ecjia.admin.showmessage(data);
+    	                    }
+    	                });
+    	            }
+    	        }
+    	        var options = $.extend(ecjia.admin.defaultOptions.validate, option);
+    	        $form.validate(options);
+    	    
+            }, 
+      };
     
 })(ecjia.admin, jQuery);
  
