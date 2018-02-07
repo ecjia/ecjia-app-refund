@@ -40,31 +40,37 @@
     
     app.payrecord_info = {
             init: function () {
-    	        var $form = $("form[name='theForm']");
-    	        var option = {
-    	            rules: {
-    	            	back_content: {
-    	                    required: true
-    	                }
-    	            },
-    	            messages: {
-    	            	back_content: {
-    	                	required: "请输入操作备注"
-    	                }
-    	            },
-    	            submitHandler: function () {
-    	                $form.ajaxSubmit({
-    	                    dataType: "json",
-    	                    success: function (data) {
-    	                        ecjia.admin.showmessage(data);
-    	                    }
-    	                });
-    	            }
-    	        }
-    	        var options = $.extend(ecjia.admin.defaultOptions.validate, option);
-    	        $form.validate(options);
-    	    
-            }, 
+            	$(".back-logo").click(function() {
+            		$(".back-logo").removeClass('active');
+            		$(this).addClass('active');
+            		$("input[name='back_type']").val($(this).attr('data-type'));
+            	});
+            	
+			    var $form = $("form[name='theForm']");
+			    var option = {
+			        rules: {
+			        	back_content: {
+			                required: true
+			            }
+			        },
+			        messages: {
+			        	back_content: {
+			            	required: "请输入操作备注"
+			            }
+			        },
+			        submitHandler: function () {
+			            $form.ajaxSubmit({
+			                dataType: "json",
+			                success: function (data) {
+			                    ecjia.admin.showmessage(data);
+			                }
+			            });
+			        }
+			    }
+			    var options = $.extend(ecjia.admin.defaultOptions.validate, option);
+			    $form.validate(options);
+			
+            }
       };
     
 })(ecjia.admin, jQuery);

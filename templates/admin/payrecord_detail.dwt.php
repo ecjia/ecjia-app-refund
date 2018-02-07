@@ -5,6 +5,7 @@
 <script type="text/javascript">
     ecjia.admin.payrecord_info.init();
 </script>
+
 <!-- {/block} -->
 
 <!-- {block name="main_content"} -->
@@ -59,78 +60,93 @@
 				</div>
 				
 				{if !$payrecord_info.back_content}
-				<h3>退款操作</h3>
-				<div class="control-group">
-					<label class="control-label">退款金额：</label>
-					<div class="controls l_h30"></div>
-				</div>
-				
-				<div class="control-group">
-					<label class="control-label">退回积分：</label>
-					<div class="controls l_h30"></div>
-				</div>
-				
-				<div class="control-group">
-					<label class="control-label">退款方式：</label>
-					<div class="controls l_h30"></div>
-				</div>
-				
-				<div class="control-group">
-					<label class="control-label">操作备注：</label>
-					<div class="controls">
-						<textarea name="back_content" id="back_content" class="span10" placeholder="请输入退款备注"></textarea>
-						<span class="input-must">{lang key='system::system.require_field'}</span>
-						<span class="help-block">输入退款说明等内容，此项为必填项</span>
+					<h3>退款操作</h3>
+					<div class="control-group">
+						<label class="control-label">退款金额：</label>
+						<div class="controls l_h30 ecjiafc-red"><strong>¥ {$payrecord_info.back_money_paid} 元</strong></div>
 					</div>
-				</div>
-
-				<div class="control-group">
-					<div class="controls">
-					    <button class="btn btn-gebo" type="submit">更新</button>
-						<input type="hidden" name="id" value="" />
+					
+					<div class="control-group">
+						<label class="control-label">退回积分：</label>
+						<div class="controls l_h30 ecjiafc-red"><strong>{$payrecord_info.back_integral}</strong></div>
 					</div>
-				</div>
+					
+					<div class="control-group">
+						<label class="control-label">退款方式：</label>
+						<div class="controls back-logo-wrap">
+						     <ul>
+						         <li class="back-logo active" data-type="original">
+						             <img src="{$original_img}">
+						             <img class="back-logo-select" src="{$selected_img}">
+						         </li>
+						         
+						         <li class="back-logo" data-type="surplus">
+						             <img src="{$surplus_img}">
+						             <img class="back-logo-select" src="{$selected_img}">
+						         </li>
+						     </ul>
+						     <input name="back_type" value="original" type="hidden">
+						</div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label">操作备注：</label>
+						<div class="controls">
+							<textarea name="back_content" id="back_content" class="span10" placeholder="请输入退款备注"></textarea>
+							<span class="input-must">{lang key='system::system.require_field'}</span>
+							<span class="help-block">输入退款说明等内容，此项为必填项</span>
+						</div>
+					</div>
+	
+					<div class="control-group">
+						<div class="controls">
+						    <button class="btn btn-gebo" type="submit">更新</button>
+							<input type="hidden" name="id" value="{$payrecord_info.id}" />
+							<input type="hidden" name="refund_id" value="{$payrecord_info.refund_id}" />
+							<input type="hidden" name="refund_type" value="{$payrecord_info.refund_type}" />
+						</div>
+					</div>
 				{else}
-				<h3>平台退款详情</h3>
-				<div class="control-group">
-					<label class="control-label">平台确认：</label>
-					<div class="controls l_h30"></div>
-				</div>
-				
-				<div class="control-group">
-					<label class="control-label">退款方式：</label>
-					<div class="controls l_h30"></div>
-				</div>
-				
-				<div class="control-group">
-					<label class="control-label">应退款金额：</label>
-					<div class="controls l_h30"></div>
-				</div>
-				
-				<div class="control-group">
-					<label class="control-label">积分：</label>
-					<div class="controls l_h30"></div>
-				</div>
-				
-				<div class="control-group">
-					<label class="control-label">实际退款金额：</label>
-					<div class="controls l_h30"></div>
-				</div>
-				
-				<div class="control-group">
-					<label class="control-label">退款备注：</label>
-					<div class="controls l_h30"></div>
-				</div>
-				
-				<div class="control-group">
-					<label class="control-label">退款时间：</label>
-					<div class="controls l_h30"></div>
-				</div>
-				
-				<div class="control-group">
-					<label class="control-label">操作人：</label>
-					<div class="controls l_h30"></div>
-				</div>
+					<h3>平台退款详情</h3>
+					<div class="control-group">
+						<label class="control-label">平台确认：</label>
+						<div class="controls l_h30"></div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label">退款方式：</label>
+						<div class="controls l_h30"></div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label">应退款金额：</label>
+						<div class="controls l_h30"></div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label">积分：</label>
+						<div class="controls l_h30"></div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label">实际退款金额：</label>
+						<div class="controls l_h30"></div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label">退款备注：</label>
+						<div class="controls l_h30"></div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label">退款时间：</label>
+						<div class="controls l_h30"></div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label">操作人：</label>
+						<div class="controls l_h30"></div>
+					</div>
 				{/if}
 			</div>
 
@@ -152,7 +168,7 @@
 					                <p>支付方式：{$order_info.pay_name}</p>
 					                <p>下单时间：{$order_info.add_time}</p>
 					                <p>付款时间：{$order_info.pay_time}</p>
-					                <a id="order-info" href="javascript:;">点此处查看退款单详细信息 >></a>
+					                <a id="order-info" href='{url path="refund/admin/refund_detail" args="refund_id={$refund_info.refund_id}"}'>点此处查看退款单详细信息 >></a>
 						        </div>
 							</div>
 						</div>

@@ -75,3 +75,45 @@
 	width:50px;
 	height:50px;
 }
+
+
+
+.back-logo-wrap ul {
+    margin: -2px 0 0 -20px;
+}
+.back-logo-wrap ul li {
+    float: left;
+    margin-left: 20px;
+	line-height: 20px;
+	list-style: outside none none;
+}
+.back-logo.active {
+    border: 1px solid #01b7ee;
+    color: #01b7ee;
+}
+
+.back-logo {
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    position: relative;
+    width: 110px;
+}
+.back-logo.active .back-logo-select {
+    display: block;
+}
+.back-logo .back-logo-select {
+    border: medium none;
+    border-top-right-radius: 3px;
+    bottom: 0;
+    display: none;
+    position: absolute;
+    right: 0;
+    width: 20px;
+    z-index: 100;
+}
+.back-logo-wrap img {
+    border: 0 none;
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle;
+}

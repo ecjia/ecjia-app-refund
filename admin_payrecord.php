@@ -138,6 +138,7 @@ class admin_payrecord extends ecjia_admin {
 		}
 		$this->assign('order_info', $order_info);
 		
+		
 		//打款表信息
 		$payrecord_info = RC_DB::table('refund_payrecord')->where('refund_id', $refund_id)->first();
 		if ($payrecord_info['add_time']) {
@@ -145,11 +146,12 @@ class admin_payrecord extends ecjia_admin {
 		}
 		$this->assign('payrecord_info', $payrecord_info);
 		
-		
-		
-		
-		
 		$this->assign('form_action', RC_Uri::url('refund/admin_payrecord/update'));
+		
+		
+		$this->assign('original_img', RC_App::apps_url('statics/images/original_pic.png', __FILE__));
+		$this->assign('surplus_img', RC_App::apps_url('statics/images/surplus_pic.png', __FILE__));
+		$this->assign('selected_img', RC_App::apps_url('statics/images/selected.png', __FILE__));
 		
 		$this->display('payrecord_detail.dwt');
 		
@@ -161,14 +163,54 @@ class admin_payrecord extends ecjia_admin {
 	 */
 	public function update() {
 		$this->admin_priv('payrecord_manage');
-	
-		$id = intval($_POST['id']);
 		
+		$id = intval($_POST['id']);
+		$refund_id    = intval($_POST['refund_id']);
+		$refund_type  = trim($_POST['refund_type']);
+		$back_type 	  = $_POST['back_type'];
+		$back_content = trim($_POST['back_content']);
+		if ($refund_type) {
+			$return_status = 0;
+		} else {
+			$return_status = 3;
+		}
+		if ($_POST['back_type'] == 'surplus') {//退回余额  
+			$action_note = '退回余额';
+		} else {//TODO
+			$action_note = '原路退回';
+		}
+		
+		//更新打款表
 		$data = array(
-
+			'back_type'			=>	$back_type,
+			'back_time'			=>	RC_Time::gmtime(),
+			'back_content'		=>	$back_content,	
+			'action_user_id'	=>	$_SESSION['admin_id'],	
+			'action_user_name'	=>	$_SESSION['admin_name']
 		);
-	
 		RC_DB::table('refund_payrecord')->where('id', $id)->update($data);
+		
+		//更新退款订单表
+		$data = array(
+			'refund_status'	=> 2,
+			'refund_time'	=> RC_Time::gmtime(),
+		);
+		RC_DB::table('refund_payrecord')->where('id', $id)->update($data);
+		
+		//更新订单操作表
+		$data = array(
+			'refund_id' 		=> $refund_id,
+			'action_user_type'	=>	'admin',
+			'action_user_id'	=>  $_SESSION['admin_id'],
+			'action_user_name'	=>	$_SESSION['admin_name'],
+			'status'		    =>  1,
+			'refund_status'		=>  2,
+			'return_status'		=>  $return_status,
+			'action_note'		=>  $action_note,
+			'log_time'			=>  RC_Time::gmtime(),
+		);
+		RC_DB::table('refund_order_action')->insertGetId($data);
+		
 		return $this->showmessage('编辑优惠买单规则成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/admin/edit', array('id' => $id ,'store_id' => $store_id))));
 	}
 
