@@ -144,6 +144,9 @@ class admin_payrecord extends ecjia_admin {
 		if ($payrecord_info['add_time']) {
 			$payrecord_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $payrecord_info['add_time']);
 		}
+		if ($payrecord_info['back_time']) {
+			$payrecord_info['back_time'] = RC_Time::local_date(ecjia::config('time_format'), $payrecord_info['back_time']);
+		}
 		$this->assign('payrecord_info', $payrecord_info);
 		
 		$this->assign('form_action', RC_Uri::url('refund/admin_payrecord/update'));

@@ -10,9 +10,9 @@
 			</li>
 
 			<li class="step-last">
-				<div class="">
-					<div class="step-no">3</div>
-					<div class="m_t5">平台审核、退款完成<br>{if $refund_info.refund_time}{$refund_info.refund_time}{/if}</div>
+				<div class="{if $refund_info.refund_status eq '2'}step-cur{/if}">
+					<div class="step-no">2</div>
+					<div class="m_t5">退款成功<br>{if $payrecord_info.back_time}{$payrecord_info.back_time}{/if}</div>
 				</div>
 			</li>
 		</ul>

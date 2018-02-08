@@ -112,42 +112,42 @@
 					<h3>平台退款详情</h3>
 					<div class="control-group">
 						<label class="control-label">平台确认：</label>
-						<div class="controls l_h30"></div>
+						<div class="controls l_h30">已退款</div>
 					</div>
 					
 					<div class="control-group">
 						<label class="control-label">退款方式：</label>
-						<div class="controls l_h30"></div>
+						<div class="controls l_h30">{if $payrecord_info.back_type eq 'original'}原路退回{else}退回余额{/if}</div>
 					</div>
 					
 					<div class="control-group">
 						<label class="control-label">应退款金额：</label>
-						<div class="controls l_h30"></div>
+						<div class="controls l_h30">- ¥ {$payrecord_info.back_money_paid} 元</div>
 					</div>
 					
 					<div class="control-group">
 						<label class="control-label">积分：</label>
-						<div class="controls l_h30"></div>
+						<div class="controls l_h30">- {$payrecord_info.back_integral}</div>
 					</div>
 					
 					<div class="control-group">
 						<label class="control-label">实际退款金额：</label>
-						<div class="controls l_h30"></div>
+						<div class="controls l_h30">- ¥ {$payrecord_info.back_money_paid} 元</div>
 					</div>
 					
 					<div class="control-group">
 						<label class="control-label">退款备注：</label>
-						<div class="controls l_h30"></div>
+						<div class="controls l_h30">{$payrecord_info.back_content}</div>
 					</div>
 					
 					<div class="control-group">
 						<label class="control-label">退款时间：</label>
-						<div class="controls l_h30"></div>
+						<div class="controls l_h30">{$payrecord_info.back_time}</div>
 					</div>
 					
 					<div class="control-group">
 						<label class="control-label">操作人：</label>
-						<div class="controls l_h30"></div>
+						<div class="controls l_h30">{$payrecord_info.action_user_name}</div>
 					</div>
 				{/if}
 			</div>

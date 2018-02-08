@@ -94,7 +94,7 @@
 					</div>
 					<div class="accordion-body in collapse" id="admin_content">
 						<div class="refund_content">
-							<p>退款方式：{$payrecord_info.back_pay_name}</p>
+							<p>退款方式：{if $payrecord_info.back_type eq 'original'}原路退回{else}退回余额{/if}</p>
 							<p>应退款金额：- ¥ {$payrecord_info.back_money_paid}</p>
 							<p>积分：- {$payrecord_info.back_integral}</p>
 							<p>实际退款金额：- ¥ {$payrecord_info.back_money_paid}</p>
