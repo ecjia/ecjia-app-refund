@@ -100,10 +100,12 @@
 	
 					<div class="control-group">
 						<div class="controls">
-						    <button class="btn btn-gebo" type="submit">更新</button>
+						    <button class="btn btn-gebo" type="submit">退款</button>
 							<input type="hidden" name="id" value="{$payrecord_info.id}" />
 							<input type="hidden" name="refund_id" value="{$payrecord_info.refund_id}" />
 							<input type="hidden" name="refund_type" value="{$payrecord_info.refund_type}" />
+							<input type="hidden" name="back_money_paid" value="{$payrecord_info.back_money_paid}" />
+							<input type="hidden" name="back_integral" value="{$payrecord_info.back_integral}" />
 						</div>
 					</div>
 				{else}

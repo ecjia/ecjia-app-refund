@@ -55,7 +55,7 @@
 			        },
 			        messages: {
 			        	back_content: {
-			            	required: "请输入操作备注"
+			            	required: "请输入退款操作备注"
 			            }
 			        },
 			        submitHandler: function () {
