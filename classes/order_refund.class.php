@@ -114,6 +114,7 @@ class order_refund {
 	
 	/**
 	 * 售后申请操作记录
+	 * @param array $options
 	 */
 	public static function refund_order_action($options){
 		$data = array(
@@ -221,6 +222,42 @@ class order_refund {
 			'add_time'		=> RC_Time::gmtime()
 		);
 		RC_DB::table('order_status_log')->insert($data);
+	}
+
+	/**
+	 * 获取退款申请最新一条log
+	 * @param array $options
+	 */
+	public static function get_latest_refund_log($refund_id) {
+		if (!empty($refund_id)) {
+			$log_data = RC_DB::table('refund_order_action')->where('refund_id', $refund_id)->orderBy('log_time', 'desc')->get();
+			if ($log_data) {
+				$log_data = $log_data['0'];
+			}
+		} else {
+			$log_data = array();
+		}
+		
+		return $log_data;
+	}
+	
+	
+	/**
+	 * 获取退款退货售后申请的退货商品
+	 * @return  array
+	 */
+	public static function refund_backgoods_list($refund_id) {
+		$list = array();
+	
+		if (!empty($refund_id)) {
+			$list = RC_DB::table('back_goods as bg')
+						->leftJoin('goods as g',  RC_DB::raw('bg.goods_id'), '=', RC_DB::raw('g.goods_id'))
+						->selectRaw('bg.*, g.goods_thumb, g.goods_img, g.original_img')
+						->where(RC_DB::raw('bg.back_id'), $refund_id)
+						->get();
+		}
+	
+		return $list;
 	}
 }	
 

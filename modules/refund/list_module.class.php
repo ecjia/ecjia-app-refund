@@ -80,26 +80,70 @@ class list_module extends api_front implements api_interface {
 			RC_Loader::load_app_class('order_refund', 'refund', false);
 			
 			foreach ($refund_order_data['list'] as $rows) {
-				//最新一条退款进度日志 
-				$latest_refund_log = order_refund::get_latest_refund_log();
+				//获取最新一条退款进度日志 
+				$log_data = array();
+				$latest_refund_log = order_refund::get_latest_refund_log($rows['refund_id']);
+				if (!empty($latest_refund_log)) {
+					if ($latest_refund_log['status'] == 0) {
+						$status = 'await_check';
+						$label_status = '待审核';
+					} elseif ($latest_refund_log['status'] == 1) {
+						$status = 'agree';
+						$label_status = '同意';
+					} elseif ($latest_refund_log['status'] == 10) {
+						$status = 'canceled';
+						$label_status = '已取消';
+					} elseif ($latest_refund_log['status'] == 11) {
+						$status = 'refused';
+						$label_status = '拒绝退款';
+					}
+					
+					$log_data = array(
+							'log_description' 		=> $latest_refund_log['action_note'],
+							'formatted_action_time'	=> RC_Time::local_date(ecjia::config('time_format'), $latest_refund_log['log_time']),
+							'status'				=> $status,
+							'label_status'			=> $label_status
+					);
+				} 
+				
+				//售后申请退货商品信息
+				$goods_list = array();
+				if ($rows['refund_type'] == 'return') {
+					$goods_data = order_refund::refund_backgoods_list($rows['refund_id']);
+					if (!empty($goods_data)) {
+						foreach ($goods_data as $res) {
+							$goods_list[] = array(
+									'goods_id' 		=> $res['goods_id'],
+									'name'	   		=> $res['goods_name'],
+									'goods_attr'	=> !empty($res['goods_attr']) ? $res['goods_attr'] : '',
+									'goods_number'	=> $res['send_number'],
+									'img' 			=> array(
+															'small'	=> !empty($res['goods_thumb']) ? RC_Upload::upload_url($res['goods_thumb']) : '',
+															'thumb'	=> !empty($res['goods_img']) ? RC_Upload::upload_url($res['goods_img']) : '',
+															'url' 	=> !empty($res['original_img']) ? RC_Upload::upload_url($res['original_img']) : '',
+														),
+							);
+						}
+					}
+				}
+				
 				$arr[] = array(
 					'store_id' 					=> intval($rows['store_id']),
 					'store_name' 				=> $rows['store_name'],
-					'store_logo'				=> empty($rows['store_logo']) ? '' : RC_Upload::upload_url($rows['store_logo']),
 					'order_id' 					=> $rows['order_id'],
 					'order_sn' 					=> $rows['order_sn'],
-					'order_status'				=> $rows['order_status'],
-					'order_status_str'			=> $rows['order_status_str'],
-					'label_order_status'		=> empty($rows['label_order_status']) ? '' : $rows['label_order_status'],
-					'total_discount'			=> $rows['total_discount'],
-					'formated_total_discount'	=> $rows['formated_total_discount'],
-					'order_amount'				=> $rows['order_amount'],
-					'formated_order_amount'	=> price_format($rows['order_amount']),
-					'formated_add_time'			=> RC_Time::local_date(ecjia::config('time_format'), $rows['add_time']),
+					'refund_sn'					=> $rows['refund_sn'],
+					'refund_type'				=> $rows['refund_type'],
+					'label_refund_type'			=> $rows['label_refund_type'],
+					'service_status_code'		=> $rows['service_status_code'],
+					'label_service_status'		=> $rows['label_service_status'],
+					'formated_add_time'			=> $rows['formated_add_time'],
+					'latest_refund_log'			=> $log_data,
+					'goods_list'				=> $goods_list,
 				);
 			}
 		}
-		return array('data' => $arr, 'pager' => $quickpay_order_data['page']);
+		return array('data' => $arr, 'pager' => $refund_order_data['page']);
 	}
 }
 // end

@@ -60,7 +60,7 @@ class refund_refund_order_list_api extends Component_Event_Api {
 			foreach ($list as $row) {
 				$row['store_name'] 			= $row['store_id'] > 0 ? RC_DB::table('store_franchisee')->where('store_id', $row['store_id'])->pluck('merchants_name') : '';
 				$row['label_refund_type']	= $row['refund_type'] == 'refund' ? '仅退款' : '退货退款';
-				$row['format_add_time']		= RC_Time::local_date(ecjia::config('time_format'), $row['add_time']);
+				$row['formated_add_time']		= RC_Time::local_date(ecjia::config('time_format'), $row['add_time']);
 				if ($row['status'] == Ecjia\App\Refund\RefundStatus::CANCELED) {
 					$row['service_status_code'] = 'canceled';
 					$row['label_service_status']= '已取消';

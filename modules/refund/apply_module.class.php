@@ -274,7 +274,7 @@ class apply_module extends api_front implements api_interface {
 									'goods_name'	=> $row['goods_name'],
 									'goods_sn'		=> $row['goods_sn'],
 									'is_real'		=> $row['is_real'],
-									'send_number'	=> $row['send_number'],
+									'send_number'	=> $row['goods_number'],
 									'goods_attr'	=> $row['goods_attr']
 							);
 							$back_goods_id = RC_DB::table('back_goods')->insertGetId($back_goods_data);
@@ -289,7 +289,17 @@ class apply_module extends api_front implements api_interface {
 				$pra = array('order_status' => '申请退款', 'order_id' => $order_id, 'message' => '您的退款申请已提交，等待商家处理！');
 				order_refund::order_status_log($pra);
 				//退款申请操作log记录
-				order_refund::refund_order_action();
+				$opt = array(
+						'refund_id' 		=> $refund_id,
+						'action_user_type'	=> 'user',
+						'action_user_id'	=> $_SESSION['user_id'],
+						'action_user_name'  => '买家',
+						'status'			=> 0,
+						'refund_status'		=> 0,
+						'return_status'		=> 0,
+						'action_note'		=> '买家申请退款',
+				);
+				order_refund::refund_order_action($opt);
 			}
 		}
 		
