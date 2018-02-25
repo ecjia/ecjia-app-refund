@@ -203,84 +203,94 @@ class apply_module extends api_front implements api_interface {
 			//插入售后申请表数据
 			$refund_id = RC_DB::table('refund_order')->insertGetId($refund_data);
 			
-			//售后申请图片处理
-			$image_info = null;
-			if (!empty($_FILES)) {
-				$save_path = 'data/refund/'.RC_Time::local_date('Ym');
-				$upload = RC_Upload::uploader('image', array('save_path' => $save_path, 'auto_sub_dirs' => true));
-			
-				$count = count($_FILES['refund_images']['name']);
-				//最多可传5张图片
-				if ($count > 5) {
-					return new ecjia_error('refund_img_error', '申请图片最多可传5张哦！');
-				}
-				for ($i = 0; $i < $count; $i++) {
-					$refund_images = array(
-							'name' 		=> 	$_FILES['refund_images']['name'][$i],
-							'type' 		=> 	$_FILES['refund_images']['type'][$i],
-							'tmp_name' 	=> 	$_FILES['refund_images']['tmp_name'][$i],
-							'error'		=> 	$_FILES['refund_images']['error'][$i],
-							'size'		=> 	$_FILES['refund_images']['size'][$i],
-					);
-					if (!empty($refund_images['name'])) {
-						if (!$upload->check_upload_file($refund_images)) {
-							return new ecjia_error('picture_error', $upload->error());
-						}
+			if ($refund_id) {
+				//售后申请图片处理
+				$image_info = null;
+				if (!empty($_FILES)) {
+					$save_path = 'data/refund/'.RC_Time::local_date('Ym');
+					$upload = RC_Upload::uploader('image', array('save_path' => $save_path, 'auto_sub_dirs' => true));
+						
+					$count = count($_FILES['refund_images']['name']);
+					//最多可传5张图片
+					if ($count > 5) {
+						return new ecjia_error('refund_img_error', '申请图片最多可传5张哦！');
 					}
-				}
-			
-				$image_info	= $upload->batch_upload($_FILES);
-				if (!empty($image_info)) {
-					foreach ($image_info as $image) {
-						if (!empty($image)) {
-							$image_url	= $upload->get_position($image);
-							$data = array(
-									'object_app'		=> 'ecjia.refund',
-									'object_group'		=> 'refund',
-									'object_id'			=> $refund_id,
-									'attach_label'  	=> $image['name'],
-									'attach_description'=> '退款图片',
-									'file_name'     	=> $image['name'],
-									'file_path'			=> $image_url,
-									'file_size'     	=> $image['size'] / 1000,
-									'file_ext'      	=> $image['ext'],
-									'file_hash'     	=> $image['sha1'],
-									'file_mime'     	=> $image['type'],
-									'is_image'			=> 1,
-									'user_id'			=> $_SESSION['user_id'],
-									'user_type'     	=> 'user',
-									'add_time'			=> RC_Time::gmtime(),
-									'add_ip'			=> RC_Ip::client_ip(),
-									'in_status'     	=> 0
-							);
-							$attach = RC_DB::table('term_attachment')->insert($data);
-						}
-					}
-				}
-			}
-			
-			//退商品
-			if ($refund_type == 'return') {
-				//获取订单商品
-				$order_goods = order_refund::currorder_goods_list($order_id);
-				if (!empty($order_goods)) {
-					foreach ($order_goods as $row) {
-						$back_goods_data = array(
-								'rec_id'		=> $row['rec_id'],
-								'back_id'		=> $refund_id,
-								'goods_id'		=> $row['goods_id'],
-								'product_id'	=> $row['product_id'],
-								'goods_name'	=> $row['goods_name'],
-								'goods_sn'		=> $row['goods_sn'],
-								'is_real'		=> $row['is_real'],
-								'send_number'	=> $row['send_number'],
-								'goods_attr'	=> $row['$row']
+					for ($i = 0; $i < $count; $i++) {
+						$refund_images = array(
+								'name' 		=> 	$_FILES['refund_images']['name'][$i],
+								'type' 		=> 	$_FILES['refund_images']['type'][$i],
+								'tmp_name' 	=> 	$_FILES['refund_images']['tmp_name'][$i],
+								'error'		=> 	$_FILES['refund_images']['error'][$i],
+								'size'		=> 	$_FILES['refund_images']['size'][$i],
 						);
-						$back_goods_id = RC_DB::table('back_goods')->insertGetId($back_goods_data);
+						if (!empty($refund_images['name'])) {
+							if (!$upload->check_upload_file($refund_images)) {
+								return new ecjia_error('picture_error', $upload->error());
+							}
+						}
+					}
+						
+					$image_info	= $upload->batch_upload($_FILES);
+					if (!empty($image_info)) {
+						foreach ($image_info as $image) {
+							if (!empty($image)) {
+								$image_url	= $upload->get_position($image);
+								$data = array(
+										'object_app'		=> 'ecjia.refund',
+										'object_group'		=> 'refund',
+										'object_id'			=> $refund_id,
+										'attach_label'  	=> $image['name'],
+										'attach_description'=> '退款图片',
+										'file_name'     	=> $image['name'],
+										'file_path'			=> $image_url,
+										'file_size'     	=> $image['size'] / 1000,
+										'file_ext'      	=> $image['ext'],
+										'file_hash'     	=> $image['sha1'],
+										'file_mime'     	=> $image['type'],
+										'is_image'			=> 1,
+										'user_id'			=> $_SESSION['user_id'],
+										'user_type'     	=> 'user',
+										'add_time'			=> RC_Time::gmtime(),
+										'add_ip'			=> RC_Ip::client_ip(),
+										'in_status'     	=> 0
+								);
+								$attach = RC_DB::table('term_attachment')->insert($data);
+							}
+						}
 					}
 				}
+					
+				//退商品
+				if ($refund_type == 'return') {
+					//获取订单商品
+					$order_goods = order_refund::currorder_goods_list($order_id);
+					if (!empty($order_goods)) {
+						foreach ($order_goods as $row) {
+							$back_goods_data = array(
+									'rec_id'		=> $row['rec_id'],
+									'back_id'		=> $refund_id,
+									'goods_id'		=> $row['goods_id'],
+									'product_id'	=> $row['product_id'],
+									'goods_name'	=> $row['goods_name'],
+									'goods_sn'		=> $row['goods_sn'],
+									'is_real'		=> $row['is_real'],
+									'send_number'	=> $row['send_number'],
+									'goods_attr'	=> $row['goods_attr']
+							);
+							$back_goods_id = RC_DB::table('back_goods')->insertGetId($back_goods_data);
+						}
+					}
+				}
+				//更改订单状态
+				RC_DB::table('order_info')->where('order_id', $order_id)->update(array('order_status' => OS_RETURNED));
+				//订单操作记录log
+				order_refund::order_action($order_id, OS_RETURNED, $order_info['shipping_status'], $order_info['pay_status'], '买家申请退款', '买家');
+				//订单状态log记录
+				$pra = array('order_status' => '申请退款', 'order_id' => $order_id, 'message' => '您的退款申请已提交，等待商家处理！');
+				order_refund::order_status_log($pra);
+				//退款申请操作log记录
+				order_refund::refund_order_action();
 			}
-			
 		}
 		
 		return array();

@@ -170,6 +170,58 @@ class order_refund {
 	
 		return $list;
 	}
+	
+	
+	/**
+	 * 记录订单操作记录
+	 *
+	 * @access public
+	 * @param string $order_sn
+	 *        	订单编号
+	 * @param integer $order_status
+	 *        	订单状态
+	 * @param integer $shipping_status
+	 *        	配送状态
+	 * @param integer $pay_status
+	 *        	付款状态
+	 * @param string $note
+	 *        	备注
+	 * @param string $username
+	 *        	用户名，用户自己的操作则为 buyer
+	 * @return void
+	 */
+	public static function order_action($order_id, $order_status, $shipping_status, $pay_status, $note = '', $username = null, $place = 0) {
+		if (is_null ( $username )) {
+			$username = empty($_SESSION ['admin_name']) ? '系统' : $_SESSION ['admin_name'];
+		}
+	
+	
+		$data = array (
+				'order_id'           => $order_id,
+				'action_user'        => $username,
+				'order_status'       => $order_status,
+				'shipping_status'    => $shipping_status,
+				'pay_status'         => $pay_status,
+				'action_place'       => $place,
+				'action_note'        => $note,
+				'log_time'           => RC_Time::gmtime()
+		);
+		RC_DB::table('order_action')->insert($data);
+	}
+	
+	/**
+	 * 订单状态log记录
+	 * @param array $options
+	 */
+	public static function order_status_log($options) {
+		$data = array(
+			'order_status' 	=> $options['order_status'],
+			'order_id' 		=> $options['order_id'],
+			'message' 		=> $options['message'],
+			'add_time'		=> RC_Time::gmtime()
+		);
+		RC_DB::table('order_status_log')->insert($data);
+	}
 }	
 
 
