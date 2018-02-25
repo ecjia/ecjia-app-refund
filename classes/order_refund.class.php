@@ -151,7 +151,7 @@ class order_refund {
 		$refund_info = array();
 		
 		if (!empty($order_id)) {
-			$refund_info = RC_DB::table('refund_order')->where('order_id', $order_id)->first();
+			$refund_info = RC_DB::table('refund_order')->where('order_id', $order_id)->where('status', '<>', 10)->first();
 		}
 		
 		return $refund_info;
