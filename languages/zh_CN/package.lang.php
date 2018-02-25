@@ -50,7 +50,7 @@ defined('IN_ECJIA') or exit('No permission resources.');
  * ECJIA 应用语言包
  */
 return array(
-	'refund'      => '退货退款订单',
+	'refund'      => '退款',
 	'refund_desc' => '退货退款订单操作',
 );
 
