@@ -47,11 +47,11 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 选择上门取件返还方式
+ * 选择自选快递返还方式
  * @author 
  * zrl
  */
-class home_module extends api_front implements api_interface {
+class express_module extends api_front implements api_interface {
     public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {	
     	$this->authSession();
     	$user_id = $_SESSION['user_id'];
@@ -60,10 +60,11 @@ class home_module extends api_front implements api_interface {
     	}
     	
 		$refund_sn			= trim($this->requestData('refund_sn', ''));
-		$pickup_address 	= trim($this->requestData('pickup_address', ''));
-		$expect_pickup_time	= trim($this->requestData('expect_pickup_time', ''));
-		$contact_name		= trim($this->requestData('contact_name', ''));
+		$recipient_address 	= trim($this->requestData('recipient_address', ''));
+		$recipients			= trim($this->requestData('recipients', ''));
 		$contact_phone		= trim($this->requestData('contact_phone', ''));
+		$shipping_name		= trim($this->requestData('shipping_name', ''));
+		$shipping_sn		= trim($this->requestData('shipping_sn', ''));
 		
 		
 		if (empty($refund_sn)) {
@@ -75,32 +76,46 @@ class home_module extends api_front implements api_interface {
 			return new ecjia_error('not_exists_info', '不存在的信息！');
 		}
 		
-		//当前申请是否支持上门取件返回方式
+		//当前申请是否支持自选快递返回方式
 		$return_shipping_range = $return_shipping_range = explode(',', $refund_info['return_shipping_range']);
-		if (!in_array('home', $return_shipping_range)) {
-			return new ecjia_error('return_shipping_range_error', '当前申请不支持上门取件返还方式！');
+		if (!in_array('express', $return_shipping_range)) {
+			return new ecjia_error('return_shipping_range_error', '当前申请不支持自选快递返还方式！');
 		}
 		
-		if (empty($contact_name) || empty($contact_phone)) {
-			return new ecjia_error('contact_info_error', '联系人信息不能为空！');
+		if (empty($shipping_name) || empty($shipping_sn)) {
+			return new ecjia_error('express_info_error', '快递信息不能为空！');
 		}
-        //取件地址默认为用户下单地址
-		if (empty($pickup_address)) {
-			$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->selectRaw('city, district, street, address')->first();
-			$pickup_address = ecjia_region::getRegionName($order_info['city']).ecjia_region::getRegionName($order_info['district']).ecjia_region::getRegionName($order_info['street']).$order_info['address'];
+        //收件地址默认为店铺地址
+		$store_info = RC_DB::table('store_franchisee')->where('store_id', $refund_info['store_id'])->selectRaw('merchants_name, responsible_person, city, district, street, address')->first();
+		$store_recipients = $store_info['responsible_person'];
+		$store_name = $store_info['merchants_name'];
+		/*商家电话*/
+		$store_service_phone = RC_DB::table('merchants_config')->where('store_id', $refund_info['store_id'])->where('code', 'shop_kf_mobile')->pluck('value');
+		//店铺地址
+		$store_address = ecjia_region::getRegionName($store_info['city']).ecjia_region::getRegionName($store_info['district']).ecjia_region::getRegionName($store_info['street']).$store_info['address'];
+		//默认地址，收货人，联系方式
+		if (empty($recipient_address)) {
+			$recipient_address = $store_address;
+		}
+		if (empty($recipients)) {
+			$recipients = $store_recipients;
+		}
+		if (empty($contact_phone)) {
+			$contact_phone = $store_service_phone;
 		}
 		
-        $home = array(
-        		'return_way_code' 	=> 'home',
-        		'return_way_name' 	=> '上门取件',
-        		'pickup_address'  	=> $pickup_address,
-        		'expect_pickup_time'=> $expect_pickup_time,
-        		'contact_name'		=> $contact_name,
-        		'contact_phone' 	=> $contact_phone
+        $express = array(
+        		'return_way_code' 	=> 'express',
+        		'return_way_name' 	=> '自选快递',
+        		'recipient_address' => $recipient_address,
+        		'recipients'		=> $recipients,
+        		'contact_phone' 	=> $contact_phone,
+        		'shipping_name'		=> $shipping_name,
+        		'shipping_sn'		=> $shipping_sn
         );
         
-        $home = serialize($home);
-        $update_data = array('return_shipping_type' => 'home', 'return_shipping_value' => $home, 'return_status' => 2);
+        $express = serialize($express);
+        $update_data = array('return_shipping_type' => 'express', 'return_shipping_value' => $express, 'return_status' => 2);
        	RC_DB::table('refund_order')->where('refund_sn', $refund_sn)->update($update_data);
         
         return array();
