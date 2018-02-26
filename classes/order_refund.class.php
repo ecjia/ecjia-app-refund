@@ -259,6 +259,72 @@ class order_refund {
 	
 		return $list;
 	}
+	
+	/**
+	 * 获取退款详情
+	 * @return  array
+	 */
+	public static function get_refundorder_detail($options) {
+		$detail = array();
+		$refund_sn = $options['refund_sn'];
+		if (!empty($refund_sn)) {
+			$detail = RC_DB::table('refund_order')->where('refund_sn', $refund_sn)->first();
+			if (!empty($detail['refund_reason'])) {
+				$reason_list = RC_Loader::load_app_config('refund_reasons', 'refund');
+				foreach ($reason_list as $row) {
+					foreach ($row as $a) {
+						$data[] = $a;
+					}
+				}
+				foreach ($data as $b) {
+					if ($b['reason_id'] == $detail['refund_reason']) {
+						$detail['reason'] = $b['reason_name'];
+					}
+				}
+			}
+		}
+	
+		return $detail;
+	}
+	
+	/**
+	 * 获取一周后日期（上门取件日期）
+	 * @return  array
+	 */
+	public static function get_pickup_dates() {
+		$time = RC_Time::gmtime();
+		$date1 = date('Y-m-d', ($time . ' +1 day'));
+		$date2 = date('Y-m-d', strtotime($date1 . ' +1 day'));
+		$date3 = date('Y-m-d', strtotime($date2 . ' +1 day'));
+		$date4 = date('Y-m-d', strtotime($date3 . ' +1 day'));
+		$date5 = date('Y-m-d', strtotime($date4 . ' +1 day'));
+		$date6 = date('Y-m-d', strtotime($date5 . ' +1 day'));
+		$date7 = date('Y-m-d', strtotime($date6 . ' +1 day'));
+		
+		$dates = array($date1, $date2, $date3, $date4, $date5, $date6, $date7);
+		
+		return $dates;
+	}
+	
+	/**
+	 * 获取上门取件时间段
+	 * @return  array
+	 */
+	public static function get_pickup_times() {
+		$times = array(array('start_time' => '08:00', 'end_time' => '18:00'));
+	
+		return $times;
+	}
+	
+	/**
+	 * 获取退款进度日志
+	 * @return  array
+	 */
+	public static function get_refund_logs($refund_id) {
+		$logs = RC_DB::table('refund_order_action')->where('refund_id', $refund_id)->get();
+	
+		return $logs;
+	}
 }	
 
 
