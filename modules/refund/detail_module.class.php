@@ -113,6 +113,9 @@ class detail_module extends api_front implements api_interface {
 		
 		//应退总金额
 		$refund_total_amount = ($refund_order_info['surplus'] + $refund_order_info['money_paid']) - $refund_order_info['shipping_fee'];
+		//用户地址
+		$order_info = RC_DB::table('order_info')->where('order_id', $refund_order_info['order_id'])->selectRaw('city, district, street, address')->first();
+		$user_address = ecjia_region::getRegionName($order_info['city']).ecjia_region::getRegionName($order_info['district']).ecjia_region::getRegionName($order_info['street']).$order_info['address'];
 		//售后图片
 		$return_images = order_refund::get_return_images($refund_order_info['refund_id']);
 		//可用的返还方式
@@ -264,6 +267,7 @@ class detail_module extends api_front implements api_interface {
 				'shipping_fee'				=> price_format($refund_order_info['shipping_fee']),
 				'refund_total_amount'		=> price_format($refund_total_amount),
 				'reason'					=> $refund_order_info['reason'],
+				'user_address'				=> $user_address,
 				'return_images'				=> $return_images,
 				'return_way_list'			=> $return_way_list,
 				'selected_returnway_info'	=> $selected_returnway_info,
