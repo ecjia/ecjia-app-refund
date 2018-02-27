@@ -325,6 +325,17 @@ class order_refund {
 	
 		return $logs;
 	}
+	
+	/**
+	 * 获取打款信息
+	 * @return  array
+	 */
+	public static function get_refund_payrecord($refund_id) {
+		$refund_payrecord = array();
+		$refund_payrecord = RC_DB::table('refund_payrecord')->where('refund_id', $refund_id)->first();
+	
+		return $refund_payrecord;
+	}
 }	
 
 

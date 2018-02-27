@@ -123,10 +123,12 @@ class list_module extends api_front implements api_interface {
 															'url' 	=> !empty($res['original_img']) ? RC_Upload::upload_url($res['original_img']) : '',
 														),
 							);
+							$total_goods_number += $res['send_number'];
 						}
 					}
 				}
-				
+				//退款总金额 = 
+				$total_refund_amount = ($rows['surplus'] + $rows['money_paid']) - $rows['shipping_fee'];
 				$arr[] = array(
 					'store_id' 					=> intval($rows['store_id']),
 					'store_name' 				=> $rows['store_name'],
@@ -138,6 +140,8 @@ class list_module extends api_front implements api_interface {
 					'service_status_code'		=> $rows['service_status_code'],
 					'label_service_status'		=> $rows['label_service_status'],
 					'formated_add_time'			=> $rows['formated_add_time'],
+					'total_goods_number'		=> $total_goods_number,
+					'total_refund_amount'		=> price_format($total_refund_amount),
 					'latest_refund_log'			=> $log_data,
 					'goods_list'				=> $goods_list,
 				);
