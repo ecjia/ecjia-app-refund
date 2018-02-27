@@ -81,7 +81,7 @@ class cancel_module extends api_front implements api_interface {
         RC_DB::table('refund_order')->where('refund_sn', $refund_sn)->update(array('status' => $cancel_status));
         
         RC_Loader::load_app_class('order_refund', 'refund', false);
-        //退款申请操作记录
+        //撤销退款申请操作记录
         $refund_order_action = array(
         		'refund_id' 		=> $refund_info['refund_id'],
         		'action_user_type'	=> 'user',
@@ -90,7 +90,7 @@ class cancel_module extends api_front implements api_interface {
         		'status'			=> 10,
         		'refund_status'		=> $refund_info['refund_status'],
         		'return_status'		=> $refund_info['return_status'],
-        		'action_note'		=> ''
+        		'action_note'		=> '买家撤销退款申请！'
         );
         order_refund::refund_order_action($refund_order_action);
         //还原订单状态
