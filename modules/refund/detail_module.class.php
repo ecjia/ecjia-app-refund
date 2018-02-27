@@ -155,15 +155,28 @@ class detail_module extends api_front implements api_interface {
 				);
 				$shop = $shop_data;
 			}
-			if (!empty($home)) {
-				$return_way_list = array($home);
-			} 
-			if (!empty($home) && !empty($express)) {
-				$return_way_list = array($home, $express);
-			} 
-			if (!empty($home) && !empty($express) && !empty($shop)) {
+			$return_way_list = array();
+			$count = count($return_shipping_range);
+			if ($count == 3) {
 				$return_way_list = array($home, $express, $shop);
+			} elseif ($count == 2) {
+				if (in_array('home', $return_shipping_range) && in_array('express', $return_shipping_range)) {
+					$return_way_list = array($home, $express);
+				} elseif (in_array('home', $return_shipping_range) && in_array('shop', $return_shipping_range)) {
+					$return_way_list = array($home, $shop);
+				} elseif (in_array('express', $return_shipping_range) && in_array('shop', $return_shipping_range)) {
+					$return_way_list = array($express, $shop);
+				}
+			} elseif ($count == 1) {
+				if (in_array('home', $return_shipping_range)) {
+					$return_way_list = array($home);
+				} elseif (in_array('express', $return_shipping_range)) {
+					$return_way_list = array($express);
+				} elseif (in_array('shop', $return_shipping_range)) {
+					$return_way_list = array($shop);
+				}
 			}
+			
 		} else {
 			$return_way_list = array();
 		}
@@ -253,6 +266,14 @@ class detail_module extends api_front implements api_interface {
 			}
 		}
 		
+		//配送费说明
+		$shipping_fee_desc = array(
+				'shipping_fee' 		=> price_format($refund_order_info['shipping_fee']),
+				'pack_fee'	   		=> price_format($refund_order_info['pack_fee']),
+				'total_fee'			=> price_format($refund_order_info['shipping_fee'] + $refund_order_info['pack_fee']),
+				'desc'				=> '运费：原订单实际支付的运费金额'
+		);
+		
 		$arr = array();
 		$arr = array(
 				'refund_sn' 				=> $refund_sn,
@@ -268,6 +289,7 @@ class detail_module extends api_front implements api_interface {
 				'refund_total_amount'		=> price_format($refund_total_amount),
 				'reason'					=> $refund_order_info['reason'],
 				'user_address'				=> $user_address,
+				'shipping_fee_desc'			=> $shipping_fee_desc,
 				'return_images'				=> $return_images,
 				'return_way_list'			=> $return_way_list,
 				'selected_returnway_info'	=> $selected_returnway_info,

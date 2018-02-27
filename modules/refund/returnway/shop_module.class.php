@@ -106,7 +106,7 @@ class shop_module extends api_front implements api_interface {
         );
         
         $shop = serialize($shop);
-        $update_data = array('return_shipping_type' => 'express', 'return_shipping_value' => $shop, 'return_status' => 2);
+        $update_data = array('return_shipping_type' => 'shop', 'return_shipping_value' => $shop, 'return_status' => 2);
        	RC_DB::table('refund_order')->where('refund_sn', $refund_sn)->update($update_data);
         
         return array();
