@@ -108,15 +108,15 @@ class list_module extends api_front implements api_interface {
 				
 				//售后申请退货商品信息
 				$goods_list = array();
-				if ($rows['refund_type'] == 'return') {
-					$goods_data = order_refund::refund_backgoods_list($rows['refund_id']);
+				//if ($rows['refund_type'] == 'return') {
+					$goods_data = order_refund::currorder_goods_list($rows['order_id']);
 					if (!empty($goods_data)) {
 						foreach ($goods_data as $res) {
 							$goods_list[] = array(
 									'goods_id' 		=> $res['goods_id'],
 									'name'	   		=> $res['goods_name'],
 									'goods_attr'	=> !empty($res['goods_attr']) ? $res['goods_attr'] : '',
-									'goods_number'	=> $res['send_number'],
+									'goods_number'	=> $res['goods_number'],
 									'img' 			=> array(
 															'small'	=> !empty($res['goods_thumb']) ? RC_Upload::upload_url($res['goods_thumb']) : '',
 															'thumb'	=> !empty($res['goods_img']) ? RC_Upload::upload_url($res['goods_img']) : '',
@@ -126,9 +126,16 @@ class list_module extends api_front implements api_interface {
 							$total_goods_number += $res['send_number'];
 						}
 					}
+				//}
+				//退款总金额 
+				$order_info = RC_DB::table('order_info')->where('order_id', $rows['order_id'])->selectRaw('order_status, shipping_status, pay_status')->first();
+				//配送费：已发货的不退，未发货的退
+				if ($order_info['shipping_status'] > SS_UNSHIPPED) {
+					$total_refund_amount  = ($rows['money_paid'] + $rows['surplus']) - ($rows['shipping_fee'] - $rows['pack_fee']);
+				} else {
+					$total_refund_amount  = $rows['money_paid'] + $rows['surplus'];
 				}
-				//退款总金额 = 
-				$total_refund_amount = ($rows['surplus'] + $rows['money_paid']) - $rows['shipping_fee'];
+			
 				$arr[] = array(
 					'store_id' 					=> intval($rows['store_id']),
 					'store_name' 				=> $rows['store_name'],
@@ -140,7 +147,7 @@ class list_module extends api_front implements api_interface {
 					'service_status_code'		=> $rows['service_status_code'],
 					'label_service_status'		=> $rows['label_service_status'],
 					'formated_add_time'			=> $rows['formated_add_time'],
-					'total_goods_number'		=> $total_goods_number,
+					'total_goods_number'		=> empty($total_goods_number) ? 0 : $total_goods_number,
 					'total_refund_amount'		=> price_format($total_refund_amount),
 					'latest_refund_log'			=> $log_data,
 					'goods_list'				=> $goods_list,

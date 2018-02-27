@@ -80,7 +80,15 @@ class payrecord_module extends api_front implements api_interface {
 		
 		$back_integral = $refund_order_info['integral'];
 		//应退总金额
-		$back_amount = ($refund_order_info['surplus'] + $refund_order_info['money_paid']) - $refund_order_info['shipping_fee'];
+		$back_amount = ($refund_order_info['surplus'] + $refund_order_info['money_paid']);
+		//应退总金额
+		//配送费：已发货的不退，未发货的退
+		$order_info = RC_DB::table('order_info')->where('order_id', $refund_order_info['order_id'])->selectRaw('order_status, shipping_status, pay_status')->first();
+		if ($order_info['shipping_status'] > SS_UNSHIPPED) {
+			$refund_total_amount  = ($refund_order_info['money_paid'] + $refund_order_info['surplus']) - ($refund_order_info['shipping_fee'] - $refund_order_info['pack_fee']);
+		} else {
+			$refund_total_amount  = $refund_order_info['money_paid'] + $refund_order_info['surplus'];
+		}
 		$back_account= '';
 		if ($refund_order_info['pay_code']) {
 			if ($refund_order_info['pay_code'] == 'pay_balance') {

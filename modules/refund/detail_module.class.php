@@ -111,11 +111,17 @@ class detail_module extends api_front implements api_interface {
 			$label_refund_status= '已审核';
 		}
 		
-		//应退总金额
-		$refund_total_amount = ($refund_order_info['surplus'] + $refund_order_info['money_paid']) - $refund_order_info['shipping_fee'];
+		
 		//用户地址
-		$order_info = RC_DB::table('order_info')->where('order_id', $refund_order_info['order_id'])->selectRaw('city, district, street, address')->first();
+		$order_info = RC_DB::table('order_info')->where('order_id', $refund_order_info['order_id'])->selectRaw('city, district, street, address, order_status, pay_status, shipping_status')->first();
 		$user_address = ecjia_region::getRegionName($order_info['city']).ecjia_region::getRegionName($order_info['district']).ecjia_region::getRegionName($order_info['street']).$order_info['address'];
+		//应退总金额
+		//配送费：已发货的不退，未发货的退
+		if ($order_info['shipping_status'] > SS_UNSHIPPED) {
+			$refund_total_amount  = ($refund_order_info['money_paid'] + $refund_order_info['surplus']) - ($refund_order_info['shipping_fee'] - $refund_order_info['pack_fee']);
+		} else {
+			$refund_total_amount  = $refund_order_info['money_paid'] + $refund_order_info['surplus'];
+		}
 		//售后图片
 		$return_images = order_refund::get_return_images($refund_order_info['refund_id']);
 		//可用的返还方式
@@ -247,15 +253,15 @@ class detail_module extends api_front implements api_interface {
 		
 		//售后申请退货商品
 		$goods_list = array();
-		if ($refund_order_info['refund_type'] == 'return') {
-			$goods_data = order_refund::refund_backgoods_list($refund_order_info['refund_id']);
+		//if ($refund_order_info['refund_type'] == 'return') {
+			$goods_data = order_refund::currorder_goods_list($refund_order_info['order_id']);
 			if (!empty($goods_data)) {
 				foreach ($goods_data as $res) {
 					$goods_list[] = array(
 							'goods_id' 		=> $res['goods_id'],
 							'name'	   		=> $res['goods_name'],
 							'goods_attr'	=> !empty($res['goods_attr']) ? $res['goods_attr'] : '',
-							'goods_number'	=> $res['send_number'],
+							'goods_number'	=> $res['goods_number'],
 							'img' 			=> array(
 									'small'	=> !empty($res['goods_thumb']) ? RC_Upload::upload_url($res['goods_thumb']) : '',
 									'thumb'	=> !empty($res['goods_img']) ? RC_Upload::upload_url($res['goods_img']) : '',
@@ -264,7 +270,7 @@ class detail_module extends api_front implements api_interface {
 					);
 				}
 			}
-		}
+		//}
 		
 		//配送费说明
 		$shipping_fee_desc = array(
@@ -285,7 +291,7 @@ class detail_module extends api_front implements api_interface {
 				'refund_status'				=> $refund_status,
 				'label_refund_status'		=> $label_refund_status,
 				'refund_goods_amount'		=> price_format($refund_order_info['goods_amount']),
-				'shipping_fee'				=> price_format($refund_order_info['shipping_fee']),
+				//'shipping_fee'				=> price_format($refund_order_info['shipping_fee']),
 				'refund_total_amount'		=> price_format($refund_total_amount),
 				'reason'					=> $refund_order_info['reason'],
 				'user_address'				=> $user_address,
