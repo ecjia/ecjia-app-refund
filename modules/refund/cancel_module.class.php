@@ -94,13 +94,19 @@ class cancel_module extends api_front implements api_interface {
         );
         order_refund::refund_order_action($refund_order_action);
         //还原订单状态
-        $order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->selectRaw('order_status, shipping_status')->first();
+        $order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->selectRaw('order_status, shipping_status, pay_status')->first();
         if ($order_info['shipping_status'] == SS_SHIPPED) {
         	$data = array('order_status' => OS_SPLITED);
         }else{
         	$data = array('order_status' => OS_CONFIRMED);
         }
         RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->update($data);
+        
+        //订单操作记录log
+		order_refund::order_action($refund_info['order_id'], $data['order_status'], $order_info['shipping_status'], $order_info['pay_status'], '买家撤销退款申请', '买家');
+		//订单状态log记录
+		$pra = array('order_status' => '撤销退款申请', 'order_id' => $refund_info['order_id'], 'message' => '您已成功撤销退款申请！');
+		order_refund::order_status_log($pra);
         
         return array();
 	}
