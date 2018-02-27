@@ -145,7 +145,7 @@ class order_refund {
 	}
 	
 	/**
-	 * 获取某个订单的售后申请信息
+	 * 获取某个订单的售后申请信息（有效的，不含取消的）
 	 * @return  array
 	 */
 	public static function currorder_refund_info($order_id) {
@@ -321,7 +321,7 @@ class order_refund {
 	 * @return  array
 	 */
 	public static function get_refund_logs($refund_id) {
-		$logs = RC_DB::table('refund_order_action')->where('refund_id', $refund_id)->get();
+		$logs = RC_DB::table('refund_order_action')->where('refund_id', $refund_id)->orderBy('log_time', 'desc')->get();
 	
 		return $logs;
 	}
