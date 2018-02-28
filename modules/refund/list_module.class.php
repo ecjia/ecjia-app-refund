@@ -108,25 +108,22 @@ class list_module extends api_front implements api_interface {
 				
 				//售后申请退货商品信息
 				$goods_list = array();
-				//if ($rows['refund_type'] == 'return') {
-					$goods_data = order_refund::currorder_goods_list($rows['order_id']);
-					if (!empty($goods_data)) {
-						foreach ($goods_data as $res) {
-							$goods_list[] = array(
-									'goods_id' 		=> $res['goods_id'],
-									'name'	   		=> $res['goods_name'],
-									'goods_attr'	=> !empty($res['goods_attr']) ? $res['goods_attr'] : '',
-									'goods_number'	=> $res['goods_number'],
-									'img' 			=> array(
-															'small'	=> !empty($res['goods_thumb']) ? RC_Upload::upload_url($res['goods_thumb']) : '',
-															'thumb'	=> !empty($res['goods_img']) ? RC_Upload::upload_url($res['goods_img']) : '',
-															'url' 	=> !empty($res['original_img']) ? RC_Upload::upload_url($res['original_img']) : '',
-														),
-							);
-							$total_goods_number += $res['send_number'];
-						}
+				$goods_data = order_refund::currorder_goods_list($rows['order_id']);
+				if (!empty($goods_data)) {
+					foreach ($goods_data as $res) {
+						$goods_list[] = array(
+								'goods_id' 		=> $res['goods_id'],
+								'name'	   		=> $res['goods_name'],
+								'goods_attr'	=> !empty($res['goods_attr']) ? $res['goods_attr'] : '',
+								'goods_number'	=> $res['goods_number'],
+								'img' 			=> array(
+														'small'	=> !empty($res['goods_thumb']) ? RC_Upload::upload_url($res['goods_thumb']) : '',
+														'thumb'	=> !empty($res['goods_img']) ? RC_Upload::upload_url($res['goods_img']) : '',
+														'url' 	=> !empty($res['original_img']) ? RC_Upload::upload_url($res['original_img']) : '',
+													),
+						);
 					}
-				//}
+				}
 				//退款总金额 
 				$order_info = RC_DB::table('order_info')->where('order_id', $rows['order_id'])->selectRaw('order_status, shipping_status, pay_status')->first();
 				//配送费：已发货的不退，未发货的退
@@ -147,11 +144,20 @@ class list_module extends api_front implements api_interface {
 					'service_status_code'		=> $rows['service_status_code'],
 					'label_service_status'		=> $rows['label_service_status'],
 					'formated_add_time'			=> $rows['formated_add_time'],
-					'total_goods_number'		=> empty($total_goods_number) ? 0 : $total_goods_number,
 					'total_refund_amount'		=> price_format($total_refund_amount),
 					'latest_refund_log'			=> $log_data,
 					'goods_list'				=> $goods_list,
 				);
+			}
+			
+			if (!empty($arr)) {
+				foreach ($arr as $k => $v) {
+					if (!empty($v['goods_list'])) {
+						foreach ($v['goods_list'] as $vv) {
+							$arr[$k]['total_goods_number'] += $vv['goods_number'];
+						}
+					}
+				}
 			}
 		}
 		return array('data' => $arr, 'pager' => $refund_order_data['page']);
