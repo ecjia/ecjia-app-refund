@@ -166,7 +166,10 @@ class order_refund {
 		$list = array();
 	
 		if (!empty($order_id)) {
-			$list = RC_DB::table('order_goods')->where('order_id', $order_id)->get();
+			$list = RC_DB::table('order_goods as og')
+			->leftJoin('goods as g', RC_DB::raw('og.goods_id'), '=', RC_DB::raw('g.goods_id'))
+			->selectRaw('og.*, g.goods_thumb, g.goods_img, g.original_img')
+			->where(RC_DB::raw('og.order_id'), $order_id)->get();
 		}
 	
 		return $list;
