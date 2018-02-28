@@ -77,14 +77,14 @@
 				<p>申请人：{$refund_info.user_name}</p>
 				<p>退款原因：{if $refund_info.refund_reason eq 1}暂时不想购买了{elseif $refund_info.refund_reason eq 2}忘记使⽤优惠券{elseif $refund_info.refund_reason eq 3}商家缺货， 不想买了{elseif $refund_info.refund_reason eq 4}商家服务态度有问题{elseif $refund_info.refund_reason eq 5}商家长时间未发货{elseif $refund_info.refund_reason eq 6}信息填写有误， 重新购买{else}暂无原因{/if}</p>
 				<p>退款金额：{$refund_info.money_paid}</p>
-				<p>退款说明：{$refund_info.refund_content}</p>
+				<p>退款说明：{if $refund_info.refund_content}{$refund_info.refund_content}{else}暂无{/if}</p>
 				<p>上传凭证： 
 					{if $refund_img_list}
 					<!-- {foreach from=$refund_img_list item=list} -->
 	                <img src="{RC_Upload::upload_url()}/{$list.file_path}">
 	                <!-- {/foreach} -->
 	                {else}
-	            	<img src="{RC_Uri::admin_url('statics/images/nopic.png')}">
+	            	暂无
 					{/if}
                 </p>
 			</div>

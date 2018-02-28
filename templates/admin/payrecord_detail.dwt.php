@@ -43,7 +43,7 @@
 				
 				<div class="control-group">
 					<label class="control-label">退款说明：</label>
-					<div class="controls l_h30">{$refund_info.refund_content}</div>
+					<div class="controls l_h30">{if $refund_info.refund_content}{$refund_info.refund_content}{else}暂无{/if}</div>
 				</div>
 				
 				<div class="control-group formSep">
@@ -54,7 +54,7 @@
 			            <img src="{RC_Upload::upload_url()}/{$list.file_path}">
 			            <!-- {/foreach} -->
 			            {else}
-			        	<img src="{RC_Uri::admin_url('statics/images/nopic.png')}">
+			        	暂无
 						{/if}
 					</div>
 				</div>
