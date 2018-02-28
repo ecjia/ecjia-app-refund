@@ -115,14 +115,14 @@ class payrecord_module extends api_front implements api_interface {
 		
 		/*退款状态处理*/
 		if ($refund_order_info['refund_status'] == '1') {
-			$refund_status 		= 'await_check';
-			$label_refund_status= '待审核';
+			$refund_status 		= 'checked';
+			$label_refund_status= '已审核';
 		} elseif ($refund_order_info['refund_status'] == '2') {
 			$refund_status 		= 'refunded';
 			$label_refund_status= '已退款';
 		} else {
-			$refund_status 		= 'checked';
-			$label_refund_status= '已审核';
+			$refund_status 		= 'await_check';
+			$label_refund_status= '待审核';
 		}
 		
 		//退款进度日志

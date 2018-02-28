@@ -193,7 +193,6 @@ class apply_module extends api_front implements api_interface {
 					'order_amount'	=> $order_info['order_amount'],
 					'money_paid'	=> $order_info['money_paid'],
 					'status'		=> 0,
-					'refund_status'	=> Ecjia\App\Refund\RefundStatus::UNTRANSFER,
 					'refund_content'=> $refund_description,
 					'refund_reason'	=> $reason_id,
 					'return_status'	=> $return_status,
