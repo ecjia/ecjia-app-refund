@@ -120,6 +120,10 @@ class admin_payrecord extends ecjia_admin {
 		$refund_info = RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
 		$this->assign('refund_info', $refund_info);
 		
+		//获取用户退货退款原因
+		$reason_list = $this->get_reason_list();
+		$this->assign('reason_list', $reason_list);
+		
 		//退款上传凭证素材
 		$refund_img_list = RC_DB::table('term_attachment')->where('object_id', $refund_info['refund_id'])->where('object_app', 'ecjia.refund')->where('object_group','refund')->select('file_path')->get();
 		$this->assign('refund_img_list', $refund_img_list);
@@ -179,7 +183,6 @@ class admin_payrecord extends ecjia_admin {
 		} else {
 			$return_status = 3;
 		}
-		
 		//用户表和资金变动表变动
 		$user_id = RC_DB::TABLE('refund_order')->where('refund_id', $refund_id)->pluck('user_id');
 		if ($_POST['back_type'] == 'surplus') {//退回余额  （消费积分和金额）
@@ -198,10 +201,11 @@ class admin_payrecord extends ecjia_admin {
 			//更新用户表
 			$step = $back_money_paid." ,pay_points = pay_points + ('$back_integral')";
 			RC_DB::table('users')->where('user_id', $user_id)->increment('user_money', $step);
-		} else {//TODO
-			$action_note = '退款金额已原路退回'.$back_money_paid.'元，退回积分为：'.$back_integral;
-			return $this->showmessage('抱歉！目前还不支持原路退回', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-		}
+		} 
+// 		else {//TODO
+// 			$action_note = '退款金额已原路退回'.$back_money_paid.'元，退回积分为：'.$back_integral;
+// 			return $this->showmessage('抱歉！目前还不支持原路退回', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+// 		}
 		
 		//更新打款表
 		$data = array(
@@ -310,6 +314,29 @@ class admin_payrecord extends ecjia_admin {
 			}
 		}
 		return array('list' => $list, 'filter' => $filter, 'page' => $page->show(5), 'desc' => $page->page_desc(), 'count' => $refund_count);
+	}
+	
+
+	/**
+	 * 获取退货原因列表
+	 */
+	private function get_reason_list(){
+		$reason_list = array(
+			'1'	=> '暂时不想购买了',
+			'2' => '忘记使用优惠券',
+			'3' => '商家缺货，不想买了',
+			'4' => '商家服务态度有问题',
+			'5' => '商家长时间未发货',
+			'6' => '信息填写有误，重新购买',
+
+			'11' => '商品质量问题',
+			'12' => '发错货',
+			'13' => '缺斤少两',
+			'14' => '外表损伤（包装，商品等）',
+			'15' => '未在时效内送达',
+			'16' => '误购'
+		);
+		return $reason_list;
 	}
 }
 
