@@ -37,6 +37,7 @@
 					<!-- {foreach from=$reason_list key=key item=val} -->
 	 				{if $key eq $refund_info.refund_reason}{$val}{/if}
 					<!-- {/foreach} -->
+					</div>
 				</div>
 				
 				<div class="control-group">
