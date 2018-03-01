@@ -135,7 +135,7 @@
                 <hr>
                 <p>收货人：{$order_info.consignee}<span><a id="address-info" href="javascript:;">查看更多</a></span></p>
                 <div class="address-info" style="display: none;">
-	                <p>收货地址：{$order_info.province}{$order_info.city}{$order_info.district}{$order_info.street}</p>
+	                <p>收货地址：{$order_info.province}{$order_info.city}{$order_info.district}{$order_info.street}{$order_info.address}</p>
 	                <p>联系电话：{$order_info.mobile}</p>
                 </div>
 	        </div>

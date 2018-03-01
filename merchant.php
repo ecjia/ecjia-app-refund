@@ -121,8 +121,8 @@ class merchant extends ecjia_merchant {
 		$refund_img_list = RC_DB::table('term_attachment')->where('object_id', $refund_info['refund_id'])->where('object_app', 'ecjia.refund')->where('object_group','refund')->select('file_path')->get();
 		$this->assign('refund_img_list', $refund_img_list);
 		
-		//退款有关下单信息以及商品信息
-		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->select('shipping_fee','order_sn','money_paid','pay_name','pay_time','add_time','consignee','province','city','district','street','mobile')->first();
+		//退款有关下单信息
+		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->select('shipping_fee','order_sn','money_paid','pay_name','pay_time','add_time','consignee','province','city','district','street','address','mobile')->first();
 		$order_info['province']	= ecjia_region::getRegionName($order_info['province']);
 		$order_info['city']     = ecjia_region::getRegionName($order_info['city']);
 		$order_info['district'] = ecjia_region::getRegionName($order_info['district']);
@@ -135,6 +135,7 @@ class merchant extends ecjia_merchant {
 		}
 		$this->assign('order_info', $order_info);
 		
+		//送货商品信息
 		$goods_list = RC_DB::TABLE('order_goods')->where('order_id', $refund_info['order_id'])->select('goods_id', 'goods_name' ,'goods_price','goods_number')->get();
 		foreach ($goods_list as $key => $val) {
 			$goods_list[$key]['image']  = RC_DB::TABLE('goods')->where('goods_id', $val['goods_id'])->pluck('goods_thumb');
@@ -289,7 +290,7 @@ class merchant extends ecjia_merchant {
 		$this->assign('refund_img_list', $refund_img_list);
 		
 		//退款有关下单信息
-		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->select('shipping_fee','order_sn','money_paid','pay_name','pay_time','add_time','consignee','province','city','district','street','mobile')->first();
+		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->select('shipping_fee','order_sn','money_paid','pay_name','pay_time','add_time','consignee','province','city','district','street','address','mobile')->first();
 		$order_info['province']	= ecjia_region::getRegionName($order_info['province']);
 		$order_info['city']     = ecjia_region::getRegionName($order_info['city']);
 		$order_info['district'] = ecjia_region::getRegionName($order_info['district']);
@@ -302,11 +303,10 @@ class merchant extends ecjia_merchant {
 		}
 		$this->assign('order_info', $order_info);
 		
-		//back_goods表商品信息
-		$goods_list	= RC_DB::table('back_goods')->where('back_id', $refund_info['refund_id'])->get();
+		//送货商品
+		$goods_list = RC_DB::TABLE('order_goods')->where('order_id', $refund_info['order_id'])->select('goods_id', 'goods_name' ,'goods_price','goods_number')->get();
 		foreach ($goods_list as $key => $val) {
 			$goods_list[$key]['image']  = RC_DB::TABLE('goods')->where('goods_id', $val['goods_id'])->pluck('goods_thumb');
-			$goods_list[$key]['shop_price']  = RC_DB::TABLE('goods')->where('goods_id', $val['goods_id'])->pluck('shop_price');
 		}
 		$disk = RC_Filesystem::disk();
 		foreach ($goods_list as $key => $val) {
@@ -317,6 +317,22 @@ class merchant extends ecjia_merchant {
 			}
 		}
 		$this->assign('goods_list', $goods_list);
+		
+		//退货商品
+		$refund_list = RC_DB::table('back_goods')->where('back_id', $refund_info['refund_id'])->get();
+		foreach ($refund_list as $key => $val) {
+			$refund_list[$key]['image']  = RC_DB::TABLE('goods')->where('goods_id', $val['goods_id'])->pluck('goods_thumb');
+			$refund_list[$key]['shop_price']  = RC_DB::TABLE('goods')->where('goods_id', $val['goods_id'])->pluck('shop_price');
+		}
+		$disk = RC_Filesystem::disk();
+		foreach ($refund_list as $key => $val) {
+			if (!$disk->exists(RC_Upload::upload_path($val['image'])) || empty($val['image'])) {
+				$refund_list[$key]['image'] = RC_Uri::admin_url('statics/images/nopic.png');
+			} else {
+				$refund_list[$key]['image'] = RC_Upload::upload_url($val['image']);
+			}
+		}
+		$this->assign('refund_list', $refund_list);
 		
 		//商家审核操作记录
 		$action_mer_msg = RC_DB::TABLE('refund_order_action')->where('refund_id', $refund_info['refund_id'])->select('status','refund_status','return_status','action_note','action_user_name','log_time')->get();
@@ -344,8 +360,9 @@ class merchant extends ecjia_merchant {
 		$this->assign('payrecord_info', $payrecord_info);
 			
 		//读取有关返回方式的信息（店长信息和店铺信息）
-		$return_shipping_content['staff_name']  = $_SESSION['staff_name'];
-		$return_shipping_content['staff_mobile']= $_SESSION['staff_mobile'];
+		$Manager = RC_DB::table('staff_user')->where('store_id', $_SESSION['store_id'])->where('parent_id', 0)->first();
+		$return_shipping_content['staff_name']  = $Manager['name'];
+		$return_shipping_content['staff_mobile']= $Manager['mobile'];
 		$return_shipping_content['store_name']  = $_SESSION['store_name'];
 		$store_info = RC_DB::TABLE('store_franchisee')->where('store_id', $_SESSION['store_id'])->select('province', 'city', 'district', 'street')->first();
 		$return_shipping_content['address']	= ecjia_region::getRegionName($store_info['province']).ecjia_region::getRegionName($store_info['city']).ecjia_region::getRegionName($store_info['district']).ecjia_region::getRegionName($store_info['street']);

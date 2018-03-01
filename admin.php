@@ -146,7 +146,7 @@ class admin extends ecjia_admin {
 		$this->assign('mer_info', $mer_info);
 		
 		
-		//退款有关下单信息以及商品信息
+		//退款有关下单信
 		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->select('shipping_fee','order_sn','money_paid','pay_name','pay_time','add_time','consignee','province','city','district','street','mobile')->first();
 		$order_info['province']	= ecjia_region::getRegionName($order_info['province']);
 		$order_info['city']     = ecjia_region::getRegionName($order_info['city']);
@@ -160,6 +160,7 @@ class admin extends ecjia_admin {
 		}
 		$this->assign('order_info', $order_info);
 	
+		//送货商品
 		$goods_list = RC_DB::TABLE('order_goods')->where('order_id', $refund_info['order_id'])->select('goods_id', 'goods_name' ,'goods_price','goods_number')->get();
 		foreach ($goods_list as $key => $val) {
 			$goods_list[$key]['image']  = RC_DB::TABLE('goods')->where('goods_id', $val['goods_id'])->pluck('goods_thumb');
@@ -274,11 +275,10 @@ class admin extends ecjia_admin {
 		}
 		$this->assign('order_info', $order_info);
 		
-		//back_goods表商品信息
-		$goods_list	= RC_DB::table('back_goods')->where('back_id', $refund_info['refund_id'])->get();
+		//送货商品
+		$goods_list = RC_DB::TABLE('order_goods')->where('order_id', $refund_info['order_id'])->select('goods_id', 'goods_name' ,'goods_price','goods_number')->get();
 		foreach ($goods_list as $key => $val) {
 			$goods_list[$key]['image']  = RC_DB::TABLE('goods')->where('goods_id', $val['goods_id'])->pluck('goods_thumb');
-			$goods_list[$key]['shop_price']  = RC_DB::TABLE('goods')->where('goods_id', $val['goods_id'])->pluck('shop_price');
 		}
 		$disk = RC_Filesystem::disk();
 		foreach ($goods_list as $key => $val) {
@@ -289,6 +289,22 @@ class admin extends ecjia_admin {
 			}
 		}
 		$this->assign('goods_list', $goods_list);
+		
+		//退货商品
+		$refund_list = RC_DB::table('back_goods')->where('back_id', $refund_info['refund_id'])->get();
+		foreach ($refund_list as $key => $val) {
+			$refund_list[$key]['image']  = RC_DB::TABLE('goods')->where('goods_id', $val['goods_id'])->pluck('goods_thumb');
+			$refund_list[$key]['shop_price']  = RC_DB::TABLE('goods')->where('goods_id', $val['goods_id'])->pluck('shop_price');
+		}
+		$disk = RC_Filesystem::disk();
+		foreach ($refund_list as $key => $val) {
+			if (!$disk->exists(RC_Upload::upload_path($val['image'])) || empty($val['image'])) {
+				$refund_list[$key]['image'] = RC_Uri::admin_url('statics/images/nopic.png');
+			} else {
+				$refund_list[$key]['image'] = RC_Upload::upload_url($val['image']);
+			}
+		}
+		$this->assign('refund_list', $refund_list);
 		
 		//商家审核操作记录
 		$action_mer_msg = RC_DB::TABLE('refund_order_action')->where('refund_id', $refund_info['refund_id'])->select('status','refund_status','return_status','action_note','action_user_name','log_time')->get();
