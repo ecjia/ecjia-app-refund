@@ -111,6 +111,7 @@
         <div class="panel panel-body">
             <h4>商品相关信息</h4>
            	<div class="goods-content">
+           	
            		<!-- {foreach from=$goods_list item=list} -->
            		<div class="goods-info">
            			<div class="goods-img">
@@ -121,7 +122,8 @@
 	           			 <p>¥&nbsp;{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.goods_number}</p>
 	           		</div>
            		</div>
-           		 <!-- {/foreach} -->
+           		<!-- {/foreach} -->
+           		
            		<hr>
                 <p>运费：¥&nbsp;{$order_info.shipping_fee}</p>
                 <p>订单总额：¥&nbsp;{$order_info.money_paid}</p>

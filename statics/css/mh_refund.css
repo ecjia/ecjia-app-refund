@@ -52,6 +52,9 @@
 	display: inline-block;
 	margin-left:10px;
 }
+.goods-desc p{
+	width:250px;
+}
 .goods-content span {
     float: right;
 }
