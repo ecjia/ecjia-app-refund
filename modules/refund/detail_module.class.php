@@ -113,7 +113,7 @@ class detail_module extends api_front implements api_interface {
 		
 		
 		//用户地址
-		$order_info = RC_DB::table('order_info')->where('order_id', $refund_order_info['order_id'])->selectRaw('city, district, street, address, order_status, pay_status, shipping_status')->first();
+		$order_info = RC_DB::table('order_info')->where('order_id', $refund_order_info['order_id'])->selectRaw('consignee, mobile, city, district, street, address, order_status, pay_status, shipping_status')->first();
 		$user_address = ecjia_region::getRegionName($order_info['city']).ecjia_region::getRegionName($order_info['district']).ecjia_region::getRegionName($order_info['street']).$order_info['address'];
 		//应退总金额
 		//配送费：已发货的不退，未发货的退
@@ -135,7 +135,10 @@ class detail_module extends api_front implements api_interface {
 				$home_data = array(
 						'return_way_code' => 'home',
 						'return_way_name' => '上门取件',
-						'expect_pickup_date' => array('dates' => $dates, 'times' => $times),
+						'pickup_address'  => $user_address,
+						'contact_name'	  => $order_info['consignee'],
+						'contact_phone'   => $order_info['mobile'],
+						'expect_pickup_date' => array('dates' => $dates, 'times' => $times)
 				);
 				$home = $home_data;
 			}
@@ -258,10 +261,12 @@ class detail_module extends api_front implements api_interface {
 			if (!empty($goods_data)) {
 				foreach ($goods_data as $res) {
 					$goods_list[] = array(
-							'goods_id' 		=> $res['goods_id'],
-							'name'	   		=> $res['goods_name'],
-							'goods_attr'	=> !empty($res['goods_attr']) ? $res['goods_attr'] : '',
-							'goods_number'	=> $res['goods_number'],
+							'goods_id' 				=> $res['goods_id'],
+							'name'	   				=> $res['goods_name'],
+							'goods_price'			=> $res['goods_price'],
+							'formated_goods_price' 	=> price_format($res['goods_price']),
+							'goods_attr'			=> !empty($res['goods_attr']) ? $res['goods_attr'] : '',
+							'goods_number'			=> $res['goods_number'],
 							'img' 			=> array(
 									'small'	=> !empty($res['goods_thumb']) ? RC_Upload::upload_url($res['goods_thumb']) : '',
 									'thumb'	=> !empty($res['goods_img']) ? RC_Upload::upload_url($res['goods_img']) : '',
@@ -294,6 +299,7 @@ class detail_module extends api_front implements api_interface {
 				//'shipping_fee'				=> price_format($refund_order_info['shipping_fee']),
 				'refund_total_amount'		=> price_format($refund_total_amount),
 				'reason'					=> $refund_order_info['reason'],
+				'refund_desc'				=> $refund_order_info['refund_content'],
 				'user_address'				=> $user_address,
 				'shipping_fee_desc'			=> $shipping_fee_desc,
 				'return_images'				=> $return_images,
