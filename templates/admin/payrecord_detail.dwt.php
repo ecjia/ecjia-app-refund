@@ -33,7 +33,10 @@
 				
 				<div class="control-group">
 					<label class="control-label">退款原因：</label>
-					<div class="controls l_h30">{if $refund_info.refund_reason eq 1}暂时不想购买了{elseif $refund_info.refund_reason eq 2}忘记使⽤优惠券{elseif $refund_info.refund_reason eq 3}商家缺货， 不想买了{elseif $refund_info.refund_reason eq 4}商家服务态度有问题{elseif $refund_info.refund_reason eq 5}商家长时间未发货{elseif $refund_info.refund_reason eq 6}信息填写有误， 重新购买{else}暂无原因{/if}</div>
+					<div class="controls l_h30">
+					<!-- {foreach from=$reason_list key=key item=val} -->
+	 				{if $key eq $refund_info.refund_reason}{$val}{/if}
+					<!-- {/foreach} -->
 				</div>
 				
 				<div class="control-group">
