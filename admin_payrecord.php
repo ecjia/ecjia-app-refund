@@ -183,7 +183,6 @@ class admin_payrecord extends ecjia_admin {
 		} else {
 			$return_status = 3;
 		}
-		
 		//用户表和资金变动表变动
 		$user_id = RC_DB::TABLE('refund_order')->where('refund_id', $refund_id)->pluck('user_id');
 		if ($_POST['back_type'] == 'surplus') {//退回余额  （消费积分和金额）
@@ -202,10 +201,11 @@ class admin_payrecord extends ecjia_admin {
 			//更新用户表
 			$step = $back_money_paid." ,pay_points = pay_points + ('$back_integral')";
 			RC_DB::table('users')->where('user_id', $user_id)->increment('user_money', $step);
-		} else {//TODO
-			$action_note = '退款金额已原路退回'.$back_money_paid.'元，退回积分为：'.$back_integral;
-			return $this->showmessage('抱歉！目前还不支持原路退回', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-		}
+		} 
+// 		else {//TODO
+// 			$action_note = '退款金额已原路退回'.$back_money_paid.'元，退回积分为：'.$back_integral;
+// 			return $this->showmessage('抱歉！目前还不支持原路退回', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+// 		}
 		
 		//更新打款表
 		$data = array(

@@ -78,17 +78,12 @@
 						<label class="control-label">退款方式：</label>
 						<div class="controls back-logo-wrap">
 						     <ul>
-						         <li class="back-logo active" data-type="original">
-						             <img src="{$original_img}">
-						             <img class="back-logo-select" src="{$selected_img}">
-						         </li>
-						         
-						         <li class="back-logo" data-type="surplus">
+						         <li class="back-logo active" data-type="surplus">
 						             <img src="{$surplus_img}">
 						             <img class="back-logo-select" src="{$selected_img}">
 						         </li>
 						     </ul>
-						     <input name="back_type" value="original" type="hidden">
+						     <input name="back_type" value="surplus" type="hidden">
 						</div>
 					</div>
 					
