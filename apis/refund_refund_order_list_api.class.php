@@ -63,9 +63,12 @@ class refund_refund_order_list_api extends Component_Event_Api {
 				if ($row['status'] == Ecjia\App\Refund\RefundStatus::CANCELED) {
 					$row['service_status_code'] = 'canceled';
 					$row['label_service_status']= '已取消';
-				} elseif ($row['status'] == Ecjia\App\Refund\RefundStatus::AGREE && $row['refund_status'] == Ecjia\App\Refund\RefundStatus::TRANSFERED) {
+				} elseif (($row['status'] == Ecjia\App\Refund\RefundStatus::AGREE && $row['refund_status'] == Ecjia\App\Refund\RefundStatus::TRANSFERED)) {
 					$row['service_status_code'] = 'refunded';
 					$row['label_service_status']= '已退款';
+				}elseif ($row['status'] == Ecjia\App\Refund\RefundStatus::REFUSED) {
+					$row['service_status_code'] = 'refused';
+					$row['label_service_status']= '已拒绝';
 				} else{
 					$row['service_status_code'] = 'going';
 					$row['label_service_status']= '进行中';
