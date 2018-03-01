@@ -119,7 +119,7 @@ class detail_module extends api_front implements api_interface {
 		//应退总金额
 		//配送费：已发货的不退，未发货的退
 		if ($order_info['shipping_status'] > SS_UNSHIPPED) {
-			$refund_total_amount  = ($refund_order_info['money_paid'] + $refund_order_info['surplus']) - ($refund_order_info['shipping_fee'] - $refund_order_info['pack_fee']);
+			$refund_total_amount  = ($refund_order_info['money_paid'] + $refund_order_info['surplus']) - ($refund_order_info['shipping_fee'] + $refund_order_info['pack_fee']);
 		} else {
 			$refund_total_amount  = $refund_order_info['money_paid'] + $refund_order_info['surplus'];
 		}
