@@ -62,10 +62,12 @@
                         <textarea class="form-control" id="action_note" name="action_note" style="margin-bottom: 10px;"></textarea>
                         <select name="mer_reply_content" id="mer_reply_content" class="form-control" >
 	                        <option value="">请选择……</option>
-							<option value="1">同意，对不起，由于我们的问题给您添麻烦了，我们会尽快处理您的申请！</option>
-							<option value="2">请选择以下快递方式，将发票和商品一并寄回，注明亲的详细地址和联系方式，结算好运费，我们收到后会尽快处理您的申请！</option>
-							<option value="3">亲，7天内是可以无条件退款，质量问题您退货单邮费是由我们为您承担，如果是非质量问题，您退回的邮费是由您承担的哦！</option>
-							<option value="4">不同意，经我们核实该订单不属于我们售后的范围，如有问题，请联系客服。</option>
+							<option value="1">审核通过</option>
+							<option value="2">审核通过，用户需写明退货信息，退回被损坏货品</option>
+							<option value="3">审核未通过，用户申请不符合退货退款要求</option>
+							<option value="4">退回货品已签收，等待平台退款</option>
+							<option value="5">退回货品未收到，暂不处理退款请求</option>
+							<option value="6">货品破损严重，拒绝签收</option>
 						</select>
 						<span class="help-block" style="margin-top: 50px;">可使用快捷用语</span>
                      </div>
