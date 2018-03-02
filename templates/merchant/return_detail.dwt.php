@@ -212,10 +212,22 @@
 		           	</div>
 	           		<div class="goods-desc">
 	           			 <p>{$list.goods_name}</p>
-	           			 <p>¥&nbsp;{$list.shop_price}&nbsp;&nbsp;&nbsp;x1</p>
+	           			 <p>¥&nbsp;{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.goods_number}</p>
 	           		</div>
            		</div>
-           		 <!-- {/foreach} -->
+           		<!-- {/foreach} -->
+           		<hr>
+           		<!-- {foreach from=$refund_list item=list} -->
+           		<div class="goods-info">
+           			<div class="goods-img">
+	           			<img src="{$list.image}">
+		           	</div>
+	           		<div class="goods-desc">
+	           			 <p>{$list.goods_name}</p>
+	           			 <p>¥&nbsp;{$list.shop_price}&nbsp;&nbsp;&nbsp;x{$list.send_number}</p>
+	           		</div>
+           		</div>
+           		<!-- {/foreach} -->
            		<hr>
                 <p>运费：¥&nbsp;{$order_info.shipping_fee}</p>
                 <p>订单总额：¥&nbsp;{$order_info.money_paid}</p>

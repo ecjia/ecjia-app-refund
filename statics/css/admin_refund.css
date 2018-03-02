@@ -177,13 +177,17 @@
 	display: inline-block;
 	margin-left:10px;
 }
+.goods-desc p{
+	width:250px;
+	margin: 3px 0 6px 0;
+}
 .goods-content span {
     float: right;
 }
 
 .goods-info{
-	height:50px;
-	margin-bottom:10px;
+	height: 55px;
+    margin-bottom: 15px;
 }
 
 
