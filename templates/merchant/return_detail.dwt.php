@@ -203,7 +203,7 @@
     
     <div class="col-lg-4">
         <div class="panel panel-body">
-            <h4>商品相关信息</h4>
+            <h4>已收货商品</h4>
            	<div class="goods-content">
            		<!-- {foreach from=$goods_list item=list} -->
            		<div class="goods-info">
@@ -213,18 +213,6 @@
 	           		<div class="goods-desc">
 	           			 <p>{$list.goods_name}</p>
 	           			 <p>¥&nbsp;{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.goods_number}</p>
-	           		</div>
-           		</div>
-           		<!-- {/foreach} -->
-           		<hr>
-           		<!-- {foreach from=$refund_list item=list} -->
-           		<div class="goods-info">
-           			<div class="goods-img">
-	           			<img src="{$list.image}">
-		           	</div>
-	           		<div class="goods-desc">
-	           			 <p>{$list.goods_name}</p>
-	           			 <p>¥&nbsp;{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.send_number}</p>
 	           		</div>
            		</div>
            		<!-- {/foreach} -->
@@ -244,6 +232,25 @@
 	                <p>收货地址：{$order_info.province}{$order_info.city}{$order_info.district}{$order_info.street}{$order_info.address}</p>
 	                <p>联系电话：{$order_info.mobile}</p>
                 </div>
+	        </div>
+        </div>
+	</div>
+	
+	<div class="col-lg-4">
+        <div class="panel panel-body">
+            <h4>申请退货商品</h4>
+           	<div class="goods-content">
+           		<!-- {foreach from=$refund_list item=list} -->
+           		<div class="goods-info">
+           			<div class="goods-img">
+	           			<img src="{$list.image}">
+		           	</div>
+	           		<div class="goods-desc">
+	           			 <p>{$list.goods_name}</p>
+	           			 <p>¥&nbsp;{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.send_number}</p>
+	           		</div>
+           		</div>
+           		<!-- {/foreach} -->
 	        </div>
         </div>
 	</div>

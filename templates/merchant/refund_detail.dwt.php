@@ -109,7 +109,7 @@
     
     <div class="col-lg-4">
         <div class="panel panel-body">
-            <h4>商品相关信息</h4>
+            <h4>已收货商品</h4>
            	<div class="goods-content">
            		<!-- {foreach from=$goods_list item=list} -->
            		<div class="goods-info">

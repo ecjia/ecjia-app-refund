@@ -166,7 +166,7 @@
 			<div class="accordion-group">
 				<div class="accordion-heading">
 					<a class="accordion-toggle collapsed move-mod-head" data-toggle="collapse" data-target="#refund_goods_content">
-						<strong>商品相关信息</strong>
+						<strong>已收货商品</strong>
 					</a>
 				</div>
 				<div class="accordion-body in collapse reply_admin_list" id="refund_goods_content">
@@ -180,18 +180,6 @@
 				           		<div class="goods-desc">
 				           			 <p>{$list.goods_name}</p>
 				           			 <p>¥&nbsp;{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.goods_number}</p>
-				           		</div>
-			           		</div>
-			           		 <!-- {/foreach} -->
-			           		<hr>
-			           		<!-- {foreach from=$refund_list item=list} -->
-			           		<div class="goods-info">
-			           			<div class="goods-img">
-				           			<img src="{$list.image}">
-					           	</div>
-				           		<div class="goods-desc">
-				           			 <p>{$list.goods_name}</p>
-				           			 <p>¥&nbsp;{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.send_number}</p>
 				           		</div>
 			           		</div>
 			           		<!-- {/foreach} -->
@@ -211,6 +199,33 @@
 				                <p>收货地址：{$order_info.province}{$order_info.city}{$order_info.district}{$order_info.street}</p>
 				                <p>联系电话：{$order_info.mobile}</p>
 			                </div>
+				        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="foldable-list move-mod-group" >
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle collapsed move-mod-head" data-toggle="collapse" data-target="#refund_goods_content2">
+						<strong>申请退货商品</strong>
+					</a>
+				</div>
+				<div class="accordion-body in collapse reply_admin_list" id="refund_goods_content2">
+					<div class="accordion-inner">
+					 	<div class="goods-content">
+			           		<!-- {foreach from=$refund_list item=list} -->
+			           		<div class="goods-info">
+			           			<div class="goods-img">
+				           			<img src="{$list.image}">
+					           	</div>
+				           		<div class="goods-desc">
+				           			 <p>{$list.goods_name}</p>
+				           			 <p>¥&nbsp;{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.send_number}</p>
+				           		</div>
+			           		</div>
+			           		<!-- {/foreach} -->
 				        </div>
 					</div>
 				</div>

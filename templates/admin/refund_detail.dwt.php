@@ -144,7 +144,7 @@
 			<div class="accordion-group">
 				<div class="accordion-heading">
 					<a class="accordion-toggle collapsed move-mod-head" data-toggle="collapse" data-target="#refund_goods_content">
-						<strong>商品相关信息</strong>
+						<strong>已收货商品</strong>
 					</a>
 				</div>
 				<div class="accordion-body in collapse reply_admin_list" id="refund_goods_content">
