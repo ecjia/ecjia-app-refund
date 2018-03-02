@@ -192,6 +192,7 @@ class merchant extends ecjia_merchant {
 			$status = 1;
 			$refund_status = 1;
 			$refund_info = RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
+			$payment_record_id = RC_DB::TABLE('payment_record')->where('order_sn', $refund_info['order_sn'])->pluck('id');
 			$data = array(
 				'store_id'	=>	$_SESSION['store_id'],
 				'order_id'	=>	$refund_info['order_id'],
@@ -216,7 +217,7 @@ class merchant extends ecjia_merchant {
 				'back_inv_tax'			=> $refund_info['inv_tax'],
 				'back_order_amount'		=> $refund_info['order_amount'],
 				'back_money_paid'		=> $refund_info['money_paid'],
-				'payment_record_id'		=> '',//流水账
+				'payment_record_id'		=> $payment_record_id,
 				'add_time'	=> RC_Time::gmtime()
 			);
 			RC_DB::table('refund_payrecord')->insertGetId($data);

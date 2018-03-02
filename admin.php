@@ -133,9 +133,9 @@ class admin extends ecjia_admin {
 		$this->assign('refund_img_list', $refund_img_list);
 	
 		//店铺信息
-		$store_info = RC_DB::TABLE('store_franchisee')->where('store_id', $refund_info['store_id'])->select('merchants_name','province','city','district','street')->first();  
+		$store_info = RC_DB::TABLE('store_franchisee')->where('store_id', $refund_info['store_id'])->select('merchants_name','province','city','district','street','address')->first();  
 		$mer_info['merchants_name'] = $store_info['merchants_name'];
-		$mer_info['address'] = ecjia_region::getRegionName($store_info['province']).ecjia_region::getRegionName($store_info['city']).ecjia_region::getRegionName($store_info['district']).ecjia_region::getRegionName($store_info['street']);
+		$mer_info['address'] = ecjia_region::getRegionName($store_info['province']).ecjia_region::getRegionName($store_info['city']).ecjia_region::getRegionName($store_info['district']).ecjia_region::getRegionName($store_info['street']).$store_info['address'];
 		$shop_trade_time = RC_DB::table('merchants_config')->where('store_id', $refund_info['store_id'])->where('code', 'shop_trade_time')->pluck('value');
 		$mer_info['shop_trade_time'] = unserialize($shop_trade_time);
 		$mer_info['img'] = 	RC_DB::table('merchants_config')->where('store_id',$refund_info['store_id'])->where('code', 'shop_logo')->pluck('value');
@@ -249,9 +249,9 @@ class admin extends ecjia_admin {
 		$this->assign('refund_img_list', $refund_img_list);
 		
 		//店铺信息
-		$store_info = RC_DB::TABLE('store_franchisee')->where('store_id', $refund_info['store_id'])->select('merchants_name','province','city','district','street')->first();
+		$store_info = RC_DB::TABLE('store_franchisee')->where('store_id', $refund_info['store_id'])->select('merchants_name','province','city','district','street','address')->first();
 		$mer_info['merchants_name'] = $store_info['merchants_name'];
-		$mer_info['address'] = ecjia_region::getRegionName($store_info['province']).ecjia_region::getRegionName($store_info['city']).ecjia_region::getRegionName($store_info['district']).ecjia_region::getRegionName($store_info['street']);
+		$mer_info['address'] = ecjia_region::getRegionName($store_info['province']).ecjia_region::getRegionName($store_info['city']).ecjia_region::getRegionName($store_info['district']).ecjia_region::getRegionName($store_info['street']).$store_info['address'];
 		$shop_trade_time = RC_DB::table('merchants_config')->where('store_id', $refund_info['store_id'])->where('code', 'shop_trade_time')->pluck('value');
 		$mer_info['shop_trade_time'] = unserialize($shop_trade_time);
 		$mer_info['img'] = 	RC_DB::table('merchants_config')->where('store_id',$refund_info['store_id'])->where('code', 'shop_logo')->pluck('value');

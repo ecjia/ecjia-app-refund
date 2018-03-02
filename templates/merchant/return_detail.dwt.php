@@ -122,7 +122,7 @@
 							<option value="3">亲，7天内是可以无条件退款，质量问题您退货单邮费是由我们为您承担，如果是非质量问题，您退回的邮费是由您承担的哦！</option>
 							<option value="4">不同意，经我们核实该订单不属于我们售后的范围，如有问题，请联系客服。</option>
 						  </select>
-						  <span class="help-block">可使用快捷用语</span>
+						  <span class="help-block" style="margin-top: 50px;">可使用快捷用语</span>
                      </div>
                  </div>
 				 <div class="mer-btn">
@@ -151,7 +151,7 @@
 							<option value="3">商品未收到，请您确认快递信息是否正确。</option>
 							<option value="4">亲，您的包裹我们还没有收到呢，我们会联系物流查询一下具体是什么原因异常，请耐心等待！</option>
 						  </select>
-						  <span class="help-block">可使用快捷用语</span>
+						  <span class="help-block" style="margin-top: 50px;">可使用快捷用语</span>
                      </div>
                  </div>
 				 <div class="mer-btn">
