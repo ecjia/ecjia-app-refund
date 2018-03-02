@@ -322,7 +322,7 @@ class merchant extends ecjia_merchant {
 		$refund_list = RC_DB::table('back_goods')->where('back_id', $refund_info['refund_id'])->get();
 		foreach ($refund_list as $key => $val) {
 			$refund_list[$key]['image']  = RC_DB::TABLE('goods')->where('goods_id', $val['goods_id'])->pluck('goods_thumb');
-			$refund_list[$key]['goods_price']  = RC_DB::TABLE('order_goods')->where('goods_id', $val['goods_id'])->pluck('goods_price');
+			$refund_list[$key]['goods_price']  = RC_DB::TABLE('order_goods')->where('goods_id', $val['goods_id'])->where('order_id', $refund_info['order_id'])->pluck('goods_price');
 		}
 		$disk = RC_Filesystem::disk();
 		foreach ($refund_list as $key => $val) {
