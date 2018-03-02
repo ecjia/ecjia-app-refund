@@ -66,7 +66,8 @@ class cancel_module extends api_front implements api_interface {
 			return new ecjia_error('invalid_parameter', RC_Lang::get('orders::order.invalid_parameter'));
 		}
 		
-		$refund_info = RC_DB::table('refund_order')->where('refund_sn', $refund_sn)->first();
+		RC_Loader::load_app_class('order_refund', 'refund', false);
+		$refund_info = order_refund::get_refundorder_detail(array('refund_sn' => $refund_sn));
 		if (empty($refund_info)) {
 			return new ecjia_error('not_exists_info', '不存在的信息！');
 		}

@@ -68,7 +68,8 @@ class shop_module extends api_front implements api_interface {
 			return new ecjia_error('invalid_parameter', RC_Lang::get('orders::order.invalid_parameter'));
 		}
 		
-		$refund_info = RC_DB::table('refund_order')->where('refund_sn', $refund_sn)->first();
+		RC_Loader::load_app_class('order_refund', 'refund', false);
+		$refund_info = order_refund::get_refundorder_detail(array('refund_sn' => $refund_sn));
 		if (empty($refund_info)) {
 			return new ecjia_error('not_exists_info', '不存在的信息！');
 		}
@@ -108,6 +109,9 @@ class shop_module extends api_front implements api_interface {
         $shop = serialize($shop);
         $update_data = array('return_shipping_type' => 'shop', 'return_shipping_value' => $shop, 'return_status' => 2);
        	RC_DB::table('refund_order')->where('refund_sn', $refund_sn)->update($update_data);
+       	//订单状态log记录
+       	$pra = array('order_status' => '返还退货商品', 'order_id' => $refund_info['order_id'], 'message' => '买家已返还退货商品！');
+       	order_refund::order_status_log($pra);
         
         return array();
 	}
