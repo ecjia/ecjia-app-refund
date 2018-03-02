@@ -185,7 +185,7 @@ class admin_payrecord extends ecjia_admin {
 		}
 		//用户表和资金变动表变动
 		$user_id = RC_DB::TABLE('refund_order')->where('refund_id', $refund_id)->pluck('user_id');
-		if ($_POST['back_type'] == 'surplus') {//退回余额  （消费积分和金额）
+		if ($back_type == 'surplus') {//退回余额  （消费积分和金额）
 			$action_note = '退款金额已退回余额'.$back_money_paid.'元，退回积分为：'.$back_integral;
 			//更新帐户变动记录 
 			$account_log = array (
@@ -239,24 +239,18 @@ class admin_payrecord extends ecjia_admin {
 		RC_DB::table('refund_order_action')->insertGetId($data);
 		
 		//录入退款订单状态变动日志表
-		$order_id = RC_DB::TABLE('refund_order')->where('refund_id', $refund_id)->pluck('order_id');
 		$data = array(
-			'order_id' 		=>  $order_id,
-			'order_status'	=>  '退款处理',
+			'refund_id' 	=>  $refund_id,
+			'status'		=>  '退款到账',
 			'message'		=>  '',
 			'add_time'		=>  RC_Time::gmtime(),
 		);
-		RC_DB::table('order_status_log')->insertGetId($data);
+		RC_DB::table('refund_status_log')->insertGetId($data);
 		
 		
 		//录入普通订单状态变动日志表
-		$data = array(
-			'refund_id' 	=>  $refund_id,
-			'status'		=>  '退款处理',
-			'message'		=>  '',
-			'add_time'		=>  RC_Time::gmtime(),
-		);
-		RC_DB::table('order_status_log')->insertGetId($data);
+		$order_id = RC_DB::TABLE('refund_order')->where('refund_id', $refund_id)->pluck('order_id');
+		OrderStatusLog::return_confirm_receive(array('order_id' => $order_id, 'back_money' => $back_money_paid));
 		
 		//短信告知用户退款退货成功 
 // 		$user_info = RC_DB::table('users')->where('user_id', $user_id)->select('user_name', 'pay_points', 'user_money', 'mobile_phone')->first();

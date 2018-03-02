@@ -244,22 +244,15 @@ class merchant extends ecjia_merchant {
 		
 		//录入退款订单状态变动日志表
 		$data = array(
-			'order_id' 		=>  $refund_info['order_id'],
-			'order_status'	=>  '订单退款申请审核中',
+			'refund_id' 	=>  $refund_id,
+			'order_status'	=>  '',
 			'message'		=>  '',
 			'add_time'		=>  RC_Time::gmtime(),
 		);
-		RC_DB::table('order_status_log')->insertGetId($data);
-		
+		RC_DB::table('refund_status_log')->insertGetId($data);
 		
 		//录入普通订单状态变动日志表
-		$data = array(
-			'refund_id' 	=>  $refund_id,
-			'status'		=>  '订单退款申请审核中',
-			'message'		=>  '',
-			'add_time'		=>  RC_Time::gmtime(),
-		);
-		RC_DB::table('order_status_log')->insertGetId($data);
+		OrderStatusLog::refund_order_process(array('order_id' => $refund_info['order_id'], 'status' => $status));
 
 		return $this->showmessage('操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS,array('pjaxurl' => RC_Uri::url('refund/merchant/refund_detail', array('refund_id' => $refund_id))));
 	}
@@ -437,24 +430,18 @@ class merchant extends ecjia_merchant {
 		RC_DB::table('refund_order_action')->insertGetId($data);
 		
 		//录入退款订单状态变动日志表
-		$order_id = RC_DB::TABLE('refund_order')->where('refund_id', $refund_id)->pluck('order_id');
-		$data = array(
-			'order_id' 		=>  $order_id,
-			'order_status'	=>  '订单退款退货申请审核中',
-			'message'		=>  '',
-			'add_time'		=>  RC_Time::gmtime(),
-		);
-		RC_DB::table('order_status_log')->insertGetId($data);
-		
-		
-		//录入普通订单状态变动日志表
 		$data = array(
 			'refund_id' 	=>  $refund_id,
 			'status'		=>  '订单退款退货申请审核中',
 			'message'		=>  '',
 			'add_time'		=>  RC_Time::gmtime(),
 		);
-		RC_DB::table('order_status_log')->insertGetId($data);
+		RC_DB::table('refund_status_log')->insertGetId($data);
+		
+		
+		//录入普通订单状态变动日志表
+		$order_id = RC_DB::TABLE('refund_order')->where('refund_id', $refund_id)->pluck('order_id');
+		OrderStatusLog::return_order_process(array('order_id' => $order_id, 'status' => $status));
 		
 		return $this->showmessage('操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('refund/merchant/return_detail', array('refund_id' => $refund_id))));
 	}
@@ -528,25 +515,17 @@ class merchant extends ecjia_merchant {
 		RC_DB::table('refund_order_action')->insertGetId($data);
 		
 		//录入退款订单状态变动日志表
-		$order_id = RC_DB::TABLE('refund_order')->where('refund_id', $refund_id)->pluck('order_id');
 		$data = array(
-			'order_id' 		=>  $order_id,
+			'refund_id' 	=>  $refund_id,
 			'order_status'	=>  '商家确认收货',
 			'message'		=>  '',
 			'add_time'		=>  RC_Time::gmtime(),
 		);
-		RC_DB::table('order_status_log')->insertGetId($data);
-		
+		RC_DB::table('refund_status_log')->insertGetId($data);
 		
 		//录入普通订单状态变动日志表
-		$data = array(
-			'refund_id' 	=>  $refund_id,
-			'status'		=>  '商家确认收货',
-			'message'		=>  '',
-			'add_time'		=>  RC_Time::gmtime(),
-		);
-		RC_DB::table('order_status_log')->insertGetId($data);
-		
+		$order_id = RC_DB::TABLE('refund_order')->where('refund_id', $refund_id)->pluck('order_id');
+		OrderStatusLog::return_confirm_receive(array('order_id' => $order_id, 'status' => $return_status));
 		
 		return $this->showmessage('操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('refund/merchant/return_detail', array('refund_id' => $refund_id))));
 	}
