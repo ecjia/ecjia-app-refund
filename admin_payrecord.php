@@ -238,19 +238,12 @@ class admin_payrecord extends ecjia_admin {
 		);
 		RC_DB::table('refund_order_action')->insertGetId($data);
 		
-		//录入退款订单状态变动日志表
-		$data = array(
-			'refund_id' 	=>  $refund_id,
-			'status'		=>  '退款到账',
-			'message'		=>  '',
-			'add_time'		=>  RC_Time::gmtime(),
-		);
-		RC_DB::table('refund_status_log')->insertGetId($data);
+		//售后订单状态变动日志表
+		RefundStatusLog::refund_payrecord(array('refund_id' => $refund_id, 'back_money' => $back_money_paid));
 		
-		
-		//录入普通订单状态变动日志表
+		//普通订单状态变动日志表
 		$order_id = RC_DB::TABLE('refund_order')->where('refund_id', $refund_id)->pluck('order_id');
-		OrderStatusLog::return_confirm_receive(array('order_id' => $order_id, 'back_money' => $back_money_paid));
+		OrderStatusLog::refund_payrecord(array('order_id' => $order_id, 'back_money' => $back_money_paid));
 		
 		//短信告知用户退款退货成功 
 // 		$user_info = RC_DB::table('users')->where('user_id', $user_id)->select('user_name', 'pay_points', 'user_money', 'mobile_phone')->first();
