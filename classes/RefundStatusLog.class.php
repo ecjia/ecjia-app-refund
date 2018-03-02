@@ -66,7 +66,7 @@ class RefundStatusLog
     	$data = array(
     		'status'	=> '服务单退款申请已处理',
     		'message'   => $message,
-    		'refund_id' => $options['order_id'],
+    		'refund_id' => $options['refund_id'],
     		'add_time'  => RC_Time::gmtime(),
     	);
     	RC_DB::table('refund_status_log')->insert($data);
@@ -87,7 +87,7 @@ class RefundStatusLog
     	$data = array(
     		'status'	=> '服务单退货退款申请已处理',
     		'message'   => $message,
-    		'refund_id' => $options['order_id'],
+    		'refund_id' => $options['refund_id'],
     		'add_time'  => RC_Time::gmtime(),
     	);
     	RC_DB::table('refund_status_log')->insert($data);
@@ -108,7 +108,7 @@ class RefundStatusLog
     	$data = array(
     		'status'	=> '确认收货处理',
     		'message'       => $message,
-    		'refund_id'    	=> $options['order_id'],
+    		'refund_id'    	=> $options['refund_id'],
     		'add_time'    	=> RC_Time::gmtime(),
     	);
     	RC_DB::table('refund_status_log')->insert($data);
@@ -124,7 +124,7 @@ class RefundStatusLog
     	$data = array(
     		'status'	=> '退款到账',
     		'message'   => '您的退款'.$options['back_money'].'元，已退回至您的余额，请查收',
-    		'refund_id' => $options['order_id'],
+    		'refund_id' => $options['refund_id'],
     		'add_time'  => RC_Time::gmtime(),
     	);
     	RC_DB::table('refund_status_log')->insert($data);
