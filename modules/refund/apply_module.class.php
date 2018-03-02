@@ -45,6 +45,7 @@ class apply_module extends api_front implements api_interface {
 		//过滤掉已取消的和退款处理成功的，保留在处理中的申请
 		$order_refund_info = order_refund::currorder_refund_info($order_id);
 		if (!empty($order_refund_info)) {
+			$refund_id = $order_refund_info['refund_id'];
 			//已存在处理中的申请或退款成功的申请
 			if (($order_refund_info['status'] == Ecjia\App\Refund\RefundStatus::UNCHECK) 
 			   || (($order_refund_info['status'] == Ecjia\App\Refund\RefundStatus::AGREE) && ($order_refund_info['refund_staus'] == Ecjia\App\Refund\RefundStatus::UNTRANSFER))
@@ -289,17 +290,20 @@ class apply_module extends api_front implements api_interface {
 				$pra = array('order_status' => '申请退款', 'order_id' => $order_id, 'message' => '您的退款申请已提交，等待商家处理！');
 				order_refund::order_status_log($pra);
 				//退款申请操作log记录
-				$opt = array(
-						'refund_id' 		=> $refund_id,
-						'action_user_type'	=> 'user',
-						'action_user_id'	=> $_SESSION['user_id'],
-						'action_user_name'  => '买家',
-						'status'			=> 0,
-						'refund_status'		=> 0,
-						'return_status'		=> 0,
-						'action_note'		=> '买家申请退款',
-				);
-				order_refund::refund_order_action($opt);
+				//$opt = array(
+				//		'refund_id' 		=> $refund_id,
+				//		'action_user_type'	=> 'user',
+				//		'action_user_id'	=> $_SESSION['user_id'],
+				//		'action_user_name'  => '买家',
+				//		'status'			=> 0,
+				//		'refund_status'		=> 0,
+				//		'return_status'		=> 0,
+				//		'action_note'		=> '买家申请退款',
+				//);
+				//order_refund::refund_order_action($opt);
+				//售后申请状态记录
+				$opt = array('status' => '申请退款', 'refund_id' => $refund_id, 'message' => '您的退款申请已提交，等待商家处理！');
+				order_refund::refund_status_log($opt);
 			}
 		}
 		
