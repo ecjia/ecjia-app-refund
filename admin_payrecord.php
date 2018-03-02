@@ -238,6 +238,26 @@ class admin_payrecord extends ecjia_admin {
 		);
 		RC_DB::table('refund_order_action')->insertGetId($data);
 		
+		//录入退款订单状态变动日志表
+		$order_id = RC_DB::TABLE('refund_order')->where('refund_id', $refund_id)->pluck('order_id');
+		$data = array(
+			'order_id' 		=>  $order_id,
+			'order_status'	=>  '退款处理',
+			'message'		=>  '',
+			'add_time'		=>  RC_Time::gmtime(),
+		);
+		RC_DB::table('order_status_log')->insertGetId($data);
+		
+		
+		//录入普通订单状态变动日志表
+		$data = array(
+			'refund_id' 	=>  $refund_id,
+			'status'		=>  '退款处理',
+			'message'		=>  '',
+			'add_time'		=>  RC_Time::gmtime(),
+		);
+		RC_DB::table('order_status_log')->insertGetId($data);
+		
 		//短信告知用户退款退货成功 
 // 		$user_info = RC_DB::table('users')->where('user_id', $user_id)->select('user_name', 'pay_points', 'user_money', 'mobile_phone')->first();
 // 		if (!empty($user_info['mobile_phone'])) {
@@ -255,6 +275,7 @@ class admin_payrecord extends ecjia_admin {
 // 			);
 // 			RC_Api::api('sms', 'send_event_sms', $options);
 // 		}
+
 		return $this->showmessage('退款操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('refund/admin_payrecord/detail', array('refund_id' => $refund_id))));
 	}
 
