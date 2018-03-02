@@ -176,7 +176,7 @@ class admin extends ecjia_admin {
 		$this->assign('goods_list', $goods_list);
 	
 		//商家审核操作记录
-		$action_mer_msg = RC_DB::TABLE('refund_order_action')->where('refund_id', $refund_info['refund_id'])->where('status', $refund_info['status'])->select('action_note','action_user_name','log_time')->first();
+		$action_mer_msg = RC_DB::TABLE('refund_order_action')->where('action_user_type', 'merchant')->where('refund_id', $refund_info['refund_id'])->where('status', $refund_info['status'])->select('action_note','action_user_name','log_time')->first();
 		if ($action_mer_msg['log_time']) {
 			$action_mer_msg['log_time'] = RC_Time::local_date(ecjia::config('time_format'), $action_mer_msg['log_time']);
 		}
@@ -184,7 +184,7 @@ class admin extends ecjia_admin {
 	
 		//平台审核操作记录
 		if ($refund_info['refund_status'] == '2') {
-			$action_admin_msg = RC_DB::TABLE('refund_order_action')->where('refund_id', $refund_info['refund_id'])->where('refund_status', $refund_info['refund_status'])->select('action_note','action_user_name','log_time')->first();
+			$action_admin_msg = RC_DB::TABLE('refund_order_action')->where('action_user_type', 'admin')->where('refund_id', $refund_info['refund_id'])->where('refund_status', $refund_info['refund_status'])->select('action_note','action_user_name','log_time')->first();
 			if ($action_admin_msg['log_time']) {
 				$action_admin_msg['log_time'] = RC_Time::local_date(ecjia::config('time_format'), $action_admin_msg['log_time']);
 			}
@@ -307,12 +307,13 @@ class admin extends ecjia_admin {
 		$this->assign('refund_list', $refund_list);
 		
 		//商家审核操作记录
-		$action_mer_msg = RC_DB::TABLE('refund_order_action')->where('refund_id', $refund_info['refund_id'])->select('status','refund_status','return_status','action_note','action_user_name','log_time')->get();
-		foreach ($action_mer_msg as $key=>$val) {
-			$action_mer_msg[$key]['log_time']  = RC_Time::local_date('Y-m-d H:i:s', $val['log_time']);
-		}
-		$this->assign('action_mer_msg_return', $action_mer_msg[0]);
-		$this->assign('action_mer_msg_confirm', $action_mer_msg[1]);
+		$action_mer_msg_return = RC_DB::TABLE('refund_order_action')->where('action_user_type','merchant')->where('refund_id', $refund_info['refund_id'])->where('status', $refund_info['status'])->select('action_note','action_user_name','log_time')->first();
+		$this->assign('action_mer_msg_return', $action_mer_msg_return);
+		_dump($action_mer_msg_return,1);
+		
+		$action_mer_msg_confirm = RC_DB::TABLE('refund_order_action')->where('action_user_type','merchant')->where('refund_id', $refund_info['refund_id'])->where('status',$refund_info['return_status'])->select('action_note','action_user_name','log_time')->first();
+		$this->assign('action_mer_msg_confirm', $action_mer_msg_confirm);
+		
 		
 		//平台审核操作记录
 		if ($refund_info['refund_status'] == '2') {
