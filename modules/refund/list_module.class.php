@@ -84,25 +84,25 @@ class list_module extends api_front implements api_interface {
 				$log_data = array();
 				$latest_refund_log = order_refund::get_latest_refund_log($rows['refund_id']);
 				if (!empty($latest_refund_log)) {
-					if ($latest_refund_log['status'] == 0) {
-						$status = 'await_check';
-						$label_status = '待审核';
-					} elseif ($latest_refund_log['status'] == 1) {
-						$status = 'agree';
-						$label_status = '同意';
-					} elseif ($latest_refund_log['status'] == 10) {
-						$status = 'canceled';
-						$label_status = '已取消';
-					} elseif ($latest_refund_log['status'] == 11) {
-						$status = 'refused';
-						$label_status = '拒绝退款';
-					}
+					//if ($latest_refund_log['status'] == 0) {
+					//	$status = 'await_check';
+					//	$label_status = '待审核';
+					//} elseif ($latest_refund_log['status'] == 1) {
+					//	$status = 'agree';
+					//	$label_status = '同意';
+					//} elseif ($latest_refund_log['status'] == 10) {
+					//	$status = 'canceled';
+					//	$label_status = '已取消';
+					//} elseif ($latest_refund_log['status'] == 11) {
+					//	$status = 'refused';
+					//	$label_status = '拒绝退款';
+					//}
 					
 					$log_data = array(
-							'log_description' 		=> $latest_refund_log['action_note'],
-							'formatted_action_time'	=> RC_Time::local_date(ecjia::config('time_format'), $latest_refund_log['log_time']),
-							'status'				=> $status,
-							'label_status'			=> $label_status
+							'log_description' 		=> $latest_refund_log['message'],
+							'formatted_action_time'	=> RC_Time::local_date(ecjia::config('time_format'), $latest_refund_log['add_time']),
+							//'status'				=> $status,
+							'label_status'			=> $latest_refund_log['status']
 					);
 				} 
 				

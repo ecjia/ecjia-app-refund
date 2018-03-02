@@ -226,6 +226,20 @@ class order_refund {
 		);
 		RC_DB::table('order_status_log')->insert($data);
 	}
+	
+	/**
+	 * 售后申请状态log记录
+	 * @param array $options
+	 */
+	public static function refund_status_log($options) {
+		$data = array(
+				'status' 		=> $options['status'],
+				'refund_id' 	=> $options['refund_id'],
+				'message' 		=> $options['message'],
+				'add_time'		=> RC_Time::gmtime()
+		);
+		RC_DB::table('refund_status_log')->insert($data);
+	}
 
 	/**
 	 * 获取退款申请最新一条log
@@ -233,7 +247,7 @@ class order_refund {
 	 */
 	public static function get_latest_refund_log($refund_id) {
 		if (!empty($refund_id)) {
-			$log_data = RC_DB::table('refund_order_action')->where('refund_id', $refund_id)->orderBy('log_time', 'desc')->get();
+			$log_data = RC_DB::table('refund_status_log')->where('refund_id', $refund_id)->orderBy('add_time', 'desc')->get();
 			if ($log_data) {
 				$log_data = $log_data['0'];
 			}
@@ -324,7 +338,7 @@ class order_refund {
 	 * @return  array
 	 */
 	public static function get_refund_logs($refund_id) {
-		$logs = RC_DB::table('refund_order_action')->where('refund_id', $refund_id)->orderBy('log_time', 'desc')->get();
+		$logs = RC_DB::table('refund_status_log')->where('refund_id', $refund_id)->orderBy('add_time', 'desc')->get();
 	
 		return $logs;
 	}

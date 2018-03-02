@@ -131,8 +131,8 @@ class payrecord_module extends api_front implements api_interface {
 		if (!empty($refund_logs)) {
 			foreach ($refund_logs as $log) {
 				$logs[] = array(
-						'log_description' 		=> $log['action_note'],
-						'action_time' => RC_Time::local_date(ecjia::config('time_format'), $log['log_time'])
+						'log_description' 		=> $log['message'],
+						'action_time' => RC_Time::local_date(ecjia::config('time_format'), $log['add_time'])
 				);
 			}
 		}
