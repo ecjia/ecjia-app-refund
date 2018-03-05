@@ -591,7 +591,7 @@ class merchant extends ecjia_merchant {
 		$count = $db_refund_view->count();
 		$page = new ecjia_merchant_page($count, 10, 5);
 		$data = $db_refund_view
-		->selectRaw('refund_id,refund_sn,refund_type,order_sn,money_paid,add_time,status,refund_status')
+		->selectRaw('refund_id,refund_sn,refund_type,order_id,order_sn,money_paid,surplus,add_time,shipping_fee,pack_fee,status,refund_status')
 		->orderby($filter['sort_by'], $filter['sort_order'])
 		->take(10)
 		->skip($page->start_id-1)
@@ -601,6 +601,12 @@ class merchant extends ecjia_merchant {
 		if (!empty($data)) {
 			foreach ($data as $row) {
 				$row['add_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
+				$row['shipping_status'] = RC_DB::TABLE('order_info')->where('order_id', $row['order_id'])->pluck('shipping_status');
+				if ($row['shipping_status'] > SS_UNSHIPPED) {
+					$row['refund_total_amount']  = ($row['money_paid'] + $row['surplus']) - ($row['shipping_fee'] + $row['pack_fee']);
+				} else {
+					$row['refund_total_amount']  = $row['money_paid'] + $row['surplus'];
+				}
 				$list[] = $row;
 			}
 		}

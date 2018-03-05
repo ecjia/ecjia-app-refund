@@ -107,7 +107,7 @@ ecjia.merchant.refund_list.init();
     						<td>
     							{$order.order_sn}
     						</td>
-    						<td>¥ {$order.money_paid}</td>
+    						<td>¥ {$order.refund_total_amount}</td>
     						<td>{$order.add_time}</td>
     						<td>
     							{if $order.status eq 0}待审核{elseif $order.status eq 1}同意{elseif $order.status eq 10}已取消{else}不同意{/if}
