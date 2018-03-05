@@ -101,7 +101,7 @@ class RefundStatusLog
      */
     public static function return_confirm_receive($options) {
     	if($options['status'] == 3) {
-    		$message = '商家已确认收货，等价商家退款';
+    		$message = '商家已确认收货，等待商家退款';
     	} else {
     		$message = '商家拒绝确认收货，理由：商品没有问题';
     	}

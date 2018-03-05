@@ -125,7 +125,12 @@ class merchant extends ecjia_merchant {
 		$this->assign('refund_img_list', $refund_img_list);
 		
 		//退款有关下单信息
-		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->select('shipping_fee','order_sn','money_paid','pay_name','pay_time','add_time','consignee','province','city','district','street','address','mobile')->first();
+		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])
+		->select('order_sn','pay_name','pay_time','add_time','shipping_status',
+				'consignee','province','city','district','street','address','mobile',
+				'goods_amount','shipping_fee','pay_fee','pack_fee','insure_fee','card_fee','tax','integral_money','bonus','discount')
+		->first();
+		
 		$order_info['province']	= ecjia_region::getRegionName($order_info['province']);
 		$order_info['city']     = ecjia_region::getRegionName($order_info['city']);
 		$order_info['district'] = ecjia_region::getRegionName($order_info['district']);
@@ -137,6 +142,18 @@ class merchant extends ecjia_merchant {
 			$order_info['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']);
 		}
 		$this->assign('order_info', $order_info);
+		
+		//退费计算
+		if ($order_info['shipping_status'] > SS_UNSHIPPED) {
+			$refund_total_amount  = ($refund_info['money_paid'] + $refund_info['surplus']) - ($refund_info['shipping_fee'] + $refund_info['pack_fee']);
+		} else {
+			$refund_total_amount  = $refund_info['money_paid'] + $refund_info['surplus'];
+		}
+		$this->assign('refund_total_amount', $refund_total_amount);
+		
+		//订单总额
+		$order_amount  = ($order_info['goods_amount'] + $order_info['shipping_fee'] + $order_info['pay_fee'] + $order_info['pack_fee'] + $order_info['insure_fee'] + $order_info['card_fee'] + $order_info['tax']) - ($order_info['integral_money'] + $order_info['bonus'] + $order_info['discount']);
+		$this->assign('order_amount', $order_amount);
 		
 		//送货商品信息
 		$goods_list = RC_DB::TABLE('order_goods')->where('order_id', $refund_info['order_id'])->select('goods_id', 'goods_name' ,'goods_price','goods_number')->get();
@@ -302,7 +319,11 @@ class merchant extends ecjia_merchant {
 		$this->assign('refund_img_list', $refund_img_list);
 		
 		//退款有关下单信息
-		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->select('shipping_fee','order_sn','money_paid','pay_name','pay_time','add_time','consignee','province','city','district','street','address','mobile')->first();
+		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])
+		->select('order_sn','pay_name','pay_time','add_time','shipping_status',
+				'consignee','province','city','district','street','address','mobile',
+				'goods_amount','shipping_fee','pay_fee','pack_fee','insure_fee','card_fee','tax','integral_money','bonus','discount')
+				->first();
 		$order_info['province']	= ecjia_region::getRegionName($order_info['province']);
 		$order_info['city']     = ecjia_region::getRegionName($order_info['city']);
 		$order_info['district'] = ecjia_region::getRegionName($order_info['district']);
@@ -314,6 +335,18 @@ class merchant extends ecjia_merchant {
 			$order_info['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']);
 		}
 		$this->assign('order_info', $order_info);
+		
+		//退费计算
+		if ($order_info['shipping_status'] > SS_UNSHIPPED) {
+			$refund_total_amount  = ($refund_info['money_paid'] + $refund_info['surplus']) - ($refund_info['shipping_fee'] + $refund_info['pack_fee']);
+		} else {
+			$refund_total_amount  = $refund_info['money_paid'] + $refund_info['surplus'];
+		}
+		$this->assign('refund_total_amount', $refund_total_amount);
+		
+		//订单总额
+		$order_amount  = ($order_info['goods_amount'] + $order_info['shipping_fee'] + $order_info['pay_fee'] + $order_info['pack_fee'] + $order_info['insure_fee'] + $order_info['card_fee'] + $order_info['tax']) - ($order_info['integral_money'] + $order_info['bonus'] + $order_info['discount']);
+		$this->assign('order_amount', $order_amount);
 		
 		//送货商品
 		$goods_list = RC_DB::TABLE('order_goods')->where('order_id', $refund_info['order_id'])->select('goods_id', 'goods_name' ,'goods_price','goods_number')->get();

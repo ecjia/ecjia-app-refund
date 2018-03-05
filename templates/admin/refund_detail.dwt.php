@@ -34,7 +34,7 @@
 		 				{if $key eq $refund_info.refund_reason}{$val}{/if}
 						<!-- {/foreach} -->
 						</p>
-						<p>退款金额：{$refund_info.money_paid}</p>
+						<p>退款金额：¥&nbsp;{$refund_total_amount}</p>
 						<p>退款说明：{if $refund_info.refund_content}{$refund_info.refund_content}{else}暂无{/if}</p>
 						<p>上传凭证： 
 							{if $refund_img_list}
@@ -163,7 +163,7 @@
 			           		 <!-- {/foreach} -->
 			           		<hr>
 			                <p>运费：¥&nbsp;{$order_info.shipping_fee}</p>
-			                <p>订单总额：¥&nbsp;{$order_info.money_paid}</p>
+			                <p>订单总额：¥&nbsp;{$order_amount}（退款：¥&nbsp;{$refund_total_amount}）</p>
 			                <hr>
 			                <p>订单编号：{$order_info.order_sn} <span><a id="order-info" href="javascript:;">查看更多</a></span></p>
 			                <div class="order-info" style="display: none;">
@@ -174,7 +174,7 @@
 			                <hr>
 			                <p>收货人：{$order_info.consignee}<span><a id="address-info" href="javascript:;">查看更多</a></span></p>
 			                <div class="address-info" style="display: none;">
-				                <p>收货地址：{$order_info.province}{$order_info.city}{$order_info.district}{$order_info.street}</p>
+				                <p>收货地址：{$order_info.province}{$order_info.city}{$order_info.district}{$order_info.street}{$order_info.address}</p>
 				                <p>联系电话：{$order_info.mobile}</p>
 			                </div>
 				        </div>
