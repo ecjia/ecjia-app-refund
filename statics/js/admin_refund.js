@@ -41,6 +41,18 @@
     
     app.refund_info = {
         init: function () {
+    		$('div.refund_content').imagesLoaded(function() {
+				$('div.refund_content a.up-img').attr('rel', 'gallery').colorbox({
+					maxWidth: '80%',
+					maxHeight: '80%',
+					opacity: '0.8',
+					loop: true,
+					slideshow: false,
+					fixed: true,
+					speed: 300,
+				});
+			});
+    		
             $("#order-info").click(function(){
             	$(".order-info").toggle();
             });
@@ -66,6 +78,18 @@
     
     app.return_info = {
             init: function () {
+        		$('div.refund_content').imagesLoaded(function() {
+    				$('div.refund_content a.up-img').attr('rel', 'gallery').colorbox({
+    					maxWidth: '80%',
+    					maxHeight: '80%',
+    					opacity: '0.8',
+    					loop: true,
+    					slideshow: false,
+    					fixed: true,
+    					speed: 300,
+    				});
+    			});
+        		
                 $("#order-info").click(function(){
                 	$(".order-info").toggle();
                 });
