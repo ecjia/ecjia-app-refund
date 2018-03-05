@@ -208,10 +208,11 @@ class merchant extends ecjia_merchant {
 		if (empty($action_note)) {
 			return $this->showmessage('请输入操作备注', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
+		$refund_info = RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
+		
 		if ($type == 'agree') {//商家同意
 			$status = 1;
 			$refund_status = 1;
-			$refund_info = RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
 			$payment_record_id = RC_DB::TABLE('payment_record')->where('order_sn', $refund_info['order_sn'])->pluck('id');
 			$data = array(
 				'store_id'	=>	$_SESSION['store_id'],
@@ -261,10 +262,8 @@ class merchant extends ecjia_merchant {
 		);
 		RC_DB::table('refund_order_action')->insertGetId($data);
 		
-		
 		//售后订单状态变动日志表
 		RefundStatusLog::refund_order_process(array('refund_id' => $refund_id, 'status' => $status));
-		
 		//普通订单状态变动日志表
 		OrderStatusLog::refund_order_process(array('order_id' => $refund_info['order_id'], 'status' => $status));
 
