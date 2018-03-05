@@ -109,7 +109,7 @@ class cancel_module extends api_front implements api_interface {
 		$pra = array('order_status' => '撤销退款申请', 'order_id' => $refund_info['order_id'], 'message' => '您已成功撤销退款申请！');
 		order_refund::order_status_log($pra);
 		//售后申请状态记录
-		$opt = array('status' => '申请退款', 'refund_id' => $refund_info['refund_id'], 'message' => '您的退款申请已提交，等待商家处理！');
+		$opt = array('status' => '撤销退款申请', 'refund_id' => $refund_info['refund_id'], 'message' => '您已撤销退款申请！');
 		order_refund::refund_status_log($opt);
         
         return array();
