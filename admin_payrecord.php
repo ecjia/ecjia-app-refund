@@ -55,6 +55,8 @@ class admin_payrecord extends ecjia_admin {
 	public function __construct() {
 		parent::__construct();
 		
+		RC_Loader::load_app_class('RefundReasonList', 'refund', false);
+		
 		/* 加载全局 js/css */
 		RC_Script::enqueue_script('jquery-validate');
 		RC_Script::enqueue_script('jquery-form');

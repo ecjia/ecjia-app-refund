@@ -55,8 +55,9 @@ class admin extends ecjia_admin {
 	public function __construct() {
 		parent::__construct();
 		
-		/* 加载全局 js/css */
+		RC_Loader::load_app_class('RefundReasonList', 'refund', false);
 		
+		/* 加载全局 js/css */
 		RC_Script::enqueue_script('jquery-dropper', RC_Uri::admin_url() . '/statics/lib/dropper-upload/jquery.fs.dropper.js', array(), false, true);
 		RC_Script::enqueue_script('jquery-imagesloaded');
 		RC_Script::enqueue_script('jquery-colorbox');
