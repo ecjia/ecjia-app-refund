@@ -11,7 +11,11 @@
 			
 			<li>
 				<div class="{if $refund_info.return_status gt '1'}step-done{elseif $refund_info.status gt '0'}step-cur{/if}">
-					<div class="step-no">{if $refund_info.return_status eq '1'}2{/if}</div>
+					{if $refund_info.status eq '11'}
+						<div class="step-failed">{if $refund_info.return_status eq '1'}2{/if}</div>
+					{else}
+						<div class="step-no">{if $refund_info.return_status eq '1'}2{/if}</div>
+					{/if}
 					<div class="m_t5">商家处理退款申请<br>{if $action_mer_msg_return.log_time}{$action_mer_msg_return.log_time}{/if}</div>
 				</div>
 			</li>
