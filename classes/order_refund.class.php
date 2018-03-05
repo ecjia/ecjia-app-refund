@@ -55,17 +55,21 @@ class order_refund {
 	 */
 	 public static function get_reason($options){
 	 	$reason = '';
-	 	if (!empty($options['type']) && !empty($options['reason_id'])) {
-	 		$reason_list = self::reason_list($options['type']);
-	 		if (!empty($reason_list)) {
-	 			foreach ($reason_list as $val) {
-	 				if ($options['reason_id'] == $val['reason_id']) {
-	 					$reason = $val['reason_name'];
+	 	if (!empty($options['reason_id'])) {
+	 		$data = RC_Loader::load_app_config('refund_reasons', 'refund');
+	 		if (!empty($data)) {
+	 			foreach ($data as $val) {
+	 				if (!empty($val)) {
+	 					foreach ($val as $b) {
+	 						if ($options['reason_id'] == $b['reason_id']) {
+	 							$reason = $b['reason_name'];
+	 						}
+	 					}
 	 				}
+	 				
 	 			}
 	 		}
 	 	}
-		
 		return $reason;
 	}
 	
