@@ -129,7 +129,7 @@ class admin_payrecord extends ecjia_admin {
 		$this->assign('reason_list', $reason_list);
 		
 		//退款上传凭证素材
-		$refund_img_list = RC_DB::table('term_attachment')->where('object_id', $refund_info['refund_id'])->where('object_app', 'ecjia.refund')->where('object_group','refund')->select('file_path')->get();
+		$refund_img_list = RC_DB::table('term_attachment')->where('object_id', $refund_info['refund_id'])->where('object_app', 'ecjia.refund')->where('object_group','refund')->select('file_path','file_name')->get();
 		$this->assign('refund_img_list', $refund_img_list);
 		
 		//退款有关下单信息

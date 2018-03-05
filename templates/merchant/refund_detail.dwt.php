@@ -34,8 +34,10 @@
 				<p>上传凭证： 
 					{if $refund_img_list}
 					<!-- {foreach from=$refund_img_list item=list} -->
-	                <img src="{RC_Upload::upload_url()}/{$list.file_path}">
-	                <!-- {/foreach} -->
+						<a class="up-img no-underline" href="{RC_Upload::upload_url()}/{$list.file_path}" title="{$list.file_name}">
+							<img src="{RC_Upload::upload_url()}/{$list.file_path}"/>
+						</a>
+					<!-- {/foreach} -->
 	                {else}
 	            	暂无
 					{/if}

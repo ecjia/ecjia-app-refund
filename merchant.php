@@ -54,6 +54,12 @@ class merchant extends ecjia_merchant {
 
 	public function __construct() {
 		parent::__construct();
+		
+		RC_Script::enqueue_script('jquery-dropper', RC_Uri::admin_url() . '/statics/lib/dropper-upload/jquery.fs.dropper.js', array(), false, true);
+		RC_Script::enqueue_script('jquery-imagesloaded');
+		RC_Script::enqueue_script('jquery-colorbox');
+		RC_Style::enqueue_style('jquery-colorbox');
+		
 		RC_Script::enqueue_script('jquery-form');
 		RC_Script::enqueue_script('smoke');
 		RC_Style::enqueue_style('uniform-aristo');
@@ -76,7 +82,7 @@ class merchant extends ecjia_merchant {
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('订单管理', RC_Uri::url('orders/merchant/init')));
 		ecjia_merchant_screen::get_current_screen()->set_parentage('refund', 'refund/merchant.php');
 	}
-
+	
 	/**
 	 * 活动列表页
 	 */
@@ -121,7 +127,7 @@ class merchant extends ecjia_merchant {
 		$this->assign('reason_list', $reason_list);
 		
 		//退款上传凭证素材
-		$refund_img_list = RC_DB::table('term_attachment')->where('object_id', $refund_info['refund_id'])->where('object_app', 'ecjia.refund')->where('object_group','refund')->select('file_path')->get();
+		$refund_img_list = RC_DB::table('term_attachment')->where('object_id', $refund_info['refund_id'])->where('object_app', 'ecjia.refund')->where('object_group','refund')->select('file_path','file_name')->get();
 		$this->assign('refund_img_list', $refund_img_list);
 		
 		//退款有关下单信息
@@ -314,7 +320,7 @@ class merchant extends ecjia_merchant {
 		$this->assign('reason_list', $reason_list);
 		
 		//退款上传凭证素材
-		$refund_img_list = RC_DB::table('term_attachment')->where('object_id', $refund_info['refund_id'])->where('object_app', 'ecjia.refund')->where('object_group','refund')->select('file_path')->get();
+		$refund_img_list = RC_DB::table('term_attachment')->where('object_id', $refund_info['refund_id'])->where('object_app', 'ecjia.refund')->where('object_group','refund')->select('file_path','file_name')->get();
 		$this->assign('refund_img_list', $refund_img_list);
 		
 		//退款有关下单信息
