@@ -77,10 +77,12 @@ class order_refund {
 		$reason_list = array();
 		if (!empty($type)) {
 			$data = RC_Loader::load_app_config('refund_reasons', 'refund');
-			if ($type == 'cancel') {
-				$reason_list = $data['cancelorder'];
-			} elseif ($type == 'afterservice') {
-				$reason_list = $data['afterservice'];
+			if ($type == 'await_ship') {
+				$reason_list = $data['await_ship'];
+			} elseif ($type == 'shipped') {
+				$reason_list = $data['shipped'];
+			} elseif ($type == 'finished') {
+				$reason_list = $data['finished'];
 			}
 		}
 	
