@@ -59,7 +59,7 @@ class reasons_module extends api_front implements api_interface {
     	}
 		
 		$type = $this->requestData('type', '');
-		$type_array = array('cancel', 'afterservice');
+		$type_array = array('await_ship', 'shipped', 'finished');
 		
 		if (empty($type) || !in_array($type, $type_array)) {
 			return new ecjia_error('invalid_parameter', RC_Lang::get('orders::order.invalid_parameter'));
