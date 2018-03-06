@@ -148,23 +148,25 @@ class merchant extends ecjia_merchant {
 		if ($order_info['pay_time']) {
 			$order_info['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']);
 		}
+		$order_info['shipping_fee'] = price_format($order_info['shipping_fee']);
 		$this->assign('order_info', $order_info);
 		
 		//退费计算
 		if ($order_info['shipping_status'] > SS_UNSHIPPED) {
-			$refund_total_amount  = ($refund_info['money_paid'] + $refund_info['surplus']) - ($refund_info['shipping_fee'] + $refund_info['pack_fee']);
+			$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus'] - $refund_info['shipping_fee'] - $refund_info['pack_fee']);
 		} else {
-			$refund_total_amount  = $refund_info['money_paid'] + $refund_info['surplus'];
+			$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus']);
 		}
 		$this->assign('refund_total_amount', $refund_total_amount);
 		
 		//订单总额
-		$order_amount  = ($order_info['goods_amount'] + $order_info['shipping_fee'] + $order_info['pay_fee'] + $order_info['pack_fee'] + $order_info['insure_fee'] + $order_info['card_fee'] + $order_info['tax']) - ($order_info['integral_money'] + $order_info['bonus'] + $order_info['discount']);
+		$order_amount  = price_format($order_info['goods_amount'] + $order_info['shipping_fee'] + $order_info['pay_fee'] + $order_info['pack_fee'] + $order_info['insure_fee'] + $order_info['card_fee'] + $order_info['tax'] - $order_info['integral_money'] - $order_info['bonus'] - $order_info['discount']);
 		$this->assign('order_amount', $order_amount);
 		
 		//送货商品信息
 		$goods_list = RC_DB::TABLE('order_goods')->where('order_id', $refund_info['order_id'])->select('goods_id', 'goods_name' ,'goods_price','goods_number')->get();
 		foreach ($goods_list as $key => $val) {
+			$goods_list[$key]['goods_price']  = price_format($val['goods_price']);
 			$goods_list[$key]['image']  = RC_DB::TABLE('goods')->where('goods_id', $val['goods_id'])->pluck('goods_thumb');
 		}
 		$disk = RC_Filesystem::disk();
@@ -343,23 +345,25 @@ class merchant extends ecjia_merchant {
 		if ($order_info['pay_time']) {
 			$order_info['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']);
 		}
+		$order_info['shipping_fee'] = price_format($order_info['shipping_fee']);
 		$this->assign('order_info', $order_info);
 		
 		//退费计算
 		if ($order_info['shipping_status'] > SS_UNSHIPPED) {
-			$refund_total_amount  = ($refund_info['money_paid'] + $refund_info['surplus']) - ($refund_info['shipping_fee'] + $refund_info['pack_fee']);
+			$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus'] - $refund_info['shipping_fee'] - $refund_info['pack_fee']);
 		} else {
-			$refund_total_amount  = $refund_info['money_paid'] + $refund_info['surplus'];
+			$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus']);
 		}
 		$this->assign('refund_total_amount', $refund_total_amount);
 		
 		//订单总额
-		$order_amount  = ($order_info['goods_amount'] + $order_info['shipping_fee'] + $order_info['pay_fee'] + $order_info['pack_fee'] + $order_info['insure_fee'] + $order_info['card_fee'] + $order_info['tax']) - ($order_info['integral_money'] + $order_info['bonus'] + $order_info['discount']);
+		$order_amount  = price_format($order_info['goods_amount'] + $order_info['shipping_fee'] + $order_info['pay_fee'] + $order_info['pack_fee'] + $order_info['insure_fee'] + $order_info['card_fee'] + $order_info['tax'] - $order_info['integral_money'] - $order_info['bonus'] - $order_info['discount']);
 		$this->assign('order_amount', $order_amount);
 		
 		//送货商品
 		$goods_list = RC_DB::TABLE('order_goods')->where('order_id', $refund_info['order_id'])->select('goods_id', 'goods_name' ,'goods_price','goods_number')->get();
 		foreach ($goods_list as $key => $val) {
+			$goods_list[$key]['goods_price']  = price_format($val['goods_price']);
 			$goods_list[$key]['image']  = RC_DB::TABLE('goods')->where('goods_id', $val['goods_id'])->pluck('goods_thumb');
 		}
 		$disk = RC_Filesystem::disk();
@@ -376,7 +380,8 @@ class merchant extends ecjia_merchant {
 		$refund_list = RC_DB::table('back_goods')->where('back_id', $refund_info['refund_id'])->get();
 		foreach ($refund_list as $key => $val) {
 			$refund_list[$key]['image']  = RC_DB::TABLE('goods')->where('goods_id', $val['goods_id'])->pluck('goods_thumb');
-			$refund_list[$key]['goods_price']  = RC_DB::TABLE('order_goods')->where('goods_id', $val['goods_id'])->where('order_id', $refund_info['order_id'])->pluck('goods_price');
+			$goods_price = RC_DB::TABLE('order_goods')->where('goods_id', $val['goods_id'])->where('order_id', $refund_info['order_id'])->pluck('goods_price');
+			$refund_list[$key]['goods_price']  = price_format($goods_price);
 		}
 		$disk = RC_Filesystem::disk();
 		foreach ($refund_list as $key => $val) {
@@ -612,9 +617,9 @@ class merchant extends ecjia_merchant {
 				$row['add_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
 				$row['shipping_status'] = RC_DB::TABLE('order_info')->where('order_id', $row['order_id'])->pluck('shipping_status');
 				if ($row['shipping_status'] > SS_UNSHIPPED) {
-					$row['refund_total_amount']  = ($row['money_paid'] + $row['surplus']) - ($row['shipping_fee'] + $row['pack_fee']);
+					$row['refund_total_amount']  = price_format($row['money_paid'] + $row['surplus'] - $row['shipping_fee'] - $row['pack_fee']);
 				} else {
-					$row['refund_total_amount']  = $row['money_paid'] + $row['surplus'];
+					$row['refund_total_amount']  = price_format($row['money_paid'] + $row['surplus']);
 				}
 				$list[] = $row;
 			}
