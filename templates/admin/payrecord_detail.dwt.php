@@ -68,8 +68,8 @@
 				{if !$payrecord_info.back_content}
 					<h3>退款操作</h3>
 					<div class="control-group">
-						<label class="control-label">退款金额：</label>
-						<div class="controls l_h30 ecjiafc-red"><strong>{$refund_total_amount}</strong></div>
+						<label class="control-label">实际退款金额：</label>
+						<div class="controls l_h30 ecjiafc-red"><strong></strong></div>
 					</div>
 					
 					<div class="control-group">
