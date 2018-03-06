@@ -153,7 +153,7 @@ class admin extends ecjia_admin {
 		$this->assign('mer_info', $mer_info);
 		
 		
-		//退款有关下单信
+		//退款有关下单信息
 		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])
 		->select('order_sn','pay_name','pay_time','add_time','shipping_status',
 				'consignee','province','city','district','street','address','mobile',
