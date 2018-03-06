@@ -112,16 +112,15 @@ class detail_module extends api_front implements api_interface {
 			$label_refund_status= '待审核';
 		}
 		
-		
 		//用户地址
 		$order_info = RC_DB::table('order_info')->where('order_id', $refund_order_info['order_id'])->selectRaw('consignee, mobile, city, district, street, address, order_status, pay_status, shipping_status')->first();
 		$user_address = ecjia_region::getRegionName($order_info['city']).ecjia_region::getRegionName($order_info['district']).ecjia_region::getRegionName($order_info['street']).$order_info['address'];
 		//应退总金额
 		//配送费：已发货的不退，未发货的退
 		if ($order_info['shipping_status'] > SS_UNSHIPPED) {
-			$refund_total_amount  = ($refund_order_info['money_paid'] + $refund_order_info['surplus']) - ($refund_order_info['shipping_fee'] + $refund_order_info['pack_fee']);
+			$refund_total_amount  = $refund_order_info['money_paid'] + $refund_order_info['surplus'] - $refund_order_info['pay_fee']- $refund_order_info['shipping_fee'] - $refund_order_info['insure_fee'];
 		} else {
-			$refund_total_amount  = $refund_order_info['money_paid'] + $refund_order_info['surplus'];
+			$refund_total_amount  = $refund_order_info['money_paid'] + $refund_order_info['surplus'] - $refund_order_info['pay_fee'];
 		}
 		//售后图片
 		$return_images = order_refund::get_return_images($refund_order_info['refund_id']);
