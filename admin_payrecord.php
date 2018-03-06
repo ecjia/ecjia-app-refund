@@ -161,11 +161,12 @@ class admin_payrecord extends ecjia_admin {
 		if ($payrecord_info['back_time']) {
 			$payrecord_info['back_time'] = RC_Time::local_date(ecjia::config('time_format'), $payrecord_info['back_time']);
 		}
+		$payrecord_info['order_money_paid'] = price_format($payrecord_info['order_money_paid']);
+		$payrecord_info['back_money_total'] = price_format($payrecord_info['back_money_total']);
+		$payrecord_info['back_pay_fee'] = price_format($payrecord_info['back_pay_fee']);
+		$payrecord_info['back_shipping_fee'] = price_format($payrecord_info['back_shipping_fee']);
+		$payrecord_info['back_insure_fee'] = price_format($payrecord_info['back_insure_fee']);
 		$this->assign('payrecord_info', $payrecord_info);
-		
-		//退费计算
-		$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus']);
-		$this->assign('refund_total_amount', $refund_total_amount);
 		
 		//订单总额
 		$order_amount  = price_format($order_info['goods_amount'] + $order_info['shipping_fee'] + $order_info['pay_fee'] + $order_info['pack_fee'] + $order_info['insure_fee'] + $order_info['card_fee'] + $order_info['tax'] - $order_info['integral_money'] - $order_info['bonus'] - $order_info['discount']);

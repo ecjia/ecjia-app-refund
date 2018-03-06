@@ -42,7 +42,7 @@
 				
 				<div class="control-group">
 					<label class="control-label">退款金额：</label>
-					<div class="controls l_h30">{$refund_total_amount}</div>
+					<div class="controls l_h30">{$payrecord_info.order_money_paid}</div>
 				</div>
 				
 				<div class="control-group">
@@ -68,8 +68,23 @@
 				{if !$payrecord_info.back_content}
 					<h3>退款操作</h3>
 					<div class="control-group">
+						<label class="control-label">支付手续费：</label>
+						<div class="controls l_h30 ecjiafc-red"><strong>-{$payrecord_info.back_pay_fee}</strong></div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label">配送费：</label>
+						<div class="controls l_h30 ecjiafc-red"><strong>-{$payrecord_info.back_shipping_fee}</strong></div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label">保险费：</label>
+						<div class="controls l_h30 ecjiafc-red"><strong>-{$payrecord_info.back_insure_fee}</strong></div>
+					</div>
+					
+					<div class="control-group">
 						<label class="control-label">实际退款金额：</label>
-						<div class="controls l_h30 ecjiafc-red"><strong></strong></div>
+						<div class="controls l_h30 ecjiafc-red"><strong>{$payrecord_info.back_money_total}</strong></div>
 					</div>
 					
 					<div class="control-group">
@@ -167,7 +182,7 @@
 					           		<p>订单编号：{$order_info.order_sn}</p>
 					           		<hr>
 					                <p>运费：{$order_info.shipping_fee}</p>
-					                <p>订单总额：{$order_amount}（退款：{$refund_total_amount}）</p>
+					                <p>订单总额：{$order_amount}（退款：{$payrecord_info.order_money_paid}）</p>
 					                <p>支付方式：{$order_info.pay_name}</p>
 					                <p>下单时间：{$order_info.add_time}</p>
 					                <p>付款时间：{$order_info.pay_time}</p>

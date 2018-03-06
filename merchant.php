@@ -226,8 +226,12 @@ class merchant extends ecjia_merchant {
 			$shipping_status = RC_DB::TABLE('order_info')->where('order_id', $refund_info['order_id'])->pluck('shipping_status');
 			if ($shipping_status > SS_UNSHIPPED) {
 				$back_money_total  = $refund_info['money_paid'] + $refund_info['surplus'] - $refund_info['pay_fee'] - $refund_info['shipping_fee'] - $refund_info['insure_fee'];
+				$back_shipping_fee = $refund_info['shipping_fee'];
+				$back_insure_fee   = $refund_info['insure_fee'];
 			} else {
 				$back_money_total  = $refund_info['money_paid'] + $refund_info['surplus'] - $refund_info['pay_fee'];
+				$back_shipping_fee = 0;
+				$back_insure_fee   = 0;
 			}
 			$data = array(
 				'store_id'	=>	$_SESSION['store_id'],
@@ -240,8 +244,8 @@ class merchant extends ecjia_merchant {
 				'back_pay_code'		=>	$refund_info['pay_code'],
 				'back_pay_name'		=>	$refund_info['pay_name'],
 				'back_pay_fee'		=>	$refund_info['pay_fee'],
-				'back_shipping_fee'	=>	$refund_info['shipping_fee'],
-				'back_insure_fee'	=>	$refund_info['insure_fee'],
+				'back_shipping_fee'	=>	$back_shipping_fee,
+				'back_insure_fee'	=>	$back_insure_fee,
 				'back_pack_id'	=>	$refund_info['pack_id'],
 				'back_pack_fee'	=>	$refund_info['pack_fee'],
 				'back_card_id'	=>	$refund_info['card_id'],
@@ -512,8 +516,12 @@ class merchant extends ecjia_merchant {
 			$shipping_status = RC_DB::TABLE('order_info')->where('order_id', $refund_info['order_id'])->pluck('shipping_status');
 			if ($shipping_status > SS_UNSHIPPED) {
 				$back_money_total  = $refund_info['money_paid'] + $refund_info['surplus'] - $refund_info['pay_fee'] - $refund_info['shipping_fee'] - $refund_info['insure_fee'];
+				$back_shipping_fee = $refund_info['shipping_fee'];
+				$back_insure_fee   = $refund_info['insure_fee'];
 			} else {
 				$back_money_total  = $refund_info['money_paid'] + $refund_info['surplus'] - $refund_info['pay_fee'];
+				$back_shipping_fee = 0;
+				$back_insure_fee   = 0;
 			}
 			$data = array(
 					'store_id'	=>	$_SESSION['store_id'],
