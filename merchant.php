@@ -196,6 +196,11 @@ class merchant extends ecjia_merchant {
 		if ($payrecord_info['back_time']) {
 			$payrecord_info['back_time'] = RC_Time::local_date(ecjia::config('time_format'), $payrecord_info['back_time']);
 		}
+		$payrecord_info['order_money_paid_type'] = price_format($payrecord_info['order_money_paid']);
+		$payrecord_info['back_money_total_type'] = price_format($payrecord_info['back_money_total']);
+		$payrecord_info['back_pay_fee_type'] 	 = price_format($payrecord_info['back_pay_fee']);
+		$payrecord_info['back_shipping_fee_type']= price_format($payrecord_info['back_shipping_fee']);
+		$payrecord_info['back_insure_fee_type']  = price_format($payrecord_info['back_insure_fee']);
 		$this->assign('payrecord_info', $payrecord_info);
 		
 		$this->display('refund_detail.dwt');
@@ -427,6 +432,11 @@ class merchant extends ecjia_merchant {
 		if ($payrecord_info['back_time']) {
 			$payrecord_info['back_time'] = RC_Time::local_date(ecjia::config('time_format'), $payrecord_info['back_time']);
 		}
+		$payrecord_info['order_money_paid_type'] = price_format($payrecord_info['order_money_paid']);
+		$payrecord_info['back_money_total_type'] = price_format($payrecord_info['back_money_total']);
+		$payrecord_info['back_pay_fee_type'] 	 = price_format($payrecord_info['back_pay_fee']);
+		$payrecord_info['back_shipping_fee_type']= price_format($payrecord_info['back_shipping_fee']);
+		$payrecord_info['back_insure_fee_type']  = price_format($payrecord_info['back_insure_fee']);
 		$this->assign('payrecord_info', $payrecord_info);
 			
 		//读取有关返回方式的信息（店长信息和店铺信息）
