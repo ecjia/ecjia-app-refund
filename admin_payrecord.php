@@ -188,7 +188,8 @@ class admin_payrecord extends ecjia_admin {
 			$return_status = 3;
 		}
 		//用户表和资金变动表变动
-		$user_id = RC_DB::TABLE('refund_order')->where('refund_id', $refund_id)->pluck('user_id');
+		$refund_order = RC_DB::TABLE('refund_order')->where('refund_id', $refund_id)->first();
+		$user_id = $refund_order['user_id'];
 		if ($back_type == 'surplus') {//退回余额  （消费积分和金额）
 			$action_note = '退款金额已退回余额'.$back_money_paid.'元，退回积分为：'.$back_integral;
 			//更新帐户变动记录 
@@ -241,6 +242,10 @@ class admin_payrecord extends ecjia_admin {
 			'log_time'			=>  RC_Time::gmtime(),
 		);
 		RC_DB::table('refund_order_action')->insertGetId($data);
+		
+		//记录到结算表
+		RC_Api::api('commission', 'add_bill_detail', array('order_type' => 2, 'order_id' => $refund_order['order_id'],
+		  'store_id' => $refund_order['store_id']));
 		
 		//售后订单状态变动日志表
 		RefundStatusLog::refund_payrecord(array('refund_id' => $refund_id, 'back_money' => $back_money_paid));
