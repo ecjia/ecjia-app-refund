@@ -165,9 +165,9 @@ class admin_payrecord extends ecjia_admin {
 		
 		//退费计算
 		if ($order_info['shipping_status'] > SS_UNSHIPPED) {
-			$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus'] - $refund_info['shipping_fee'] - $refund_info['pack_fee']);
+			$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus'] - $refund_info['pay_fee'] - $refund_info['shipping_fee'] - $refund_info['insure_fee']);
 		} else {
-			$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus']);
+			$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus'] - $refund_info['pay_fee']);
 		}
 		$this->assign('refund_total_amount', $refund_total_amount);
 		
