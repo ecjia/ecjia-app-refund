@@ -42,7 +42,7 @@
 				
 				<div class="control-group">
 					<label class="control-label">退款金额：</label>
-					<div class="controls l_h30">{$payrecord_info.order_money_paid}</div>
+					<div class="controls l_h30">{$payrecord_info.order_money_paid_type}</div>
 				</div>
 				
 				<div class="control-group">
@@ -67,24 +67,30 @@
 				
 				{if !$payrecord_info.back_content}
 					<h3>退款操作</h3>
-					<div class="control-group">
-						<label class="control-label">支付手续费：</label>
-						<div class="controls l_h30 ecjiafc-red"><strong>-{$payrecord_info.back_pay_fee}</strong></div>
-					</div>
+					{if $payrecord_info.back_pay_fee neq '0.00'}
+						<div class="control-group">
+							<label class="control-label">扣除支付手续费：</label>
+							<div class="controls l_h30 ecjiafc-red"><strong>-{$payrecord_info.back_pay_fee_type}</strong></div>
+						</div>
+					{/if}
 					
+					{if $payrecord_info.back_insure_fee neq '0.00'}
 					<div class="control-group">
-						<label class="control-label">配送费：</label>
-						<div class="controls l_h30 ecjiafc-red"><strong>-{$payrecord_info.back_shipping_fee}</strong></div>
+						<label class="control-label">扣除配送费：</label>
+						<div class="controls l_h30 ecjiafc-red"><strong>-{$payrecord_info.back_shipping_fee_type}</strong></div>
 					</div>
+					{/if}
 					
+					{if $payrecord_info.back_insure_fee neq '0.00'}
 					<div class="control-group">
-						<label class="control-label">保险费：</label>
-						<div class="controls l_h30 ecjiafc-red"><strong>-{$payrecord_info.back_insure_fee}</strong></div>
+						<label class="control-label">扣除保价费：</label>
+						<div class="controls l_h30 ecjiafc-red"><strong>-{$payrecord_info.back_insure_fee_type}</strong></div>
 					</div>
+					{/if}
 					
 					<div class="control-group">
 						<label class="control-label">实际退款金额：</label>
-						<div class="controls l_h30 ecjiafc-red"><strong>{$payrecord_info.back_money_total}</strong></div>
+						<div class="controls l_h30 ecjiafc-red"><strong>{$payrecord_info.back_money_total_type}</strong></div>
 					</div>
 					
 					<div class="control-group">
@@ -120,7 +126,7 @@
 							<input type="hidden" name="id" value="{$payrecord_info.id}" />
 							<input type="hidden" name="refund_id" value="{$payrecord_info.refund_id}" />
 							<input type="hidden" name="refund_type" value="{$payrecord_info.refund_type}" />
-							<input type="hidden" name="back_money_paid" value="{$payrecord_info.back_money_paid}" />
+							<input type="hidden" name="back_money_total" value="{$payrecord_info.back_money_total}" />
 							<input type="hidden" name="back_integral" value="{$payrecord_info.back_integral}" />
 						</div>
 					</div>
@@ -138,17 +144,38 @@
 					
 					<div class="control-group">
 						<label class="control-label">应退款金额：</label>
-						<div class="controls l_h30">- ¥ {$payrecord_info.back_money_paid} 元</div>
+						<div class="controls l_h30">{$payrecord_info.order_money_paid_type}</div>
+					</div>
+					
+					{if $payrecord_info.back_pay_fee neq '0.00'}
+						<div class="control-group">
+							<label class="control-label">扣除支付手续费：</label>
+							<div class="controls l_h30">-{$payrecord_info.back_pay_fee_type}</div>
+						</div>
+					{/if}
+					
+					{if $payrecord_info.back_insure_fee neq '0.00'}
+					<div class="control-group">
+						<label class="control-label">扣除配送费：</label>
+						<div class="controls l_h30">-{$payrecord_info.back_shipping_fee_type}</div>
+					</div>
+					{/if}
+					
+					{if $payrecord_info.back_insure_fee neq '0.00'}
+					<div class="control-group">
+						<label class="control-label">扣除保价费：</label>
+						<div class="controls l_h30">-{$payrecord_info.back_insure_fee_type}</div>
+					</div>
+					{/if}
+					
+					<div class="control-group">
+						<label class="control-label">实际退款金额：</label>
+						<div class="controls l_h30">{$payrecord_info.back_money_total_type}</div>
 					</div>
 					
 					<div class="control-group">
 						<label class="control-label">积分：</label>
-						<div class="controls l_h30">- {$payrecord_info.back_integral}</div>
-					</div>
-					
-					<div class="control-group">
-						<label class="control-label">实际退款金额：</label>
-						<div class="controls l_h30">- ¥ {$payrecord_info.back_money_paid} 元</div>
+						<div class="controls l_h30">{$payrecord_info.back_integral}</div>
 					</div>
 					
 					<div class="control-group">
