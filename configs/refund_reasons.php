@@ -46,9 +46,9 @@
 //
 
 
-//取消订单原因和退款原因
+//待发货、已完成、待收货售后原因
 return array(
-    'cancelorder' => array(
+    'await_ship' => array(
     				array('reason_id' => 1,'reason_name' => '暂时不想购买了'),
     				array('reason_id' => 2,'reason_name' => '忘记使用优惠券'),
     				array('reason_id' => 3,'reason_name' => '商家缺货，不想买了'),
@@ -57,14 +57,19 @@ return array(
     				array('reason_id' => 6,'reason_name' => '信息填写有误，重新购买')
     	
 	),
-	'afterservice'	=> array(
+	'finished'	=> array(
 					array('reason_id' => 11,'reason_name' => '商品质量问题'),
 					array('reason_id' => 12,'reason_name' => '发错货'),
 					array('reason_id' => 13,'reason_name' => '缺斤少两'),
 					array('reason_id' => 14,'reason_name' => '外表损伤（包装，商品等）'),
 					array('reason_id' => 15,'reason_name' => '未在时效内送达'),
 					array('reason_id' => 16,'reason_name' => '误购')
-	)
-	
-		
+	),
+	'shipped'	=> array(
+					array('reason_id' => 21,'reason_name' => '暂时不想购买了'),
+					array('reason_id' => 22,'reason_name' => '忘记使用优惠券'),
+					array('reason_id' => 23,'reason_name' => '商家服务态度有问题'),
+					array('reason_id' => 24,'reason_name' => '快递太慢了'),
+					array('reason_id' => 25,'reason_name' => '信息填写有误，重新购买')
+	)		
 );

@@ -282,30 +282,20 @@ class apply_module extends api_front implements api_interface {
 						}
 					}
 				}
-				//更改订单状态
-				RC_DB::table('order_info')->where('order_id', $order_id)->update(array('order_status' => OS_RETURNED));
-				//订单操作记录log
-				order_refund::order_action($order_id, OS_RETURNED, $order_info['shipping_status'], $order_info['pay_status'], '买家申请退款', '买家');
-				//订单状态log记录
-				$pra = array('order_status' => '申请退款', 'order_id' => $order_id, 'message' => '您的退款申请已提交，等待商家处理！');
-				order_refund::order_status_log($pra);
-				//退款申请操作log记录
-				//$opt = array(
-				//		'refund_id' 		=> $refund_id,
-				//		'action_user_type'	=> 'user',
-				//		'action_user_id'	=> $_SESSION['user_id'],
-				//		'action_user_name'  => '买家',
-				//		'status'			=> 0,
-				//		'refund_status'		=> 0,
-				//		'return_status'		=> 0,
-				//		'action_note'		=> '买家申请退款',
-				//);
-				//order_refund::refund_order_action($opt);
-				//售后申请状态记录
-				$opt = array('status' => '申请退款', 'refund_id' => $refund_id, 'message' => '您的退款申请已提交，等待商家处理！');
-				order_refund::refund_status_log($opt);
 			}
 		}
+		
+		//更改订单状态
+		RC_DB::table('order_info')->where('order_id', $order_id)->update(array('order_status' => OS_RETURNED));
+		//订单操作记录log
+		order_refund::order_action($order_id, OS_RETURNED, $order_info['shipping_status'], $order_info['pay_status'], '买家申请退款', '买家');
+		//订单状态log记录
+		$pra = array('order_status' => '申请退款', 'order_id' => $order_id, 'message' => '您的退款申请已提交，等待商家处理！');
+		order_refund::order_status_log($pra);
+		
+		//售后申请状态记录
+		$opt = array('status' => '申请退款', 'refund_id' => $refund_id, 'message' => '您的退款申请已提交，等待商家处理！');
+		order_refund::refund_status_log($opt);
 		
 		return array();
 	}

@@ -81,6 +81,11 @@ class cancel_module extends api_front implements api_interface {
 		
         RC_DB::table('refund_order')->where('refund_sn', $refund_sn)->update(array('status' => $cancel_status));
         
+        //退货退款撤销，back_goods表退货商品删除
+        if ($refund_info['refund_type'] == 'return') {
+        	RC_DB::table('back_good')->where('back_id', $refund_info['refund_id'])->delete();
+        }
+        
         RC_Loader::load_app_class('order_refund', 'refund', false);
         //撤销退款申请操作记录
         $refund_order_action = array(
@@ -109,7 +114,7 @@ class cancel_module extends api_front implements api_interface {
 		$pra = array('order_status' => '撤销退款申请', 'order_id' => $refund_info['order_id'], 'message' => '您已成功撤销退款申请！');
 		order_refund::order_status_log($pra);
 		//售后申请状态记录
-		$opt = array('status' => '申请退款', 'refund_id' => $refund_info['refund_id'], 'message' => '您的退款申请已提交，等待商家处理！');
+		$opt = array('status' => '撤销退款申请', 'refund_id' => $refund_info['refund_id'], 'message' => '您已撤销退款申请！');
 		order_refund::refund_status_log($opt);
         
         return array();

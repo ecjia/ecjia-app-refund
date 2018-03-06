@@ -54,6 +54,12 @@ class merchant extends ecjia_merchant {
 
 	public function __construct() {
 		parent::__construct();
+		
+		RC_Script::enqueue_script('jquery-dropper', RC_Uri::admin_url() . '/statics/lib/dropper-upload/jquery.fs.dropper.js', array(), false, true);
+		RC_Script::enqueue_script('jquery-imagesloaded');
+		RC_Script::enqueue_script('jquery-colorbox');
+		RC_Style::enqueue_style('jquery-colorbox');
+		
 		RC_Script::enqueue_script('jquery-form');
 		RC_Script::enqueue_script('smoke');
 		RC_Style::enqueue_style('uniform-aristo');
@@ -63,6 +69,7 @@ class merchant extends ecjia_merchant {
 		
 		RC_Loader::load_app_class('OrderStatusLog', 'orders', false);
 		RC_Loader::load_app_class('RefundStatusLog', 'refund', false);
+		RC_Loader::load_app_class('RefundReasonList', 'refund', false);
 		
 		//时间控件
 		RC_Style::enqueue_style('datepicker', RC_Uri::admin_url('statics/lib/datepicker/datepicker.css'));
@@ -76,7 +83,7 @@ class merchant extends ecjia_merchant {
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('订单管理', RC_Uri::url('orders/merchant/init')));
 		ecjia_merchant_screen::get_current_screen()->set_parentage('refund', 'refund/merchant.php');
 	}
-
+	
 	/**
 	 * 活动列表页
 	 */
@@ -117,15 +124,20 @@ class merchant extends ecjia_merchant {
 		$this->assign('refund_info', $refund_info);
 		
 		//获取用户退货退款原因
-		$reason_list = $this->get_reason_list();
+		$reason_list = RefundReasonList::get_refund_reason();
 		$this->assign('reason_list', $reason_list);
 		
 		//退款上传凭证素材
-		$refund_img_list = RC_DB::table('term_attachment')->where('object_id', $refund_info['refund_id'])->where('object_app', 'ecjia.refund')->where('object_group','refund')->select('file_path')->get();
+		$refund_img_list = RC_DB::table('term_attachment')->where('object_id', $refund_info['refund_id'])->where('object_app', 'ecjia.refund')->where('object_group','refund')->select('file_path','file_name')->get();
 		$this->assign('refund_img_list', $refund_img_list);
 		
 		//退款有关下单信息
-		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->select('shipping_fee','order_sn','money_paid','pay_name','pay_time','add_time','consignee','province','city','district','street','address','mobile')->first();
+		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])
+		->select('order_sn','pay_name','pay_time','add_time','shipping_status',
+				'consignee','province','city','district','street','address','mobile',
+				'goods_amount','shipping_fee','pay_fee','pack_fee','insure_fee','card_fee','tax','integral_money','bonus','discount')
+		->first();
+		
 		$order_info['province']	= ecjia_region::getRegionName($order_info['province']);
 		$order_info['city']     = ecjia_region::getRegionName($order_info['city']);
 		$order_info['district'] = ecjia_region::getRegionName($order_info['district']);
@@ -136,11 +148,25 @@ class merchant extends ecjia_merchant {
 		if ($order_info['pay_time']) {
 			$order_info['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']);
 		}
+		$order_info['shipping_fee'] = price_format($order_info['shipping_fee']);
 		$this->assign('order_info', $order_info);
+		
+		//退费计算
+		if ($order_info['shipping_status'] > SS_UNSHIPPED) {
+			$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus'] - $refund_info['shipping_fee'] - $refund_info['pack_fee']);
+		} else {
+			$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus']);
+		}
+		$this->assign('refund_total_amount', $refund_total_amount);
+		
+		//订单总额
+		$order_amount  = price_format($order_info['goods_amount'] + $order_info['shipping_fee'] + $order_info['pay_fee'] + $order_info['pack_fee'] + $order_info['insure_fee'] + $order_info['card_fee'] + $order_info['tax'] - $order_info['integral_money'] - $order_info['bonus'] - $order_info['discount']);
+		$this->assign('order_amount', $order_amount);
 		
 		//送货商品信息
 		$goods_list = RC_DB::TABLE('order_goods')->where('order_id', $refund_info['order_id'])->select('goods_id', 'goods_name' ,'goods_price','goods_number')->get();
 		foreach ($goods_list as $key => $val) {
+			$goods_list[$key]['goods_price']  = price_format($val['goods_price']);
 			$goods_list[$key]['image']  = RC_DB::TABLE('goods')->where('goods_id', $val['goods_id'])->pluck('goods_thumb');
 		}
 		$disk = RC_Filesystem::disk();
@@ -191,10 +217,11 @@ class merchant extends ecjia_merchant {
 		if (empty($action_note)) {
 			return $this->showmessage('请输入操作备注', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
+		$refund_info = RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
+		
 		if ($type == 'agree') {//商家同意
 			$status = 1;
 			$refund_status = 1;
-			$refund_info = RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
 			$payment_record_id = RC_DB::TABLE('payment_record')->where('order_sn', $refund_info['order_sn'])->pluck('id');
 			$data = array(
 				'store_id'	=>	$_SESSION['store_id'],
@@ -244,10 +271,8 @@ class merchant extends ecjia_merchant {
 		);
 		RC_DB::table('refund_order_action')->insertGetId($data);
 		
-		
 		//售后订单状态变动日志表
 		RefundStatusLog::refund_order_process(array('refund_id' => $refund_id, 'status' => $status));
-		
 		//普通订单状态变动日志表
 		OrderStatusLog::refund_order_process(array('order_id' => $refund_info['order_id'], 'status' => $status));
 
@@ -281,7 +306,7 @@ class merchant extends ecjia_merchant {
 			$return_shipping_range = explode(",",$refund_info['return_shipping_range']);
 			foreach($return_shipping_range as $key=>$val){
 				if($val == 'home'){
-					$return_shipping_range[$key] ='上门取货';
+					$return_shipping_range[$key] ='上门取件';
 				} elseif($val == 'express'){
 					$return_shipping_range[$key] ='自选快递';
 				} elseif($val == 'shop'){
@@ -293,16 +318,23 @@ class merchant extends ecjia_merchant {
 		$this->assign('range', $range);
 		$this->assign('refund_info', $refund_info);
 		
+		$return_shipping_value = unserialize($refund_info['return_shipping_value']);
+		$this->assign('return_shipping_value', $return_shipping_value);
+		
 		//获取用户退货退款原因
-		$reason_list = $this->get_reason_list();
+		$reason_list = RefundReasonList::get_refund_reason();
 		$this->assign('reason_list', $reason_list);
 		
 		//退款上传凭证素材
-		$refund_img_list = RC_DB::table('term_attachment')->where('object_id', $refund_info['refund_id'])->where('object_app', 'ecjia.refund')->where('object_group','refund')->select('file_path')->get();
+		$refund_img_list = RC_DB::table('term_attachment')->where('object_id', $refund_info['refund_id'])->where('object_app', 'ecjia.refund')->where('object_group','refund')->select('file_path','file_name')->get();
 		$this->assign('refund_img_list', $refund_img_list);
 		
 		//退款有关下单信息
-		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->select('shipping_fee','order_sn','money_paid','pay_name','pay_time','add_time','consignee','province','city','district','street','address','mobile')->first();
+		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])
+		->select('order_sn','pay_name','pay_time','add_time','shipping_status',
+				'consignee','province','city','district','street','address','mobile',
+				'goods_amount','shipping_fee','pay_fee','pack_fee','insure_fee','card_fee','tax','integral_money','bonus','discount')
+				->first();
 		$order_info['province']	= ecjia_region::getRegionName($order_info['province']);
 		$order_info['city']     = ecjia_region::getRegionName($order_info['city']);
 		$order_info['district'] = ecjia_region::getRegionName($order_info['district']);
@@ -313,11 +345,25 @@ class merchant extends ecjia_merchant {
 		if ($order_info['pay_time']) {
 			$order_info['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']);
 		}
+		$order_info['shipping_fee'] = price_format($order_info['shipping_fee']);
 		$this->assign('order_info', $order_info);
+		
+		//退费计算
+		if ($order_info['shipping_status'] > SS_UNSHIPPED) {
+			$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus'] - $refund_info['shipping_fee'] - $refund_info['pack_fee']);
+		} else {
+			$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus']);
+		}
+		$this->assign('refund_total_amount', $refund_total_amount);
+		
+		//订单总额
+		$order_amount  = price_format($order_info['goods_amount'] + $order_info['shipping_fee'] + $order_info['pay_fee'] + $order_info['pack_fee'] + $order_info['insure_fee'] + $order_info['card_fee'] + $order_info['tax'] - $order_info['integral_money'] - $order_info['bonus'] - $order_info['discount']);
+		$this->assign('order_amount', $order_amount);
 		
 		//送货商品
 		$goods_list = RC_DB::TABLE('order_goods')->where('order_id', $refund_info['order_id'])->select('goods_id', 'goods_name' ,'goods_price','goods_number')->get();
 		foreach ($goods_list as $key => $val) {
+			$goods_list[$key]['goods_price']  = price_format($val['goods_price']);
 			$goods_list[$key]['image']  = RC_DB::TABLE('goods')->where('goods_id', $val['goods_id'])->pluck('goods_thumb');
 		}
 		$disk = RC_Filesystem::disk();
@@ -334,7 +380,8 @@ class merchant extends ecjia_merchant {
 		$refund_list = RC_DB::table('back_goods')->where('back_id', $refund_info['refund_id'])->get();
 		foreach ($refund_list as $key => $val) {
 			$refund_list[$key]['image']  = RC_DB::TABLE('goods')->where('goods_id', $val['goods_id'])->pluck('goods_thumb');
-			$refund_list[$key]['goods_price']  = RC_DB::TABLE('order_goods')->where('goods_id', $val['goods_id'])->where('order_id', $refund_info['order_id'])->pluck('goods_price');
+			$goods_price = RC_DB::TABLE('order_goods')->where('goods_id', $val['goods_id'])->where('order_id', $refund_info['order_id'])->pluck('goods_price');
+			$refund_list[$key]['goods_price']  = price_format($goods_price);
 		}
 		$disk = RC_Filesystem::disk();
 		foreach ($refund_list as $key => $val) {
@@ -558,7 +605,7 @@ class merchant extends ecjia_merchant {
 		$count = $db_refund_view->count();
 		$page = new ecjia_merchant_page($count, 10, 5);
 		$data = $db_refund_view
-		->selectRaw('refund_id,refund_sn,refund_type,order_sn,money_paid,add_time,status,refund_status')
+		->selectRaw('refund_id,refund_sn,refund_type,order_id,order_sn,money_paid,surplus,add_time,shipping_fee,pack_fee,status,refund_status')
 		->orderby($filter['sort_by'], $filter['sort_order'])
 		->take(10)
 		->skip($page->start_id-1)
@@ -568,33 +615,16 @@ class merchant extends ecjia_merchant {
 		if (!empty($data)) {
 			foreach ($data as $row) {
 				$row['add_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
+				$row['shipping_status'] = RC_DB::TABLE('order_info')->where('order_id', $row['order_id'])->pluck('shipping_status');
+				if ($row['shipping_status'] > SS_UNSHIPPED) {
+					$row['refund_total_amount']  = price_format($row['money_paid'] + $row['surplus'] - $row['shipping_fee'] - $row['pack_fee']);
+				} else {
+					$row['refund_total_amount']  = price_format($row['money_paid'] + $row['surplus']);
+				}
 				$list[] = $row;
 			}
 		}
 		return array('list' => $list, 'filter' => $filter, 'page' => $page->show(5), 'desc' => $page->page_desc(), 'count' => $refund_count);
-	}
-	
-	
-	/**
-	 * 获取退货原因列表
-	 */
-	private function get_reason_list(){
-		$reason_list = array(
-			'1'	=> '暂时不想购买了',
-			'2' => '忘记使用优惠券',
-			'3' => '商家缺货，不想买了',
-			'4' => '商家服务态度有问题',
-			'5' => '商家长时间未发货',
-			'6' => '信息填写有误，重新购买',
-				
-			'11' => '商品质量问题',
-			'12' => '发错货',
-			'13' => '缺斤少两',
-			'14' => '外表损伤（包装，商品等）',
-			'15' => '未在时效内送达',
-			'16' => '误购'
-		);
-		return $reason_list;
 	}
 }
 

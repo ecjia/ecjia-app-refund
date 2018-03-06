@@ -47,29 +47,33 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 取消订单和售后原因列表
- * @author zrl
+ * 获取退货原因
+ * 
  */
-class reasons_module extends api_front implements api_interface {
-    public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {
+class RefundReasonList
+{	
+    public static function get_refund_reason() {
+    	 $reason_list = array(
+    		'1'	=> '暂时不想购买了',
+    		'2' => '忘记使用优惠券',
+    		'3' => '商家缺货，不想买了',
+    		'4' => '商家服务态度有问题',
+    		'5' => '商家长时间未发货',
+    		'6' => '信息填写有误，重新购买',
     
-    	$this->authSession();
-    	if ($_SESSION['user_id'] <= 0) {
-    		return new ecjia_error(100, 'Invalid session');
-    	}
-		
-		$type = $this->requestData('type', '');
-		$type_array = array('await_ship', 'shipped', 'finished');
-		
-		if (empty($type) || !in_array($type, $type_array)) {
-			return new ecjia_error('invalid_parameter', RC_Lang::get('orders::order.invalid_parameter'));
-		}
-		
-		RC_Loader::load_app_class('order_refund', 'refund', false);
-		
-		$data = order_refund::reason_list($type);
-		
-		return $data;
-	}
+    		'11' => '商品质量问题',
+    		'12' => '发错货',
+    		'13' => '缺斤少两',
+    		'14' => '外表损伤（包装，商品等）',
+    		'15' => '未在时效内送达',
+    		'16' => '误购',
+    
+    		'21' => '暂时不想购买了',
+    		'22' => '忘记使用优惠券',
+    		'23' => '商家服务态度有问题',
+    		'24' => '快递太慢了',
+    		'25' => '信息填写有误，重新购买',
+    	 );
+    	 return $reason_list;
+    }
 }
-// end

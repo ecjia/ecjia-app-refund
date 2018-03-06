@@ -232,19 +232,6 @@ class detail_module extends api_front implements api_interface {
 		$logs = array();
 		if (!empty($refund_logs)) {
 			foreach ($refund_logs as $log) {
-				//if ($log['status'] == '0') {
-				//	$log_status = 'await_check';
-				//	$log_label_status = '待审核';
-				//} elseif ($log['status'] == '1') {
-				//	$log_status = 'agree';
-				//	$log_label_status = '同意';
-				//} elseif ($log['status'] == '10') {
-				//	$log_status = 'canceled';
-				//	$log_label_status = '已取消';
-				//} elseif ($log['status'] == '11') {
-				//	$log_status = 'refused';
-				//	$log_label_status = '拒绝退款';
-				//}
 				$logs[] = array(
 						'log_description' 		=> $log['message'],
 						'formatted_action_time' => RC_Time::local_date(ecjia::config('time_format'), $log['add_time']),
