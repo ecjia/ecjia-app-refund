@@ -135,7 +135,11 @@ class admin_payrecord extends ecjia_admin {
 		$this->assign('refund_img_list', $refund_img_list);
 		
 		//退款有关下单信息
-		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->select('shipping_fee','order_sn','money_paid','pay_name','pay_time','add_time','consignee','province','city','district','street','mobile')->first();
+		$order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])
+		->select('order_sn','pay_name','pay_time','add_time','shipping_status',
+				'consignee','province','city','district','street','address','mobile',
+				'goods_amount','shipping_fee','pay_fee','pack_fee','insure_fee','card_fee','tax','integral_money','bonus','discount')
+				->first();
 		$order_info['province']	= ecjia_region::getRegionName($order_info['province']);
 		$order_info['city']     = ecjia_region::getRegionName($order_info['city']);
 		$order_info['district'] = ecjia_region::getRegionName($order_info['district']);
@@ -146,8 +150,8 @@ class admin_payrecord extends ecjia_admin {
 		if ($order_info['pay_time']) {
 			$order_info['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']);
 		}
+		$order_info['shipping_fee'] = price_format($order_info['shipping_fee']);
 		$this->assign('order_info', $order_info);
-		
 		
 		//打款表信息
 		$payrecord_info = RC_DB::table('refund_payrecord')->where('refund_id', $refund_id)->first();
@@ -159,15 +163,25 @@ class admin_payrecord extends ecjia_admin {
 		}
 		$this->assign('payrecord_info', $payrecord_info);
 		
-		$this->assign('form_action', RC_Uri::url('refund/admin_payrecord/update'));
+		//退费计算
+		if ($order_info['shipping_status'] > SS_UNSHIPPED) {
+			$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus'] - $refund_info['shipping_fee'] - $refund_info['pack_fee']);
+		} else {
+			$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus']);
+		}
+		$this->assign('refund_total_amount', $refund_total_amount);
 		
+		//订单总额
+		$order_amount  = price_format($order_info['goods_amount'] + $order_info['shipping_fee'] + $order_info['pay_fee'] + $order_info['pack_fee'] + $order_info['insure_fee'] + $order_info['card_fee'] + $order_info['tax'] - $order_info['integral_money'] - $order_info['bonus'] - $order_info['discount']);
+		$this->assign('order_amount', $order_amount);
+		
+		$this->assign('form_action', RC_Uri::url('refund/admin_payrecord/update'));
 		
 		$this->assign('original_img', RC_App::apps_url('statics/images/original_pic.png', __FILE__));
 		$this->assign('surplus_img', RC_App::apps_url('statics/images/surplus_pic.png', __FILE__));
 		$this->assign('selected_img', RC_App::apps_url('statics/images/selected.png', __FILE__));
 		
 		$this->display('payrecord_detail.dwt');
-		
 	}
 	
 	
@@ -313,7 +327,7 @@ class admin_payrecord extends ecjia_admin {
 		$count = $db_refund_view->count();
 		$page = new ecjia_page($count, 10, 5);
 		$data = $db_refund_view
-		->select('id','order_sn','refund_sn','refund_id','refund_type','back_type','back_money_paid','back_time','add_time',RC_DB::raw('s.merchants_name'))
+		->select('id','order_sn','order_id','refund_sn','refund_id','refund_type','back_type','back_money_paid','back_surplus','back_time','add_time',RC_DB::raw('s.merchants_name'))
 		->orderby('id', 'DESC')
 		->take(10)
 		->skip($page->start_id-1)
@@ -324,6 +338,12 @@ class admin_payrecord extends ecjia_admin {
 			foreach ($data as $row) {
 				$row['back_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['back_time']);
 				$row['add_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
+				$row['shipping_status'] = RC_DB::TABLE('order_info')->where('order_id', $row['order_id'])->pluck('shipping_status');
+				if ($row['shipping_status'] > SS_UNSHIPPED) {
+					$row['refund_total_amount']  = price_format($row['back_money_paid'] + $row['back_surplus'] - $row['shipping_fee'] - $row['back_pack_fee']);
+				} else {
+					$row['refund_total_amount']  = price_format($row['back_money_paid'] + $row['back_surplus']);
+				}
 				$list[] = $row;
 			}
 		}

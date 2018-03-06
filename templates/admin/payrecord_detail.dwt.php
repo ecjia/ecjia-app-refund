@@ -42,7 +42,7 @@
 				
 				<div class="control-group">
 					<label class="control-label">退款金额：</label>
-					<div class="controls l_h30">{$refund_info.money_paid}</div>
+					<div class="controls l_h30">{$refund_total_amount}</div>
 				</div>
 				
 				<div class="control-group">
@@ -69,7 +69,7 @@
 					<h3>退款操作</h3>
 					<div class="control-group">
 						<label class="control-label">退款金额：</label>
-						<div class="controls l_h30 ecjiafc-red"><strong>¥ {$payrecord_info.back_money_paid} 元</strong></div>
+						<div class="controls l_h30 ecjiafc-red"><strong>{$refund_total_amount}</strong></div>
 					</div>
 					
 					<div class="control-group">
@@ -166,8 +166,8 @@
 							 	<div class="goods-content">
 					           		<p>订单编号：{$order_info.order_sn}</p>
 					           		<hr>
-					                <p>运费：¥&nbsp;{$order_info.shipping_fee}</p>
-					                <p>订单总额：¥&nbsp;57.60（退款：¥&nbsp;57.60）</p>
+					                <p>运费：{$order_info.shipping_fee}</p>
+					                <p>订单总额：{$order_amount}（退款：{$refund_total_amount}）</p>
 					                <p>支付方式：{$order_info.pay_name}</p>
 					                <p>下单时间：{$order_info.add_time}</p>
 					                <p>付款时间：{$order_info.pay_time}</p>

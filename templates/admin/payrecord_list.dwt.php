@@ -80,7 +80,7 @@
 		      	<td>
     				{if $list.refund_type eq 'refund'}仅退款{else}退货退款{/if}
     			</td>
-		      	<td>¥ {$list.back_money_paid}</td>
+		      	<td>{$list.refund_total_amount}</td>
 		      	<td>{$list.add_time}</td>
 		      	{if $smarty.get.back_type eq 'have'}
 			      	<td>{if $list.back_type eq 'original'}原路退回{elseif $list.back_type eq 'surplus'}退回余额{/if}</td>
