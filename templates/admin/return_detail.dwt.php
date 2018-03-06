@@ -34,7 +34,7 @@
 		 				{if $key eq $refund_info.refund_reason}{$val}{/if}
 						<!-- {/foreach} -->
 						</p>
-						<p>退款金额：¥&nbsp;{$refund_total_amount}</p>
+						<p>退款金额：{$refund_total_amount}</p>
 						<p>退款说明：{if $refund_info.refund_content}{$refund_info.refund_content}{else}暂无{/if}</p>
 						<p>上传凭证： 
 							{if $refund_img_list}
@@ -67,6 +67,39 @@
 							{/if}
 							<p>操作人：{$action_mer_msg_return.action_user_name}</p>
 							<p>处理时间：{$action_mer_msg_return.log_time}</p>
+						</div>
+					</div>
+				</div>
+			{/if}
+			
+			{if $refund_info.return_status gt '1'}
+				<div class="accordion-group">
+					<div class="accordion-heading">
+						<a class="accordion-toggle collapsed move-mod-head" data-toggle="collapse" data-target="#return_shipping">
+							<strong>买家退货信息</strong>
+						</a>
+					</div>
+					<div class="accordion-body in collapse" id="return_shipping">
+						<div class="refund_content">
+							{if $return_shipping_value.return_way_code eq 'home'}
+								<p>退货方式：{$return_shipping_value.return_way_name}</p>
+								<p>取件地址：{$return_shipping_value.pickup_address}</p>
+								<p>期望取件时间：{$return_shipping_value.expect_pickup_time}</p>
+								<p>联系人：{$return_shipping_value.contact_name}</p>
+								<p>联系电话：{$return_shipping_value.contact_phone}</p>
+							{elseif $return_shipping_value.return_way_code eq 'express'}
+								<p>退货方式：{$return_shipping_value.return_way_name}</p>
+								<p>收件人：{$return_shipping_value.recipients}</p>
+								<p>联系方式：{$return_shipping_value.contact_phone}</p>
+								<p>收件地址：{$return_shipping_value.recipient_address}</p>
+								<p>快递名称：{$return_shipping_value.shipping_name}</p>
+								<p>快递单号：{$return_shipping_value.shipping_sn}</p>
+							{else}
+								<p>退货方式：{$return_shipping_value.return_way_name}</p>
+								<p>店铺名称：{$return_shipping_value.store_name}</p>
+								<p>联系方式：{$return_shipping_value.contact_phone}</p>
+								<p>店铺地址：{$return_shipping_value.store_address}</p>
+							{/if}
 						</div>
 					</div>
 				</div>
@@ -181,13 +214,13 @@
 					           	</div>
 				           		<div class="goods-desc">
 				           			 <p>{$list.goods_name}</p>
-				           			 <p>¥&nbsp;{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.goods_number}</p>
+				           			 <p>{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.goods_number}</p>
 				           		</div>
 			           		</div>
 			           		<!-- {/foreach} -->
 			           		<hr>
-			                <p>运费：¥&nbsp;{$order_info.shipping_fee}</p>
-			               	<p>订单总额：¥&nbsp;{$order_amount}（退款：¥&nbsp;{$refund_total_amount}）</p>
+			                <p>运费：{$order_info.shipping_fee}</p>
+			               	<p>订单总额：{$order_amount}（退款：{$refund_total_amount}）</p>
 			                <hr>
 			                <p>订单编号：{$order_info.order_sn} <span><a id="order-info" href="javascript:;">查看更多</a></span></p>
 			                <div class="order-info" style="display: none;">
@@ -198,7 +231,7 @@
 			                <hr>
 			                <p>收货人：{$order_info.consignee}<span><a id="address-info" href="javascript:;">查看更多</a></span></p>
 			                <div class="address-info" style="display: none;">
-				                <p>收货地址：{$order_info.province}{$order_info.city}{$order_info.district}{$order_info.street}</p>
+				                <p>收货地址：{$order_info.province}{$order_info.city}{$order_info.district}{$order_info.street}{$order_info.address}</p>
 				                <p>联系电话：{$order_info.mobile}</p>
 			                </div>
 				        </div>
@@ -224,7 +257,7 @@
 					           	</div>
 				           		<div class="goods-desc">
 				           			 <p>{$list.goods_name}</p>
-				           			 <p>¥&nbsp;{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.send_number}</p>
+				           			 <p>{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.send_number}</p>
 				           		</div>
 			           		</div>
 			           		<!-- {/foreach} -->

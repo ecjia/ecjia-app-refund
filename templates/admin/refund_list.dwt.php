@@ -91,7 +91,7 @@
 		      	<td>
     				{if $list.refund_type eq 'refund'}仅退款{else}退货退款{/if}
     			</td>
-		      	<td>¥ {$list.refund_total_amount}</td>
+		      	<td>{$list.refund_total_amount}</td>
 		      	<td>{$list.add_time}</td>
 		      	<td>
 					{if $list.refund_status eq 1}<font class="ecjiafc-red">待处理</font>{elseif $list.refund_status eq 2}已打款{else}无{/if}

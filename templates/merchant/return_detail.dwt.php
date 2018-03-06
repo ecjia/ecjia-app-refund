@@ -34,7 +34,7 @@
 						<div class="form-group refund-label">
 							<div class="controls col-lg-9">
 								<input name="return_shipping_range" id="home" value="home" type="checkbox"> 
-								<label for="home"><strong>上门取货</strong></label><small>（由商家联系配送员上门取货）</small>
+								<label for="home"><strong>上门取件</strong></label><small>（由商家联系配送员上门取件）</small>
 							</div>
 						</div>
 						
@@ -80,7 +80,7 @@
  				{if $key eq $refund_info.refund_reason}{$val}{/if}
 				<!-- {/foreach} -->
 				</p>
-				<p>退款金额：¥&nbsp;{$refund_total_amount}</p>
+				<p>退款金额：{$refund_total_amount}</p>
 				<p>退款说明：{if $refund_info.refund_content}{$refund_info.refund_content}{else}暂无{/if}</p>
 				<p>上传凭证： 
 					{if $refund_img_list}
@@ -141,6 +141,37 @@
         {/if}
         
         <!-- 商家已发货 -->
+        {if $refund_info.return_status gt '1'}
+	        <section class="panel panel-body">
+				<h4>买家退货信息</h4>
+				{if $return_shipping_value.return_way_code eq 'home'}
+					<div class="mer_check" style="height: 220px;">
+						<p>退货方式：{$return_shipping_value.return_way_name}</p>
+						<p>取件地址：{$return_shipping_value.pickup_address}</p>
+						<p>期望取件时间：{$return_shipping_value.expect_pickup_time}</p>
+						<p>联系人：{$return_shipping_value.contact_name}</p>
+						<p>联系电话：{$return_shipping_value.contact_phone}</p>
+					</div>
+				{elseif $return_shipping_value.return_way_code eq 'express'}
+					<div class="mer_check" style="height: 260px;">
+						<p>退货方式：{$return_shipping_value.return_way_name}</p>
+						<p>收件人：{$return_shipping_value.recipients}</p>
+						<p>联系方式：{$return_shipping_value.contact_phone}</p>
+						<p>收件地址：{$return_shipping_value.recipient_address}</p>
+						<p>快递名称：{$return_shipping_value.shipping_name}</p>
+						<p>快递单号：{$return_shipping_value.shipping_sn}</p>
+					</div>
+				{else}
+					<div class="mer_check" style="height: 180px;">
+						<p>退货方式：{$return_shipping_value.return_way_name}</p>
+						<p>店铺名称：{$return_shipping_value.store_name}</p>
+						<p>联系方式：{$return_shipping_value.contact_phone}</p>
+						<p>店铺地址：{$return_shipping_value.store_address}</p>
+					</div>
+				{/if}
+		    </section>
+        {/if}
+        
         {if $refund_info.return_status eq '2'}
          	<section class="panel panel-body">
 				<h4>商家确认收货操作</h4>
@@ -218,13 +249,13 @@
 		           	</div>
 	           		<div class="goods-desc">
 	           			 <p>{$list.goods_name}</p>
-	           			 <p>¥&nbsp;{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.goods_number}</p>
+	           			 <p>{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.goods_number}</p>
 	           		</div>
            		</div>
            		<!-- {/foreach} -->
            		<hr>
-                <p>运费：¥&nbsp;{$order_info.shipping_fee}</p>
-                <p>订单总额：¥&nbsp;{$order_amount}（退款：¥&nbsp;{$refund_total_amount}）</p>
+                <p>运费：{$order_info.shipping_fee}</p>
+                <p>订单总额：{$order_amount}（退款：{$refund_total_amount}）</p>
                 <hr>
                 <p>订单编号：{$order_info.order_sn} <span><a id="order-info" href="javascript:;">查看更多</a></span></p>
                 <div class="order-info" style="display: none;">
@@ -253,7 +284,7 @@
 		           	</div>
 	           		<div class="goods-desc">
 	           			 <p>{$list.goods_name}</p>
-	           			 <p>¥&nbsp;{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.send_number}</p>
+	           			 <p>{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.send_number}</p>
 	           		</div>
            		</div>
            		<!-- {/foreach} -->

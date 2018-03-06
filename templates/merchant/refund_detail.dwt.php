@@ -29,7 +29,7 @@
  				{if $key eq $refund_info.refund_reason}{$val}{/if}
 				<!-- {/foreach} -->
 				</p>
-				<p>退款金额：¥&nbsp;{$refund_total_amount}</p>
+				<p>退款金额：{$refund_total_amount}</p>
 				<p>退款说明：{if $refund_info.refund_content}{$refund_info.refund_content}{else}暂无{/if}</p>
 				<p>上传凭证： 
 					{if $refund_img_list}
@@ -122,13 +122,13 @@
 		           	</div>
 	           		<div class="goods-desc">
 	           			 <p>{$list.goods_name}</p>
-	           			 <p>¥&nbsp;{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.goods_number}</p>
+	           			 <p>{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.goods_number}</p>
 	           		</div>
            		</div>
            		<!-- {/foreach} -->
            		<hr>
-                <p>运费：¥&nbsp;{$order_info.shipping_fee}</p>
-                <p>订单总额：¥&nbsp;{$order_amount}（退款：¥&nbsp;{$refund_total_amount}）</p>
+                <p>运费：{$order_info.shipping_fee}</p>
+                <p>订单总额：{$order_amount}（退款：{$refund_total_amount}）</p>
                 <hr>
                 <p>订单编号：{$order_info.order_sn} <span><a id="order-info" href="javascript:;">查看更多</a></span></p>
                 <div class="order-info" style="display: none;">
