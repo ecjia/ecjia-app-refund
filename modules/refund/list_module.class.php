@@ -128,11 +128,11 @@ class list_module extends api_front implements api_interface {
 				$order_info = RC_DB::table('order_info')->where('order_id', $rows['order_id'])->selectRaw('order_status, shipping_status, pay_status')->first();
 				//配送费：已发货的不退，未发货的退
 				if ($order_info['shipping_status'] > SS_UNSHIPPED) {
-					$total_refund_amount  = ($rows['money_paid'] + $rows['surplus']) - ($rows['shipping_fee'] + $rows['pack_fee']);
+					$refund_total_amount  = $rows['money_paid'] + $rows['surplus'] - $rows['pay_fee']- $rows['shipping_fee'] - $rows['insure_fee'];
 				} else {
-					$total_refund_amount  = $rows['money_paid'] + $rows['surplus'];
+					$refund_total_amount  = $rows['money_paid'] + $rows['surplus'] - $rows['pay_fee'];
 				}
-			
+				
 				$arr[] = array(
 					'store_id' 					=> intval($rows['store_id']),
 					'store_name' 				=> $rows['store_name'],
