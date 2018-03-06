@@ -252,7 +252,7 @@ class admin extends ecjia_admin {
 			$return_shipping_range = explode(",",$refund_info['return_shipping_range']);
 			foreach($return_shipping_range as $key=>$val){
 				if($val == 'home'){
-					$return_shipping_range[$key] ='上门取货';
+					$return_shipping_range[$key] ='上门取件';
 				} elseif($val == 'express'){
 					$return_shipping_range[$key] ='自选快递';
 				} elseif($val == 'shop'){
@@ -263,6 +263,9 @@ class admin extends ecjia_admin {
 		}
 		$this->assign('range', $range);
 		$this->assign('refund_info', $refund_info);
+		
+		$return_shipping_value = unserialize($refund_info['return_shipping_value']);
+		$this->assign('return_shipping_value', $return_shipping_value);
 		
 		//获取用户退货退款原因
 		$reason_list = RefundReasonList::get_refund_reason();

@@ -72,6 +72,39 @@
 				</div>
 			{/if}
 			
+			{if $refund_info.return_status gt '1'}
+				<div class="accordion-group">
+					<div class="accordion-heading">
+						<a class="accordion-toggle collapsed move-mod-head" data-toggle="collapse" data-target="#return_shipping">
+							<strong>买家退货信息</strong>
+						</a>
+					</div>
+					<div class="accordion-body in collapse" id="return_shipping">
+						<div class="refund_content">
+							{if $return_shipping_value.return_way_code eq 'home'}
+								<p>退货方式：{$return_shipping_value.return_way_name}</p>
+								<p>取件地址：{$return_shipping_value.pickup_address}</p>
+								<p>期望取件时间：{$return_shipping_value.expect_pickup_time}</p>
+								<p>联系人：{$return_shipping_value.contact_name}</p>
+								<p>联系电话：{$return_shipping_value.contact_phone}</p>
+							{elseif $return_shipping_value.return_way_code eq 'express'}
+								<p>退货方式：{$return_shipping_value.return_way_name}</p>
+								<p>收件人：{$return_shipping_value.recipients}</p>
+								<p>联系方式：{$return_shipping_value.contact_phone}</p>
+								<p>收件地址：{$return_shipping_value.recipient_address}</p>
+								<p>快递名称：{$return_shipping_value.shipping_name}</p>
+								<p>快递单号：{$return_shipping_value.shipping_sn}</p>
+							{else}
+								<p>退货方式：{$return_shipping_value.return_way_name}</p>
+								<p>店铺名称：{$return_shipping_value.store_name}</p>
+								<p>联系方式：{$return_shipping_value.contact_phone}</p>
+								<p>店铺地址：{$return_shipping_value.store_address}</p>
+							{/if}
+						</div>
+					</div>
+				</div>
+			{/if}
+			
 			<!-- 商家已发货 -->
 		    {if $refund_info.return_status eq '3' or $refund_info.return_status eq '11'}
 		    	<div class="accordion-group">

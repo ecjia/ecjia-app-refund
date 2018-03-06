@@ -34,7 +34,7 @@
 						<div class="form-group refund-label">
 							<div class="controls col-lg-9">
 								<input name="return_shipping_range" id="home" value="home" type="checkbox"> 
-								<label for="home"><strong>上门取货</strong></label><small>（由商家联系配送员上门取货）</small>
+								<label for="home"><strong>上门取件</strong></label><small>（由商家联系配送员上门取件）</small>
 							</div>
 						</div>
 						
@@ -141,6 +141,37 @@
         {/if}
         
         <!-- 商家已发货 -->
+        {if $refund_info.return_status gt '1'}
+	        <section class="panel panel-body">
+				<h4>买家退货信息</h4>
+				{if $return_shipping_value.return_way_code eq 'home'}
+					<div class="mer_check" style="height: 220px;">
+						<p>退货方式：{$return_shipping_value.return_way_name}</p>
+						<p>取件地址：{$return_shipping_value.pickup_address}</p>
+						<p>期望取件时间：{$return_shipping_value.expect_pickup_time}</p>
+						<p>联系人：{$return_shipping_value.contact_name}</p>
+						<p>联系电话：{$return_shipping_value.contact_phone}</p>
+					</div>
+				{elseif $return_shipping_value.return_way_code eq 'express'}
+					<div class="mer_check" style="height: 260px;">
+						<p>退货方式：{$return_shipping_value.return_way_name}</p>
+						<p>收件人：{$return_shipping_value.recipients}</p>
+						<p>联系方式：{$return_shipping_value.contact_phone}</p>
+						<p>收件地址：{$return_shipping_value.recipient_address}</p>
+						<p>快递名称：{$return_shipping_value.shipping_name}</p>
+						<p>快递单号：{$return_shipping_value.shipping_sn}</p>
+					</div>
+				{else}
+					<div class="mer_check" style="height: 180px;">
+						<p>退货方式：{$return_shipping_value.return_way_name}</p>
+						<p>店铺名称：{$return_shipping_value.store_name}</p>
+						<p>联系方式：{$return_shipping_value.contact_phone}</p>
+						<p>店铺地址：{$return_shipping_value.store_address}</p>
+					</div>
+				{/if}
+		    </section>
+        {/if}
+        
         {if $refund_info.return_status eq '2'}
          	<section class="panel panel-body">
 				<h4>商家确认收货操作</h4>
