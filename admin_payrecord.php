@@ -58,6 +58,11 @@ class admin_payrecord extends ecjia_admin {
 		RC_Loader::load_app_class('RefundReasonList', 'refund', false);
 		
 		/* 加载全局 js/css */
+		RC_Script::enqueue_script('jquery-dropper', RC_Uri::admin_url() . '/statics/lib/dropper-upload/jquery.fs.dropper.js', array(), false, true);
+		RC_Script::enqueue_script('jquery-imagesloaded');
+		RC_Script::enqueue_script('jquery-colorbox');
+		RC_Style::enqueue_style('jquery-colorbox');
+		
 		RC_Script::enqueue_script('jquery-validate');
 		RC_Script::enqueue_script('jquery-form');
 		RC_Script::enqueue_script('smoke');
@@ -328,7 +333,7 @@ class admin_payrecord extends ecjia_admin {
 		$count = $db_refund_view->count();
 		$page = new ecjia_page($count, 10, 5);
 		$data = $db_refund_view
-		->select('id','order_sn','order_id','refund_sn','refund_id','refund_type','back_type','back_money_paid','back_surplus','back_time','add_time',RC_DB::raw('s.merchants_name'))
+		->select('id','order_sn','order_id','refund_sn','refund_id','refund_type','back_type','order_money_paid','back_surplus','back_time','add_time',RC_DB::raw('s.merchants_name'))
 		->orderby('id', 'DESC')
 		->take(10)
 		->skip($page->start_id-1)
@@ -340,11 +345,7 @@ class admin_payrecord extends ecjia_admin {
 				$row['back_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['back_time']);
 				$row['add_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
 				$row['shipping_status'] = RC_DB::TABLE('order_info')->where('order_id', $row['order_id'])->pluck('shipping_status');
-				if ($row['shipping_status'] > SS_UNSHIPPED) {
-					$row['refund_total_amount']  = price_format($row['back_money_paid'] + $row['back_surplus'] - $row['shipping_fee'] - $row['back_pack_fee']);
-				} else {
-					$row['refund_total_amount']  = price_format($row['back_money_paid'] + $row['back_surplus']);
-				}
+				$row['order_money_paid']  = price_format($row['order_money_paid']);
 				$list[] = $row;
 			}
 		}

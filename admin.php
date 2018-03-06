@@ -431,11 +431,7 @@ class admin extends ecjia_admin {
 			foreach ($data as $row) {
 				$row['add_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
 				$row['shipping_status'] = RC_DB::TABLE('order_info')->where('order_id', $row['order_id'])->pluck('shipping_status');
-				if ($row['shipping_status'] > SS_UNSHIPPED) {
-					$row['refund_total_amount']  = price_format($row['money_paid'] + $row['surplus'] - $row['shipping_fee'] - $row['pack_fee']);
-				} else {
-					$row['refund_total_amount']  = price_format($row['money_paid'] + $row['surplus']);
-				}
+				$row['refund_total_amount']  = price_format($row['money_paid'] + $row['surplus']);
 				$list[] = $row;
 			}
 		}
