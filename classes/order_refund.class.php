@@ -273,7 +273,7 @@ class order_refund {
 		$list = array();
 	
 		if (!empty($refund_id)) {
-			$list = RC_DB::table('back_goods as bg')
+			$list = RC_DB::table('refund_goods as rg')
 						->leftJoin('goods as g',  RC_DB::raw('bg.goods_id'), '=', RC_DB::raw('g.goods_id'))
 						->selectRaw('bg.*, g.goods_thumb, g.goods_img, g.original_img')
 						->where(RC_DB::raw('bg.back_id'), $refund_id)
