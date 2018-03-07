@@ -121,8 +121,11 @@ class admin_payrecord extends ecjia_admin {
 	public function detail() {
 		$this->admin_priv('payrecord_manage');
 		
+		
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('退款详情'));
 		$this->assign('ur_here', '退款详情');
+		
+		$this->assign('action_link', array('text' => '交易退款', 'href' => RC_Uri::url('refund/admin_payrecord/init')));
 		
 		$refund_id = intval($_GET['refund_id']);
 		$this->assign('refund_id', $refund_id);
@@ -333,12 +336,11 @@ class admin_payrecord extends ecjia_admin {
 		$count = $db_refund_view->count();
 		$page = new ecjia_page($count, 10, 5);
 		$data = $db_refund_view
-		->select('id','order_sn','order_id','refund_sn','refund_id','refund_type','action_back_type','order_money_paid','back_surplus','action_back_time','add_time',RC_DB::raw('s.merchants_name'))
+		->select('id','order_sn','order_id','refund_sn','refund_id','refund_type','order_money_paid','back_surplus','action_back_time','action_back_type','add_time',RC_DB::raw('s.merchants_name'))
 		->orderby('id', 'DESC')
 		->take(10)
 		->skip($page->start_id-1)
 		->get();
-	
 		$list = array();
 		if (!empty($data)) {
 			foreach ($data as $row) {

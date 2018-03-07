@@ -55,7 +55,7 @@
 			<thead>
 				<tr>
 				    <th class="w100">退款编号</th>
-				    <th class="w150">商家名称</th>
+				    <th class="w100">商家名称</th>
 				    <th class="w100">订单编号</th>
 				    <th class="w50">申请类型</th>
 				    <th class="w50">退款金额</th>
@@ -72,7 +72,7 @@
 		      	<td class="hide-edit-area">
 					{$list.refund_sn}
 		     	  	<div class="edit-list">
-						<a target="_blank" href='{url path="refund/admin_payrecord/detail" args="refund_id={$list.refund_id}"}' title="查看详情">{t}查看详情{/t}</a>
+						<a class="data-pjax" href='{url path="refund/admin_payrecord/detail" args="refund_id={$list.refund_id}"}' title="查看详情">{t}查看详情{/t}</a>
 		    	  	</div>
 		      	</td>
 		      	<td>{$list.merchants_name}</td>
@@ -83,11 +83,11 @@
 		      	<td>{$list.order_money_paid}</td>
 		      	<td>{$list.add_time}</td>
 		      	{if $smarty.get.back_type eq 'have'}
-			      	<td>{if $list.back_type eq 'original'}原路退回{elseif $list.back_type eq 'surplus'}退回余额{/if}</td>
+			      	<td>{if $list.action_back_type eq 'original'}原路退回{elseif $list.action_back_type eq 'surplus'}退回余额{/if}</td>
 			      	<td>{$list.action_back_time}</td>
 		      	{/if}
 				<td>
-					{if $list.back_type}已退款{else}待退款{/if}
+					{if $list.action_back_time}已退款{else}待退款{/if}
 				</td>
 		    </tr>
 		    <!-- {foreachelse} -->
