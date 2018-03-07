@@ -262,6 +262,25 @@ class detail_module extends api_front implements api_interface {
 			}
 		//}
 		
+		//被拒后返回原因，供重新申请使用
+		$refused_reasons =array();
+		if ($refund_order_info['status'] == '11') {
+			$reasons = RC_Loader::load_app_config('refund_reasons', 'refund');
+			if (!empty($reasons)) {
+				foreach ($reasons as $kk => $value) {
+					if (!empty($value)) {
+						foreach ($value as $bb) {
+							if ($refund_order_info['refund_reason'] == $bb['reason_id']) {
+								$reason_str = $kk;
+							}
+						}
+					}
+			
+				}
+			}
+		}
+		$refused_reasons = $reasons[$reason_str];
+		
 		//配送费说明
 		$shipping_fee_desc = array(
 				'shipping_fee' 		=> price_format($refund_order_info['shipping_fee']),
@@ -293,6 +312,7 @@ class detail_module extends api_front implements api_interface {
 				'selected_returnway_info'	=> $selected_returnway_info,
 				'refund_logs'				=> $logs,
 				'goods_list'				=> $goods_list,
+				'refused_reasons'			=> $refused_reasons
 		);
 		return  $arr;
 	}
