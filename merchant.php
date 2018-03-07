@@ -110,6 +110,8 @@ class merchant extends ecjia_merchant {
 		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('退款服务'));
 		$this->assign('ur_here', '退款服务');
 		
+		$this->assign('action_link',array('href' => RC_Uri::url('refund/merchant/init'),'text' => '售后列表'));
+		
 		$refund_id = intval($_GET['refund_id']);
 		$this->assign('refund_id', $refund_id);
 		
@@ -303,6 +305,8 @@ class merchant extends ecjia_merchant {
 	
 		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('退货退款服务'));
 		$this->assign('ur_here', '退货退款服务');
+		
+		$this->assign('action_link',array('href' => RC_Uri::url('refund/merchant/init'),'text' => '售后列表'));
 				
 		$refund_id = intval($_GET['refund_id']);
 		$this->assign('refund_id', $refund_id);

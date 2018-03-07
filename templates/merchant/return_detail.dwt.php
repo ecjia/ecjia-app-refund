@@ -10,11 +10,15 @@
 <!-- {block name="home-content"} -->
 <!-- #BeginLibraryItem "/library/return_step.lbi" --><!-- #EndLibraryItem -->
 
-<div class="page-header">
-	<div class="pull-left">
-		<h2><!-- {if $ur_here}{$ur_here}{/if} --></h2>
-  	</div>
-  	<div class="clearfix"></div>
+<div class="row">
+    <div class="col-lg-12">
+        <h2 class="page-header">
+        <!-- {if $ur_here}{$ur_here}{/if} -->
+      	 {if $action_link}
+	        <a class="btn btn-primary data-pjax" href="{$action_link.href}" id="sticky_a" style="float:right;margin-top:-3px;"><i class="fa fa-reply"></i> {$action_link.text}</a>
+	        {/if}
+        </h2>
+    </div>
 </div>
 
 <div class="row" id="home-content">		
