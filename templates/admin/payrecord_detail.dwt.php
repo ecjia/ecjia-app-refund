@@ -140,7 +140,7 @@
 					
 					<div class="control-group">
 						<label class="control-label">退款方式：</label>
-						<div class="controls l_h30">{if $payrecord_info.back_type eq 'original'}原路退回{else}退回余额{/if}</div>
+						<div class="controls l_h30">{if $payrecord_info.action_back_type eq 'original'}原路退回{else}退回余额{/if}</div>
 					</div>
 					
 					<div class="control-group">

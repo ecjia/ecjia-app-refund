@@ -155,7 +155,7 @@
 					</div>
 					<div class="accordion-body in collapse" id="admin_content">
 						<div class="refund_content">
-							<p>退款方式：{if $payrecord_info.back_type eq 'original'}原路退回{else}退回余额{/if}</p>
+							<p>退款方式：{if $payrecord_info.action_back_type eq 'original'}原路退回{else}退回余额{/if}</p>
 							<p>应退款金额：{$payrecord_info.order_money_paid_type}</p>
 							{if $payrecord_info.back_pay_fee neq '0.00'}
 								<p>扣除支付手续费：-{$payrecord_info.back_pay_fee_type}</p>
