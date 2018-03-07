@@ -185,7 +185,7 @@
 					
 					<div class="control-group">
 						<label class="control-label">退款时间：</label>
-						<div class="controls l_h30">{$payrecord_info.back_time}</div>
+						<div class="controls l_h30">{$payrecord_info.action_back_time}</div>
 					</div>
 					
 					<div class="control-group">

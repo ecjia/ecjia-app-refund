@@ -215,8 +215,8 @@ class admin extends ecjia_admin {
 	
 		//平台打款信息
 		$payrecord_info = RC_DB::table('refund_payrecord')->where('refund_id', $refund_info['refund_id'])->first();
-		if ($payrecord_info['back_time']) {
-			$payrecord_info['back_time'] = RC_Time::local_date(ecjia::config('time_format'), $payrecord_info['back_time']);
+		if ($payrecord_info['action_back_time']) {
+			$payrecord_info['action_back_time'] = RC_Time::local_date(ecjia::config('time_format'), $payrecord_info['action_back_time']);
 		}
 		$payrecord_info['order_money_paid_type'] = price_format($payrecord_info['order_money_paid']);
 		$payrecord_info['back_money_total_type'] = price_format($payrecord_info['back_money_total']);
@@ -375,8 +375,8 @@ class admin extends ecjia_admin {
 		
 		//平台打款信息
 		$payrecord_info = RC_DB::table('refund_payrecord')->where('refund_id', $refund_info['refund_id'])->first();
-		if ($payrecord_info['back_time']) {
-			$payrecord_info['back_time'] = RC_Time::local_date(ecjia::config('time_format'), $payrecord_info['back_time']);
+		if ($payrecord_info['action_back_time']) {
+			$payrecord_info['action_back_time'] = RC_Time::local_date(ecjia::config('time_format'), $payrecord_info['action_back_time']);
 		}
 		$payrecord_info['order_money_paid_type'] = price_format($payrecord_info['order_money_paid']);
 		$payrecord_info['back_money_total_type'] = price_format($payrecord_info['back_money_total']);

@@ -170,7 +170,7 @@
 							{/if}
 							<p>实际退款金额：{$payrecord_info.back_money_total_type}</p>
 							<p>积分：{$payrecord_info.back_integral}</p>
-							<p>退款时间：{$payrecord_info.back_time}</p>
+							<p>退款时间：{$payrecord_info.action_back_time}</p>
 						</div>
 					</div>
 				</div>

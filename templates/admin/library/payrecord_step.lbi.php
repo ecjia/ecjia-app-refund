@@ -12,7 +12,7 @@
 			<li class="step-last">
 				<div class="{if $refund_info.refund_status eq '2'}step-cur{/if}">
 					<div class="step-no">2</div>
-					<div class="m_t5">退款成功<br><font class="ecjiafc-blue">{if $payrecord_info.back_time}{$payrecord_info.back_time}{/if}</font></div>
+					<div class="m_t5">退款成功<br><font class="ecjiafc-blue">{if $payrecord_info.action_back_time}{$payrecord_info.action_back_time}{/if}</font></div>
 				</div>
 			</li>
 		</ul>

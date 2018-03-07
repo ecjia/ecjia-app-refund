@@ -163,8 +163,8 @@ class admin_payrecord extends ecjia_admin {
 		if ($payrecord_info['add_time']) {
 			$payrecord_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $payrecord_info['add_time']);
 		}
-		if ($payrecord_info['back_time']) {
-			$payrecord_info['back_time'] = RC_Time::local_date(ecjia::config('time_format'), $payrecord_info['back_time']);
+		if ($payrecord_info['action_back_time']) {
+			$payrecord_info['action_back_time'] = RC_Time::local_date(ecjia::config('time_format'), $payrecord_info['action_back_time']);
 		}
 		$payrecord_info['order_money_paid_type'] = price_format($payrecord_info['order_money_paid']);
 		$payrecord_info['back_money_total_type'] = price_format($payrecord_info['back_money_total']);
@@ -232,9 +232,9 @@ class admin_payrecord extends ecjia_admin {
 		
 		//更新打款表
 		$data = array(
-			'back_type'			=>	$back_type,
-			'back_time'			=>	RC_Time::gmtime(),
-			'back_content'		=>	$back_content,	
+			'action_back_type'			=>	$back_type,
+			'action_back_time'			=>	RC_Time::gmtime(),
+			'action_back_content'		=>	$back_content,	
 			'action_user_id'	=>	$_SESSION['admin_id'],	
 			'action_user_name'	=>	$_SESSION['admin_name']
 		);
@@ -320,8 +320,8 @@ class admin_payrecord extends ecjia_admin {
 	
 		$filter['back_type'] = trim($_GET['back_type']);
 		$refund_count = $db_refund_view->select(
-				RC_DB::raw('SUM(IF(back_time = 0, 1, 0)) as wait'),
-				RC_DB::raw('SUM(IF(back_time > 0, 1, 0)) as have'))->first();
+				RC_DB::raw('SUM(IF(action_back_time = 0, 1, 0)) as wait'),
+				RC_DB::raw('SUM(IF(action_back_time > 0, 1, 0)) as have'))->first();
 		
 		if ($filter['back_type'] == 'wait' || $filter['back_type'] == '') {
 			$db_refund_view->whereNull(RC_DB::raw('back_type'));
@@ -333,7 +333,7 @@ class admin_payrecord extends ecjia_admin {
 		$count = $db_refund_view->count();
 		$page = new ecjia_page($count, 10, 5);
 		$data = $db_refund_view
-		->select('id','order_sn','order_id','refund_sn','refund_id','refund_type','back_type','order_money_paid','back_surplus','back_time','add_time',RC_DB::raw('s.merchants_name'))
+		->select('id','order_sn','order_id','refund_sn','refund_id','refund_type','action_back_type','order_money_paid','back_surplus','action_back_time','add_time',RC_DB::raw('s.merchants_name'))
 		->orderby('id', 'DESC')
 		->take(10)
 		->skip($page->start_id-1)
@@ -342,7 +342,7 @@ class admin_payrecord extends ecjia_admin {
 		$list = array();
 		if (!empty($data)) {
 			foreach ($data as $row) {
-				$row['back_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['back_time']);
+				$row['action_back_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['action_back_time']);
 				$row['add_time']  = RC_Time::local_date('Y-m-d H:i:s', $row['add_time']);
 				$row['shipping_status'] = RC_DB::TABLE('order_info')->where('order_id', $row['order_id'])->pluck('shipping_status');
 				$row['order_money_paid']  = price_format($row['order_money_paid']);

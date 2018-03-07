@@ -84,7 +84,7 @@
 		      	<td>{$list.add_time}</td>
 		      	{if $smarty.get.back_type eq 'have'}
 			      	<td>{if $list.back_type eq 'original'}原路退回{elseif $list.back_type eq 'surplus'}退回余额{/if}</td>
-			      	<td>{$list.back_time}</td>
+			      	<td>{$list.action_back_time}</td>
 		      	{/if}
 				<td>
 					{if $list.back_type}已退款{else}待退款{/if}
