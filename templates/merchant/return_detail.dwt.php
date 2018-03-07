@@ -241,8 +241,8 @@
 					{if $payrecord_info.back_insure_fee neq '0.00'}
 						<p>扣除保价费：-{$payrecord_info.back_insure_fee_type}</p>
 					{/if}
-					<p>实际退款金额：{$payrecord_info.back_money_total_type}</p>
-					<p>积分：{$payrecord_info.back_integral}</p>
+					<p>实际退款金额：<font class="ecjiafc-red"><strong>{$payrecord_info.back_money_total_type}</strong></font></p>
+					<p>积分：<font class="ecjiafc-red"><strong>{$payrecord_info.back_integral}</strong></font></p>
 					<p>退款时间：{$payrecord_info.action_back_time}</p>
 				</div>
 	       </section>

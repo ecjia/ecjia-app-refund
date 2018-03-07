@@ -170,12 +170,12 @@
 					
 					<div class="control-group">
 						<label class="control-label">实际退款金额：</label>
-						<div class="controls l_h30">{$payrecord_info.back_money_total_type}</div>
+						<div class="controls l_h30 ecjiafc-red"><strong>{$payrecord_info.back_money_total_type}</strong></div>
 					</div>
 					
 					<div class="control-group">
 						<label class="control-label">积分：</label>
-						<div class="controls l_h30">{$payrecord_info.back_integral}</div>
+						<div class="controls l_h30 ecjiafc-red"><strong>{$payrecord_info.back_integral}</strong></div>
 					</div>
 					
 					<div class="control-group">

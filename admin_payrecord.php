@@ -324,11 +324,11 @@ class admin_payrecord extends ecjia_admin {
 				RC_DB::raw('SUM(IF(action_back_time > 0, 1, 0)) as have'))->first();
 		
 		if ($filter['back_type'] == 'wait' || $filter['back_type'] == '') {
-			$db_refund_view->whereNull(RC_DB::raw('back_type'));
+			$db_refund_view->whereNull(RC_DB::raw('action_back_type'));
 		}
 		
 		if ($filter['back_type'] == 'have') {
-			$db_refund_view->whereNotNull(RC_DB::raw('back_type'));
+			$db_refund_view->whereNotNull(RC_DB::raw('action_back_type'));
 		} 
 		$count = $db_refund_view->count();
 		$page = new ecjia_page($count, 10, 5);
