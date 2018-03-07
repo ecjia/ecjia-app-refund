@@ -74,7 +74,7 @@
 						</div>
 					{/if}
 					
-					{if $payrecord_info.back_insure_fee neq '0.00'}
+					{if $payrecord_info.back_shipping_fee neq '0.00'}
 					<div class="control-group">
 						<label class="control-label">扣除配送费：</label>
 						<div class="controls l_h30 ecjiafc-red"><strong>-{$payrecord_info.back_shipping_fee_type}</strong></div>
@@ -154,7 +154,7 @@
 						</div>
 					{/if}
 					
-					{if $payrecord_info.back_insure_fee neq '0.00'}
+					{if $payrecord_info.back_shipping_fee neq '0.00'}
 					<div class="control-group">
 						<label class="control-label">扣除配送费：</label>
 						<div class="controls l_h30">-{$payrecord_info.back_shipping_fee_type}</div>
