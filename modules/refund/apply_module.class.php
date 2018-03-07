@@ -267,7 +267,7 @@ class apply_module extends api_front implements api_interface {
 					$order_goods = order_refund::currorder_goods_list($order_id);
 					if (!empty($order_goods)) {
 						foreach ($order_goods as $row) {
-							$back_goods_data = array(
+							$refund_goods_data = array(
 									'rec_id'		=> $row['rec_id'],
 									'refund_id'		=> $refund_id,
 									'goods_id'		=> $row['goods_id'],
@@ -278,7 +278,7 @@ class apply_module extends api_front implements api_interface {
 									'send_number'	=> $row['goods_number'],
 									'goods_attr'	=> $row['goods_attr']
 							);
-							$back_goods_id = RC_DB::table('refund_goods')->insertGetId($back_goods_data);
+							$refund_goods_id = RC_DB::table('refund_goods')->insertGetId($refund_goods_data);
 						}
 					}
 				}

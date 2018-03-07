@@ -81,7 +81,7 @@ class cancel_module extends api_front implements api_interface {
 		
         RC_DB::table('refund_order')->where('refund_sn', $refund_sn)->update(array('status' => $cancel_status));
         
-        //退货退款撤销，back_goods表退货商品删除
+        //退货退款撤销，refund_goods表退货商品删除
         if ($refund_info['refund_type'] == 'return') {
         	RC_DB::table('refund_goods')->where('refund_id', $refund_info['refund_id'])->delete();
         }

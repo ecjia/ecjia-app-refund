@@ -265,8 +265,8 @@ class detail_module extends api_front implements api_interface {
 		//配送费说明
 		$shipping_fee_desc = array(
 				'shipping_fee' 		=> price_format($refund_order_info['shipping_fee']),
-				'pack_fee'	   		=> price_format($refund_order_info['pack_fee']),
-				'total_fee'			=> price_format($refund_order_info['shipping_fee'] + $refund_order_info['pack_fee']),
+				'insure_fee'	   	=> price_format($refund_order_info['insure_fee']),
+				'total_fee'			=> price_format($refund_order_info['shipping_fee'] + $refund_order_info['insure_fee']),
 				'desc'				=> '运费：原订单实际支付的运费金额'
 		);
 		
@@ -281,7 +281,8 @@ class detail_module extends api_front implements api_interface {
 				'refund_status'				=> $refund_status,
 				'label_refund_status'		=> $label_refund_status,
 				'refund_goods_amount'		=> price_format($refund_order_info['goods_amount']),
-				//'shipping_fee'				=> price_format($refund_order_info['shipping_fee']),
+				'refund_inv_tax'			=> price_format($refund_order_info['inv_tax']),
+				'refund_integral'			=> intval($refund_order_info['integral']),
 				'refund_total_amount'		=> price_format($refund_total_amount),
 				'reason'					=> $refund_order_info['reason'],
 				'refund_desc'				=> $refund_order_info['refund_content'],
