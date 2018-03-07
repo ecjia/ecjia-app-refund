@@ -389,7 +389,7 @@ class merchant extends ecjia_merchant {
 		$this->assign('goods_list', $goods_list);
 		
 		//退货商品
-		$refund_list = RC_DB::table('back_goods')->where('back_id', $refund_info['refund_id'])->get();
+		$refund_list = RC_DB::table('refund_goods')->where('refund_id', $refund_info['refund_id'])->get();
 		foreach ($refund_list as $key => $val) {
 			$refund_list[$key]['image']  = RC_DB::TABLE('goods')->where('goods_id', $val['goods_id'])->pluck('goods_thumb');
 			$goods_price = RC_DB::TABLE('order_goods')->where('goods_id', $val['goods_id'])->where('order_id', $refund_info['order_id'])->pluck('goods_price');
