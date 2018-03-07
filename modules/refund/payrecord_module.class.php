@@ -104,7 +104,7 @@ class payrecord_module extends api_front implements api_interface {
 		if ($refund_payrecord) {
 			if ($refund_payrecord['back_pay_code'] == 'pay_balance') {
 				$back_account = '退回余额';
-			} elseif ($refund_payrecord['back_pay_code'] == 'pay_wxpay' || $refund_payrecord['back_pay_code'] == 'pay_wxpay_weapp' || $refund_payrecord['back_pay_code'] == 'pay_wxpay_shop' || $refund_payrecord['pay_code'] == 'back_pay_code') {
+			} elseif ($refund_payrecord['back_pay_code'] == 'pay_wxpay' || $refund_payrecord['back_pay_code'] == 'pay_wxpay_weapp' || $refund_payrecord['back_pay_code'] == 'pay_wxpay_shop' || $refund_payrecord['back_pay_code'] == 'pay_wxpay_app') {
 				$back_account = '微信支付账户';
 			} elseif ($refund_payrecord['back_pay_code'] == 'pay_alipay') {
 				$back_account = '支付宝账户';
