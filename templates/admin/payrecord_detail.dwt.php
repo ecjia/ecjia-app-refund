@@ -65,7 +65,7 @@
 					</div>
 				</div>
 				
-				{if !$payrecord_info.back_content}
+				{if !$payrecord_info.action_back_content}
 					<h3>退款操作</h3>
 					{if $payrecord_info.back_pay_fee neq '0.00'}
 						<div class="control-group">
@@ -180,7 +180,7 @@
 					
 					<div class="control-group">
 						<label class="control-label">退款备注：</label>
-						<div class="controls l_h30">{$payrecord_info.back_content}</div>
+						<div class="controls l_h30">{$payrecord_info.action_back_content}</div>
 					</div>
 					
 					<div class="control-group">
