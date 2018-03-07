@@ -80,9 +80,9 @@
 					{$list.refund_sn}
 		     	  	<div class="edit-list">
 				        {if $list.refund_type eq 'refund'}
-							<a target="_blank" href='{url path="refund/admin/refund_detail" args="refund_id={$list.refund_id}"}' title="查看详情">{t}查看详情{/t}</a>
+							<a class="data-pjax" href='{url path="refund/admin/refund_detail" args="refund_id={$list.refund_id}"}' title="查看详情">{t}查看详情{/t}</a>
 						{else}
-							<a target="_blank" href='{url path="refund/admin/return_detail" args="refund_id={$list.refund_id}"}' title="查看详情">{t}查看详情{/t}</a>
+							<a class="data-pjax" href='{url path="refund/admin/return_detail" args="refund_id={$list.refund_id}"}' title="查看详情">{t}查看详情{/t}</a>
 						{/if}
 		    	  	</div>
 		      	</td>
@@ -94,10 +94,10 @@
 		      	<td>{$list.refund_total_amount}</td>
 		      	<td>{$list.add_time}</td>
 		      	<td>
-					{if $list.refund_status eq 1}<font class="ecjiafc-red">待处理</font>{elseif $list.refund_status eq 2}已打款{else}无{/if}
+					{if $list.refund_status eq 1}<font class="ecjiafc-red">待处理</font>{elseif $list.refund_status eq 2}<font class="ecjiafc-green">已打款</font>{else}无{/if}
 				</td>
 				<td>
-					{if $list.status eq 0}待审核{elseif $list.status eq 1}同意{elseif $list.status eq 10}已取消{else}不同意{/if}
+					{if $list.status eq 0}待审核{elseif $list.status eq 1}<font class="ecjiafc-green">同意</font>{elseif $list.status eq 10}已取消{else}不同意{/if}
 				</td>
 		    </tr>
 		    <!-- {foreachelse} -->

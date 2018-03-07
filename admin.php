@@ -117,6 +117,8 @@ class admin extends ecjia_admin {
 		$this->admin_priv('refund_manage');
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('退款服务'));
 		$this->assign('ur_here', '退款服务');
+		
+		$this->assign('action_link', array('text' => '售后列表', 'href' => RC_Uri::url('refund/admin/init')));
 	
 		$refund_id = intval($_GET['refund_id']);
 		$this->assign('refund_id', $refund_id);
@@ -236,7 +238,9 @@ class admin extends ecjia_admin {
 	
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('退货退款服务'));
 		$this->assign('ur_here', '退货退款服务');
-	
+		
+		$this->assign('action_link', array('text' => '售后列表', 'href' => RC_Uri::url('refund/admin/init')));
+		
 		$refund_id = intval($_GET['refund_id']);
 		$this->assign('refund_id', $refund_id);
 		
