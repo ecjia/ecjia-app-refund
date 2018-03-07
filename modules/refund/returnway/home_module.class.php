@@ -103,9 +103,9 @@ class home_module extends api_front implements api_interface {
         $home = serialize($home);
         $update_data = array('return_shipping_type' => 'home', 'return_time'	=> RC_Time::gmtime(), 'return_shipping_value' => $home, 'return_status' => 2);
        	RC_DB::table('refund_order')->where('refund_sn', $refund_sn)->update($update_data);
-       	//订单状态log记录
-       	$pra = array('order_status' => '返还退货商品', 'order_id' => $refund_info['order_id'], 'message' => '买家已返还退货商品！');
-       	order_refund::order_status_log($pra);
+       	//售后状态log记录
+       	$pra = array('status' => '返还退货商品', 'refund_id' => $refund_info['order_id'], 'message' => '买家已返还退货商品！');
+       	order_refund::refund_status_log($pra);
         
         return array();
 	}
