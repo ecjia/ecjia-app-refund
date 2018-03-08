@@ -34,7 +34,7 @@ class apply_module extends api_front implements api_interface {
 		
 		//当前订单是否可申请售后
 		if (in_array($order_info['pay_status'], array(PS_UNPAYED))
-			|| in_array($order_info['order_status'], array(OS_CANCELED, OS_INVALID, OS_RETURNED))
+			|| in_array($order_info['order_status'], array(OS_CANCELED, OS_INVALID))
 			|| ($order_info['is_delete'] == '1')
 		) {
 			return new ecjia_error('error_apply', '当前订单不可申请售后！');
