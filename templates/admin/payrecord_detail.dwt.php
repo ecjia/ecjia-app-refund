@@ -29,7 +29,7 @@
 				
 				<div class="control-group">
 					<label class="control-label">申请人：</label>
-					<div class="controls l_h30">{$refund_info.user_name}</div>
+					<div class="controls l_h30">{$refund_info.user_name}{if $refund_info.referer eq 'merchant'}（商家申请）{/if}</div>
 				</div>
 				
 				<div class="control-group">

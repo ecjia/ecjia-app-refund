@@ -26,7 +26,7 @@
             <h4>买家退款申请</h4>
 			<div class="refund_content">
 				<p>退款编号：{$refund_info.refund_sn}</p>
-				<p>申请人：{$refund_info.user_name}</p>
+				<p>申请人：{$refund_info.user_name}{if $refund_info.referer eq 'merchant'}（商家申请）{/if}</p>
 				<p>退款原因：
  				<!-- {foreach from=$reason_list key=key item=val} -->
  				{if $key eq $refund_info.refund_reason}{$val}{/if}
