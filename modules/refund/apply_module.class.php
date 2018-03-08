@@ -59,7 +59,7 @@ class apply_module extends api_front implements api_interface {
 					return new ecjia_error('invalid_parameter', '参数无效！');
 				}
 				$update_data = array(
-					'reason_id' 		=> !empty($reason_id) ? $reason_id : $order_refund_info['reason_id'],
+					'refund_reason' 	=> !empty($reason_id) ? $reason_id : $order_refund_info['reason_id'],
 					'refund_content' 	=> !empty($refund_description) ? $refund_description : $order_refund_info['refund_content'],
 					'last_submit_time'	=> RC_Time::gmtime()
 				);
