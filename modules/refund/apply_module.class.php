@@ -17,6 +17,7 @@ class apply_module extends api_front implements api_interface {
 		$refund_type		= $this->requestData('refund_type');
 		$reason_id			= $this->requestData('reason_id', '');
 		$refund_description = $this->requestData('refund_description');
+		$device 			=  $this->device;
 		
 		if (empty($order_id) || empty($refund_type) || empty($reason_id)) {
 			return new ecjia_error('invalid_parameter', '参数错误');
@@ -170,7 +171,6 @@ class apply_module extends api_front implements api_interface {
 					'user_name'		=> $order_info['user_name'],
 					'refund_type'	=> $refund_type,
 					'refund_sn'		=> $refund_sn,
-					'order_type'	=> '',
 					'order_id'		=> $order_id,
 					'order_sn'		=> $order_info['order_sn'],
 					'shipping_code'	=> $shipping_code,
@@ -199,7 +199,7 @@ class apply_module extends api_front implements api_interface {
 					'refund_reason'	=> $reason_id,
 					'return_status'	=> $return_status,
 					'add_time'		=> RC_Time::gmtime(),
-					'referer'		=> $order_info['referer']
+					'referer'		=> ! empty($device['client']) ? $device['client'] : 'mobile'
 			);
 			
 			//插入售后申请表数据
@@ -264,22 +264,26 @@ class apply_module extends api_front implements api_interface {
 					
 				//退商品
 				if ($refund_type == 'return') {
-					//获取订单商品
-					$order_goods = order_refund::currorder_goods_list($order_id);
-					if (!empty($order_goods)) {
-						foreach ($order_goods as $row) {
-							$refund_goods_data = array(
-									'rec_id'		=> $row['rec_id'],
-									'refund_id'		=> $refund_id,
-									'goods_id'		=> $row['goods_id'],
-									'product_id'	=> $row['product_id'],
-									'goods_name'	=> $row['goods_name'],
-									'goods_sn'		=> $row['goods_sn'],
-									'is_real'		=> $row['is_real'],
-									'send_number'	=> $row['goods_number'],
-									'goods_attr'	=> $row['goods_attr']
-							);
-							$refund_goods_id = RC_DB::table('refund_goods')->insertGetId($refund_goods_data);
+					//获取订单的发货单列表
+					$delivery_list = order_refund::currorder_delivery_list($order_id);
+					if (!empty($delivery_list)) {
+						foreach ($delivery_list as $row) {
+							//获取发货单的发货商品列表
+							$delivery_goods_info   = order_refund::delivery_goodsInfo($row['delivery_id']);
+							if (!empty($delivery_goods_info)) {
+								$refund_goods_data = array(
+										'refund_id'		=> $refund_id,
+										'goods_id'		=> $delivery_goods_info['goods_id'],
+										'product_id'	=> $delivery_goods_info['product_id'],
+										'goods_name'	=> $delivery_goods_info['goods_name'],
+										'goods_sn'		=> $delivery_goods_info['goods_sn'],
+										'is_real'		=> $delivery_goods_info['is_real'],
+										'send_number'	=> $delivery_goods_info['send_number'],
+										'goods_attr'	=> $delivery_goods_info['goods_attr'],
+										'brand_name'	=> $delivery_goods_info['brand_name']
+								);
+								$refund_goods_id = RC_DB::table('refund_goods')->insertGetId($refund_goods_data);
+							}
 						}
 					}
 				}

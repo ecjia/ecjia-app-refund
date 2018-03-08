@@ -181,6 +181,29 @@ class order_refund {
 		return $list;
 	}
 	
+	/**
+	 * 获取某个订单的发货单列表
+	 * array
+	 */
+	public static function currorder_delivery_list($order_id) {
+		$delivery_list = array();
+		if (!empty($order_id)) {
+			$delivery_list = RC_DB::table('delivery_order')->where('order_id', $order_id)->whereIn('status', array(0,2))->get();
+		}
+		return $delivery_list;
+	}
+	
+	/**
+	 * 获取某个订单的发货了的商品信息
+	 * array
+	 */
+	public static function delivery_goodsInfo($delivery_id) {
+		$deliveryGoods_info = array();
+		if (!empty($delivery_id)) {
+			$deliveryGoods_info = RC_DB::table('delivery_goods')->where('delivery_id', $delivery_id)->selectRaw('goods_id, product_id, product_sn, goods_name,goods_sn, is_real, send_number, goods_attr')->first();
+		}
+		return $deliveryGoods_info;
+	}
 	
 	/**
 	 * 记录订单操作记录

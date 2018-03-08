@@ -46,7 +46,7 @@
 //
 
 
-//待发货、已完成、待收货售后原因
+//待发货、已完成、待收货,商家售后原因
 return array(
     'await_ship' => array(
     				array('reason_id' => 1,'reason_name' => '暂时不想购买了'),
@@ -71,5 +71,15 @@ return array(
 					array('reason_id' => 23,'reason_name' => '商家服务态度有问题'),
 					array('reason_id' => 24,'reason_name' => '快递太慢了'),
 					array('reason_id' => 25,'reason_name' => '信息填写有误，重新购买')
-	)		
+	),
+	'merchant'	=> array(
+					array('reason_id' => 91,'reason_name' => '暂时不想购买了'),
+					array('reason_id' => 92,'reason_name' => '信息填写有误，重新购买'),
+					array('reason_id' => 93,'reason_name' => '外表损伤（包装，商品等）'),
+					array('reason_id' => 94,'reason_name' => '商品质量问题'),
+					array('reason_id' => 95,'reason_name' => '发错货'),
+					array('reason_id' => 96,'reason_name' => '未在时效内送达'),
+					array('reason_id' => 97,'reason_name' => '服务态度问题')
+	),
+			
 );
