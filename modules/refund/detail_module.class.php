@@ -87,24 +87,24 @@ class detail_module extends api_front implements api_interface {
 		//店铺地址
 		$store_address = ecjia_region::getRegionName($store_info['city']).ecjia_region::getRegionName($store_info['district']).ecjia_region::getRegionName($store_info['street']).$store_info['address'];
 		/*售后申请状态处理*/
-		if ($refund_order_info['status'] == '0') {
+		if ($refund_order_info['status'] == Ecjia\App\Refund\RefundStatus::UNCHECK) {
 			$status 		= 'uncheck';
 			$label_status	= '待审核';
-		} elseif ($refund_order_info['status'] == '1') {
+		} elseif ($refund_order_info['status'] == Ecjia\App\Refund\RefundStatus::AGREE) {
 			$status			= 'agree';
 			$label_status	= '同意';
-		} elseif ($refund_order_info['status'] == '10') {
+		} elseif ($refund_order_info['status'] == Ecjia\App\Refund\RefundStatus::CANCELED) {
 			$status			= 'canceled';
 			$label_status	= '已取消';
-		} elseif ($refund_order_info['status'] == '11') {
+		} elseif ($refund_order_info['status'] == Ecjia\App\Refund\RefundStatus::REFUSED) {
 			$status			= 'refused';
 			$label_status	= '拒绝';
 		}
 		/*退款状态处理*/
-		if ($refund_order_info['refund_status'] == '1') {
+		if ($refund_order_info['refund_status'] == Ecjia\App\Refund\RefundStatus::UNTRANSFER) {
 			$refund_status 		= 'checked';
 			$label_refund_status= '已审核';
-		} elseif ($refund_order_info['refund_status'] == '2') {
+		} elseif ($refund_order_info['refund_status'] == Ecjia\App\Refund\RefundStatus::TRANSFERED) {
 			$refund_status 		= 'refunded';
 			$label_refund_status= '已退款';
 		} else {
@@ -241,45 +241,30 @@ class detail_module extends api_front implements api_interface {
 		
 		//售后申请退货商品
 		$goods_list = array();
-		//if ($refund_order_info['refund_type'] == 'return') {
-			$goods_data = order_refund::currorder_goods_list($refund_order_info['order_id']);
-			if (!empty($goods_data)) {
-				foreach ($goods_data as $res) {
-					$goods_list[] = array(
-							'goods_id' 				=> $res['goods_id'],
-							'name'	   				=> $res['goods_name'],
-							'goods_price'			=> $res['goods_price'],
-							'formated_goods_price' 	=> price_format($res['goods_price']),
-							'goods_attr'			=> !empty($res['goods_attr']) ? $res['goods_attr'] : '',
-							'goods_number'			=> $res['goods_number'],
-							'img' 			=> array(
-									'small'	=> !empty($res['goods_thumb']) ? RC_Upload::upload_url($res['goods_thumb']) : '',
-									'thumb'	=> !empty($res['goods_img']) ? RC_Upload::upload_url($res['goods_img']) : '',
-									'url' 	=> !empty($res['original_img']) ? RC_Upload::upload_url($res['original_img']) : '',
-							),
-					);
-				}
+		$goods_data = order_refund::currorder_goods_list($refund_order_info['order_id']);
+		if (!empty($goods_data)) {
+			foreach ($goods_data as $res) {
+				$goods_list[] = array(
+						'goods_id' 				=> $res['goods_id'],
+						'name'	   				=> $res['goods_name'],
+						'goods_price'			=> $res['goods_price'],
+						'formated_goods_price' 	=> price_format($res['goods_price']),
+						'goods_attr'			=> !empty($res['goods_attr']) ? $res['goods_attr'] : '',
+						'goods_number'			=> $res['goods_number'],
+						'img' 			=> array(
+								'small'	=> !empty($res['goods_thumb']) ? RC_Upload::upload_url($res['goods_thumb']) : '',
+								'thumb'	=> !empty($res['goods_img']) ? RC_Upload::upload_url($res['goods_img']) : '',
+								'url' 	=> !empty($res['original_img']) ? RC_Upload::upload_url($res['original_img']) : '',
+						),
+				);
 			}
-		//}
+		}
 		
 		//被拒后返回原因，供重新申请使用
 		$refused_reasons =array();
-		if ($refund_order_info['status'] == '11') {
-			$reasons = RC_Loader::load_app_config('refund_reasons', 'refund');
-			if (!empty($reasons)) {
-				foreach ($reasons as $kk => $value) {
-					if (!empty($value)) {
-						foreach ($value as $bb) {
-							if ($refund_order_info['refund_reason'] == $bb['reason_id']) {
-								$reason_str = $kk;
-							}
-						}
-					}
-			
-				}
-			}
+		if ($refund_order_info['status'] == Ecjia\App\Refund\RefundStatus::REFUSED) {
+			$refused_reasons = order_refund::get_one_group_reasons($refund_order_info['refund_reason']);
 		}
-		$refused_reasons = $reasons[$reason_str];
 		
 		//配送费说明
 		$shipping_fee_desc = array(

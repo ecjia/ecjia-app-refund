@@ -359,6 +359,35 @@ class order_refund {
 	
 		return $refund_payrecord;
 	}
+	
+	/**
+	 * 获取某个原因id所在的那组原因
+	 * @return  array
+	 */
+	public static function get_one_group_reasons($reason_id) {
+		$refused_reasons = array();
+		if (!empty($reason_id)) {
+			$reasons = RC_Loader::load_app_config('refund_reasons', 'refund');
+			$refused_reasons = array();
+			if (!empty($reasons)) {
+				foreach ($reasons as $kk => $value) {
+				if ($reason_id == $value['reason_id']) {
+					$reason_str = $kk;
+				}
+					if (!empty($value)) {
+						foreach ($value as $bb) {
+							if ($reason_id == $bb['reason_id']) {
+								$reason_str = $kk;
+							}
+						}
+					}
+						
+				}
+				$refused_reasons = $reasons[$reason_str];
+			}
+		}
+		return $refused_reasons;
+	}
 }	
 
 
