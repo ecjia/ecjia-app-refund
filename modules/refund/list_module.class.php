@@ -84,24 +84,9 @@ class list_module extends api_front implements api_interface {
 				$log_data = array();
 				$latest_refund_log = order_refund::get_latest_refund_log($rows['refund_id']);
 				if (!empty($latest_refund_log)) {
-					//if ($latest_refund_log['status'] == 0) {
-					//	$status = 'await_check';
-					//	$label_status = '待审核';
-					//} elseif ($latest_refund_log['status'] == 1) {
-					//	$status = 'agree';
-					//	$label_status = '同意';
-					//} elseif ($latest_refund_log['status'] == 10) {
-					//	$status = 'canceled';
-					//	$label_status = '已取消';
-					//} elseif ($latest_refund_log['status'] == 11) {
-					//	$status = 'refused';
-					//	$label_status = '拒绝退款';
-					//}
-					
 					$log_data = array(
 							'log_description' 		=> $latest_refund_log['message'],
 							'formatted_action_time'	=> RC_Time::local_date(ecjia::config('time_format'), $latest_refund_log['add_time']),
-							//'status'				=> $status,
 							'label_status'			=> $latest_refund_log['status']
 					);
 				} 
@@ -144,7 +129,7 @@ class list_module extends api_front implements api_interface {
 					'service_status_code'		=> $rows['service_status_code'],
 					'label_service_status'		=> $rows['label_service_status'],
 					'formated_add_time'			=> $rows['formated_add_time'],
-					'total_refund_amount'		=> price_format($total_refund_amount),
+					'total_refund_amount'		=> price_format($refund_total_amount),
 					'latest_refund_log'			=> $log_data,
 					'goods_list'				=> $goods_list,
 				);

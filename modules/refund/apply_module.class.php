@@ -52,7 +52,7 @@ class apply_module extends api_front implements api_interface {
 			   || (($order_refund_info['status'] == Ecjia\App\Refund\RefundStatus::AGREE) && ($order_refund_info['refund_staus'] == Ecjia\App\Refund\RefundStatus::TRANSFERED))
 			) {
 				return new ecjia_error('error_apply', '当前订单已申请了售后！');
-			} elseif ($order_refund_info['status'] == '11') {
+			} elseif ($order_refund_info['status'] == Ecjia\App\Refund\RefundStatus::REFUSED) {
 				//申请被拒，重新申请
 				$refund_sn = $this->requestData('refund_sn', '');
 				if (empty($refund_sn)) {
