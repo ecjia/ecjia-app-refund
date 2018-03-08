@@ -119,8 +119,10 @@ class detail_module extends api_front implements api_interface {
 		//配送费：已发货的不退，未发货的退
 		if ($order_info['shipping_status'] > SS_UNSHIPPED) {
 			$refund_total_amount  = $refund_order_info['money_paid'] + $refund_order_info['surplus'] - $refund_order_info['pay_fee']- $refund_order_info['shipping_fee'] - $refund_order_info['insure_fee'];
+			$refund_shipping_fee  = 0;
 		} else {
 			$refund_total_amount  = $refund_order_info['money_paid'] + $refund_order_info['surplus'] - $refund_order_info['pay_fee'];
+			$refund_shipping_fee  = $refund_order_info['shipping_fee'] > 0 ? price_format($refund_order_info['shipping_fee']) : 0 ;
 		}
 		//售后图片
 		$return_images = order_refund::get_return_images($refund_order_info['refund_id']);
@@ -267,12 +269,12 @@ class detail_module extends api_front implements api_interface {
 		}
 		
 		//配送费说明
-		$shipping_fee_desc = array(
-				'shipping_fee' 		=> price_format($refund_order_info['shipping_fee']),
-				'insure_fee'	   	=> price_format($refund_order_info['insure_fee']),
-				'total_fee'			=> price_format($refund_order_info['shipping_fee'] + $refund_order_info['insure_fee']),
-				'desc'				=> '运费：原订单实际支付的运费金额'
-		);
+// 		$shipping_fee_desc = array(
+// 				'shipping_fee' 		=> price_format($refund_order_info['shipping_fee']),
+// 				'insure_fee'	   	=> price_format($refund_order_info['insure_fee']),
+// 				'total_fee'			=> price_format($refund_order_info['shipping_fee'] + $refund_order_info['insure_fee']),
+// 				'desc'				=> '运费：原订单实际支付的运费金额'
+// 		);
 		
 		$arr = array();
 		$arr = array(
@@ -285,14 +287,15 @@ class detail_module extends api_front implements api_interface {
 				'refund_status'				=> $refund_status,
 				'label_refund_status'		=> $label_refund_status,
 				'refund_goods_amount'		=> price_format($refund_order_info['goods_amount']),
-				'refund_inv_tax'			=> price_format($refund_order_info['inv_tax']),
+				'refund_shipping_fee'		=> $refund_shipping_fee,
+				'refund_inv_tax'			=> $refund_order_info['inv_tax'] > 0 ? price_format($refund_order_info['inv_tax']) : 0,
 				'refund_integral'			=> intval($refund_order_info['integral']),
 				'refund_total_amount'		=> price_format($refund_total_amount),
 				'reason_id'					=> intval($refund_order_info['refund_reason']),
 				'reason'					=> $refund_order_info['reason'],
 				'refund_desc'				=> $refund_order_info['refund_content'],
 				'user_address'				=> $user_address,
-				'shipping_fee_desc'			=> $shipping_fee_desc,
+				//'shipping_fee_desc'			=> $shipping_fee_desc,
 				'return_images'				=> $return_images,
 				'return_way_list'			=> $return_way_list,
 				'selected_returnway_info'	=> $selected_returnway_info,
