@@ -303,6 +303,7 @@ class detail_module extends api_front implements api_interface {
 				'refund_inv_tax'			=> price_format($refund_order_info['inv_tax']),
 				'refund_integral'			=> intval($refund_order_info['integral']),
 				'refund_total_amount'		=> price_format($refund_total_amount),
+				'reason_id'					=> intval($refund_order_info['refund_reason']),
 				'reason'					=> $refund_order_info['reason'],
 				'refund_desc'				=> $refund_order_info['refund_content'],
 				'user_address'				=> $user_address,
