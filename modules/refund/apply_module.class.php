@@ -61,6 +61,7 @@ class apply_module extends api_front implements api_interface {
 				$update_data = array(
 					'refund_reason' 	=> !empty($reason_id) ? $reason_id : $order_refund_info['reason_id'],
 					'refund_content' 	=> !empty($refund_description) ? $refund_description : $order_refund_info['refund_content'],
+					'status'			=> Ecjia\App\Refund\RefundStatus::UNCHECK,
 					'last_submit_time'	=> RC_Time::gmtime()
 				);
 				
