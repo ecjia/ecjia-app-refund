@@ -283,9 +283,28 @@ class apply_module extends api_front implements api_interface {
 										'brand_name'	=> $delivery_goods_info['brand_name']
 								);
 								$refund_goods_id = RC_DB::table('refund_goods')->insertGetId($refund_goods_data);
+								/* 如果使用库存，则增加库存（不论何时减库存都需要） */
+								if (ecjia::config('use_storage') == '1') {
+									if ($delivery_goods_info['send_number'] > 0) {
+										RC_DB::table('goods')->where('goods_id', $delivery_goods_info['goods_id'])->increment('goods_number', $delivery_goods_info['send_number']);
+									}
+								}
 							}
 						}
 					}
+					
+					/* 修改订单的发货单状态为退货 */
+					$delivery_order_data = array(
+							'status' => 1,
+					);
+					RC_DB::table('delivery_order')->where('order_id', $order_info['order_id'])->whereIn('status', array(0,2))->update($delivery_order_data);
+					
+					/* 将订单的商品发货数量更新为 0 */
+					$order_goods_data = array(
+							'send_number' => 0,
+					);
+					
+					RC_DB::table('order_goods')->where('order_id', $order_info['order_id'])->update($order_goods_data);
 				}
 			}
 		}

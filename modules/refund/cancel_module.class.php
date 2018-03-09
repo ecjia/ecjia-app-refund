@@ -81,9 +81,45 @@ class cancel_module extends api_front implements api_interface {
 		
         RC_DB::table('refund_order')->where('refund_sn', $refund_sn)->update(array('status' => $cancel_status));
         
+        $order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->selectRaw('order_status, shipping_status, pay_status')->first();
+        
         //退货退款撤销，refund_goods表退货商品删除
         if ($refund_info['refund_type'] == 'return') {
         	RC_DB::table('refund_goods')->where('refund_id', $refund_info['refund_id'])->delete();
+        	//还原发货单状态
+        	if ($order_info['shipping_status'] > SS_UNSHIPPED) {
+        		if ($order_info['shipping_status'] == SS_SHIPPED) {
+        			$delivery_order_status_data = array(
+        					'status' => 0,
+        			);
+        		} else {
+        			$delivery_order_status_data = array(
+        					'status' => 2,
+        			);
+        		}
+        		RC_DB::table('delivery_order')->where('order_id', $refund_info['order_id'])->where('status', 1)->update($delivery_order_status_data);
+        	}
+        	//订单的发货单列表
+        	$delivery_list = order_refund::currorder_delivery_list($refund_info['order_id']);
+        	if (!empty($delivery_list)) {
+        		foreach ($delivery_list as $row) {
+        			//获取发货单的发货商品
+        			$delivery_goods_info   = order_refund::delivery_goodsInfo($row['delivery_id']);
+        			if (!empty($delivery_goods_info)) {
+        				//还原订单商品发货数量
+        				RC_DB::table('order_goods')->where('order_id', $refund_info['order_id'])->where('goods_id', $delivery_goods_info['goods_id'])->increment('send_number', $delivery_goods_info['send_number']);
+        				/* 还原商品申请售后时增加的库存 */
+        				if (ecjia::config('use_storage') == '1') {
+        					if ($delivery_goods_info['send_number'] > 0) {
+        						$goods_number = RC_DB::table('goods')->where('goods_id', $delivery_goods_info['goods_id'])->pluck('goods_number');
+        						if ($goods_number > $delivery_goods_info['send_number']) {
+        							RC_DB::table('goods')->where('goods_id', $delivery_goods_info['goods_id'])->decrement('goods_number', $delivery_goods_info['send_number']);
+        						}
+        					}
+        				}
+        			}
+        		}
+        	}
         }
         
         RC_Loader::load_app_class('order_refund', 'refund', false);
@@ -100,7 +136,6 @@ class cancel_module extends api_front implements api_interface {
         );
         order_refund::refund_order_action($refund_order_action);
         //还原订单状态
-        $order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->selectRaw('order_status, shipping_status, pay_status')->first();
         if ($order_info['shipping_status'] == SS_SHIPPED) {
         	$data = array('order_status' => OS_SPLITED);
         }else{
