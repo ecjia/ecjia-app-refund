@@ -197,12 +197,12 @@ class order_refund {
 	 * 获取某个订单的发货了的商品信息
 	 * array
 	 */
-	public static function delivery_goodsInfo($delivery_id) {
-		$deliveryGoods_info = array();
+	public static function delivery_goodsList($delivery_id) {
+		$deliveryGoods_list = array();
 		if (!empty($delivery_id)) {
-			$deliveryGoods_info = RC_DB::table('delivery_goods')->where('delivery_id', $delivery_id)->selectRaw('goods_id, product_id, product_sn, goods_name,goods_sn, is_real, send_number, goods_attr')->first();
+			$deliveryGoods_list = RC_DB::table('delivery_goods')->where('delivery_id', $delivery_id)->selectRaw('goods_id, product_id, product_sn, goods_name,goods_sn, is_real, send_number, goods_attr')->get();
 		}
-		return $deliveryGoods_info;
+		return $deliveryGoods_list;
 	}
 	
 	/**
