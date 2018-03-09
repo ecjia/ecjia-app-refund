@@ -286,10 +286,8 @@
                 </div>
 	        </div>
         </div>
-	</div>
-	
-	<div class="col-lg-4">
-        <div class="panel panel-body">
+        
+         <div class="panel panel-body">
             <h4>申请退货商品</h4>
            	<div class="goods-content">
            		<!-- {foreach from=$refund_list item=list} -->
