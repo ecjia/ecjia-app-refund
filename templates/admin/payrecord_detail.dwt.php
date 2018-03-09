@@ -89,6 +89,13 @@
 					</div>
 					{/if}
 					
+					{if $payrecord_info.back_inv_tax neq '0.00'}
+					<div class="control-group">
+						<label class="control-label">退回发票费：</label>
+						<div class="controls l_h30 ecjiafc-red"><strong>{$payrecord_info.back_inv_tax_type}</strong></div>
+					</div>
+					{/if}
+					
 					<div class="control-group">
 						<label class="control-label">实际退款金额：</label>
 						<div class="controls l_h30 ecjiafc-red"><strong>{$payrecord_info.back_money_total_type}</strong></div>
@@ -169,15 +176,24 @@
 					</div>
 					{/if}
 					
+					{if $payrecord_info.back_inv_tax neq '0.00'}
+					<div class="control-group">
+						<label class="control-label">退回发票费：</label>
+						<div class="controls l_h30">{$payrecord_info.back_inv_tax_type}</div>
+					</div>
+					{/if}
+					
 					<div class="control-group">
 						<label class="control-label">实际退款金额：</label>
 						<div class="controls l_h30 ecjiafc-red"><strong>{$payrecord_info.back_money_total_type}</strong></div>
 					</div>
 					
-					<div class="control-group">
-						<label class="control-label">积分：</label>
-						<div class="controls l_h30 ecjiafc-red"><strong>{$payrecord_info.back_integral}</strong></div>
-					</div>
+					{if $payrecord_info.back_integral neq '0'}
+						<div class="control-group">
+							<label class="control-label">积分：</label>
+							<div class="controls l_h30 ecjiafc-red"><strong>{$payrecord_info.back_integral}</strong></div>
+						</div>
+					{/if}
 					
 					<div class="control-group">
 						<label class="control-label">退款备注：</label>

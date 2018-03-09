@@ -117,8 +117,15 @@
 					{if $payrecord_info.back_insure_fee neq '0.00'}
 						<p>扣除保价费：-{$payrecord_info.back_insure_fee_type}</p>
 					{/if}
+					
+					{if $payrecord_info.back_inv_tax neq '0.00'}
+						<p>退回发票费：<font class="ecjiafc-red"><strong>{$payrecord_info.back_inv_tax_type}</strong></font></p>
+					{/if}
+					
 					<p>实际退款金额：<font class="ecjiafc-red"><strong>{$payrecord_info.back_money_total_type}</strong></font></p>
-					<p>积分：<font class="ecjiafc-red"><strong>{$payrecord_info.back_integral}</strong></font></p>
+					{if $payrecord_info.back_integral neq '0'}
+						<p>积分：<font class="ecjiafc-red"><strong>{$payrecord_info.back_integral}</strong></font></p>
+					{/if}
 					<p>退款时间：{$payrecord_info.action_back_time}</p>
 				</div>
 	       </section>

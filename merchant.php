@@ -204,6 +204,7 @@ class merchant extends ecjia_merchant {
 		$payrecord_info['back_pay_fee_type'] 	 = price_format($payrecord_info['back_pay_fee']);
 		$payrecord_info['back_shipping_fee_type']= price_format($payrecord_info['back_shipping_fee']);
 		$payrecord_info['back_insure_fee_type']  = price_format($payrecord_info['back_insure_fee']);
+		$payrecord_info['back_inv_tax_type']  = price_format($payrecord_info['back_inv_tax']);
 		$this->assign('payrecord_info', $payrecord_info);
 		
 		$this->display('refund_detail.dwt');
@@ -445,6 +446,7 @@ class merchant extends ecjia_merchant {
 		$payrecord_info['back_pay_fee_type'] 	 = price_format($payrecord_info['back_pay_fee']);
 		$payrecord_info['back_shipping_fee_type']= price_format($payrecord_info['back_shipping_fee']);
 		$payrecord_info['back_insure_fee_type']  = price_format($payrecord_info['back_insure_fee']);
+		$payrecord_info['back_inv_tax_type']  = price_format($payrecord_info['back_inv_tax']);
 		$this->assign('payrecord_info', $payrecord_info);
 			
 		//读取有关返回方式的信息（店长信息和店铺信息）
