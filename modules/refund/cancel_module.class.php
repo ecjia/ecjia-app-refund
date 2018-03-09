@@ -104,16 +104,18 @@ class cancel_module extends api_front implements api_interface {
         	if (!empty($delivery_list)) {
         		foreach ($delivery_list as $row) {
         			//获取发货单的发货商品
-        			$delivery_goods_info   = order_refund::delivery_goodsInfo($row['delivery_id']);
-        			if (!empty($delivery_goods_info)) {
-        				//还原订单商品发货数量
-        				RC_DB::table('order_goods')->where('order_id', $refund_info['order_id'])->where('goods_id', $delivery_goods_info['goods_id'])->increment('send_number', $delivery_goods_info['send_number']);
-        				/* 还原商品申请售后时增加的库存 */
-        				if (ecjia::config('use_storage') == '1') {
-        					if ($delivery_goods_info['send_number'] > 0) {
-        						$goods_number = RC_DB::table('goods')->where('goods_id', $delivery_goods_info['goods_id'])->pluck('goods_number');
-        						if ($goods_number > $delivery_goods_info['send_number']) {
-        							RC_DB::table('goods')->where('goods_id', $delivery_goods_info['goods_id'])->decrement('goods_number', $delivery_goods_info['send_number']);
+        			$delivery_goods_list   = order_refund::delivery_goodsList($row['delivery_id']);
+        			if (!empty($delivery_goods_list)) {
+        				foreach ($delivery_goods_list as $res) {
+        					//还原订单商品发货数量
+        					RC_DB::table('order_goods')->where('order_id', $refund_info['order_id'])->where('goods_id', $res['goods_id'])->increment('send_number', $res['send_number']);
+        					/* 还原商品申请售后时增加的库存 */
+        					if (ecjia::config('use_storage') == '1') {
+        						if ($res['send_number'] > 0) {
+        							$goods_number = RC_DB::table('goods')->where('goods_id', $res['goods_id'])->pluck('goods_number');
+        							if ($goods_number > $res['send_number']) {
+        								RC_DB::table('goods')->where('goods_id', $res['goods_id'])->decrement('goods_number', $res['send_number']);
+        							}
         						}
         					}
         				}

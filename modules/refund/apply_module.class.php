@@ -269,24 +269,26 @@ class apply_module extends api_front implements api_interface {
 					if (!empty($delivery_list)) {
 						foreach ($delivery_list as $row) {
 							//获取发货单的发货商品列表
-							$delivery_goods_info   = order_refund::delivery_goodsInfo($row['delivery_id']);
-							if (!empty($delivery_goods_info)) {
-								$refund_goods_data = array(
-										'refund_id'		=> $refund_id,
-										'goods_id'		=> $delivery_goods_info['goods_id'],
-										'product_id'	=> $delivery_goods_info['product_id'],
-										'goods_name'	=> $delivery_goods_info['goods_name'],
-										'goods_sn'		=> $delivery_goods_info['goods_sn'],
-										'is_real'		=> $delivery_goods_info['is_real'],
-										'send_number'	=> $delivery_goods_info['send_number'],
-										'goods_attr'	=> $delivery_goods_info['goods_attr'],
-										'brand_name'	=> $delivery_goods_info['brand_name']
-								);
-								$refund_goods_id = RC_DB::table('refund_goods')->insertGetId($refund_goods_data);
-								/* 如果使用库存，则增加库存（不论何时减库存都需要） */
-								if (ecjia::config('use_storage') == '1') {
-									if ($delivery_goods_info['send_number'] > 0) {
-										RC_DB::table('goods')->where('goods_id', $delivery_goods_info['goods_id'])->increment('goods_number', $delivery_goods_info['send_number']);
+							$delivery_goods_list   = order_refund::delivery_goodsList($row['delivery_id']);
+							if (!empty($delivery_goods_list)) {
+								foreach ($delivery_goods_list as $res) {
+									$refund_goods_data = array(
+											'refund_id'		=> $refund_id,
+											'goods_id'		=> $res['goods_id'],
+											'product_id'	=> $res['product_id'],
+											'goods_name'	=> $res['goods_name'],
+											'goods_sn'		=> $res['goods_sn'],
+											'is_real'		=> $res['is_real'],
+											'send_number'	=> $res['send_number'],
+											'goods_attr'	=> $res['goods_attr'],
+											'brand_name'	=> $res['brand_name']
+									);
+									$refund_goods_id = RC_DB::table('refund_goods')->insertGetId($refund_goods_data);
+									/* 如果使用库存，则增加库存（不论何时减库存都需要） */
+									if (ecjia::config('use_storage') == '1') {
+										if ($res['send_number'] > 0) {
+											RC_DB::table('goods')->where('goods_id', $res['goods_id'])->increment('goods_number', $res['send_number']);
+										}
 									}
 								}
 							}
