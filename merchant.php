@@ -272,7 +272,8 @@ class merchant extends ecjia_merchant {
 			RC_DB::table('refund_payrecord')->insertGetId($data);
 			
 			//普通订单操作日志表
-			order_refund::order_action($refund_info['order_id'], OS_CONFIRMED, SS_UNSHIPPED, PS_UNPAYED, $action_note, '商家');
+			$order_info = RC_DB::TABLE('order_info')->where('order_id', $refund_info['order_id'])->select('shipping_status', 'pay_status')->first();
+			order_refund::order_action($refund_info['order_id'], OS_CONFIRMED, $order_info['shipping_status'], $order_info['pay_status'], $action_note, '商家');
 		} else {
 			$status = 11;
 			$refund_status = 0;
@@ -481,7 +482,8 @@ class merchant extends ecjia_merchant {
 				$return_shipping_range = implode(",", $return_shipping_range);
 			}
 			//普通订单操作日志表
-			order_refund::order_action($order_id, OS_CONFIRMED, SS_UNSHIPPED, PS_UNPAYED, $action_note, '商家');
+			$order_info = RC_DB::TABLE('order_info')->where('order_id', $order_id)->select('shipping_status', 'pay_status')->first();
+			order_refund::order_action($refund_info['order_id'], OS_CONFIRMED, $order_info['shipping_status'], $order_info['pay_status'], $action_note, '商家');
 		} else {
 			$status = 11;
 		}
