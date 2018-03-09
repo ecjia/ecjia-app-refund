@@ -70,6 +70,7 @@ class merchant extends ecjia_merchant {
 		RC_Loader::load_app_class('OrderStatusLog', 'orders', false);
 		RC_Loader::load_app_class('RefundStatusLog', 'refund', false);
 		RC_Loader::load_app_class('RefundReasonList', 'refund', false);
+		RC_Loader::load_app_class('order_refund', 'refund', false);
 		
 		//时间控件
 		RC_Style::enqueue_style('datepicker', RC_Uri::admin_url('statics/lib/datepicker/datepicker.css'));
@@ -270,6 +271,9 @@ class merchant extends ecjia_merchant {
 			);
 			RC_DB::table('refund_payrecord')->insertGetId($data);
 			
+			//普通订单操作日志表
+			$order_info = RC_DB::TABLE('order_info')->where('order_id', $refund_info['order_id'])->select('shipping_status', 'pay_status')->first();
+			order_refund::order_action($refund_info['order_id'], OS_CONFIRMED, $order_info['shipping_status'], $order_info['pay_status'], $action_note, '商家');
 		} else {
 			$status = 11;
 			$refund_status = 0;
@@ -293,7 +297,7 @@ class merchant extends ecjia_merchant {
 		RefundStatusLog::refund_order_process(array('refund_id' => $refund_id, 'status' => $status));
 		//普通订单状态变动日志表
 		OrderStatusLog::refund_order_process(array('order_id' => $refund_info['order_id'], 'status' => $status));
-
+		
 		return $this->showmessage('操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS,array('pjaxurl' => RC_Uri::url('refund/merchant/refund_detail', array('refund_id' => $refund_id))));
 	}
 	
@@ -463,7 +467,8 @@ class merchant extends ecjia_merchant {
 		$this->admin_priv('refund_manage');
 		
 		$type = trim($_POST['type']);
-		$refund_id	= $_POST['refund_id'];		
+		$refund_id	= $_POST['refund_id'];	
+		$order_id = RC_DB::TABLE('refund_order')->where('refund_id', $refund_id)->pluck('order_id');
 		$action_note= trim($_POST['action_note']);
 		if (empty($action_note)) {
 			return $this->showmessage('请输入操作备注', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
@@ -476,7 +481,9 @@ class merchant extends ecjia_merchant {
 			} else {
 				$return_shipping_range = implode(",", $return_shipping_range);
 			}
-			
+			//普通订单操作日志表
+			$order_info = RC_DB::TABLE('order_info')->where('order_id', $order_id)->select('shipping_status', 'pay_status')->first();
+			order_refund::order_action($refund_info['order_id'], OS_CONFIRMED, $order_info['shipping_status'], $order_info['pay_status'], $action_note, '商家');
 		} else {
 			$status = 11;
 		}
@@ -498,7 +505,6 @@ class merchant extends ecjia_merchant {
 		RefundStatusLog::return_order_process(array('refund_id' => $refund_id, 'status' => $status));
 		
 		//普通订单状态变动日志表
-		$order_id = RC_DB::TABLE('refund_order')->where('refund_id', $refund_id)->pluck('order_id');
 		OrderStatusLog::return_order_process(array('order_id' => $order_id, 'status' => $status));
 		
 		return $this->showmessage('操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('refund/merchant/return_detail', array('refund_id' => $refund_id))));
