@@ -280,7 +280,7 @@ class admin_payrecord extends ecjia_admin {
 		if (!empty($user_info['mobile_phone'])) {
 			$options = array(
 				'mobile' => $user_info['mobile_phone'],
-				'event'	 => 'sms_refund_change',
+				'event'	 => 'sms_refund_balance_arrived',
 				'value'  =>array(
 					'user_name' 	=> $user_info['user_name'],
 					'amount' 		=> $back_money_total,
