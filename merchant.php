@@ -485,7 +485,7 @@ class merchant extends ecjia_merchant {
 			}
 			//普通订单操作日志表
 			$order_info = RC_DB::TABLE('order_info')->where('order_id', $order_id)->select('shipping_status', 'pay_status')->first();
-			order_refund::order_action($refund_info['order_id'], OS_RETURNED, $order_info['shipping_status'], $order_info['pay_status'], $action_note, '商家');
+			order_refund::order_action($order_id, OS_RETURNED, $order_info['shipping_status'], $order_info['pay_status'], $action_note, '商家');
 		} else {
 			$status = 11;
 		}

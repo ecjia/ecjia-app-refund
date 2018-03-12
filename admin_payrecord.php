@@ -276,22 +276,19 @@ class admin_payrecord extends ecjia_admin {
 		OrderStatusLog::refund_payrecord(array('order_id' => $order_id, 'back_money' => $back_money_total));
 		
 		//短信告知用户退款退货成功 
-// 		$user_info = RC_DB::table('users')->where('user_id', $user_id)->select('user_name', 'pay_points', 'user_money', 'mobile_phone')->first();
-// 		if (!empty($user_info['mobile_phone'])) {
-// 			$options = array(
-// 				'mobile' => $user_info['mobile_phone'],
-// 				'event'	 => 'sms_refund_change',
-// 				'value'  =>array(
-// 					'user_name' 	=> $user_info['user_name'],
-// 					'amount' 		=> $back_money_total,
-// 					'user_money' 	=> $user_info['user_money'],
-// 					'point' 		=> $back_integral,
-// 					'pay_points' 	=> $user_info['pay_points'],
-// 					'service_phone' => ecjia::config('service_phone'),
-// 				),
-// 			);
-// 			RC_Api::api('sms', 'send_event_sms', $options);
-// 		}
+		$user_info = RC_DB::table('users')->where('user_id', $user_id)->select('user_name', 'pay_points', 'user_money', 'mobile_phone')->first();
+		if (!empty($user_info['mobile_phone'])) {
+			$options = array(
+				'mobile' => $user_info['mobile_phone'],
+				'event'	 => 'sms_refund_change',
+				'value'  =>array(
+					'user_name' 	=> $user_info['user_name'],
+					'amount' 		=> $back_money_total,
+					'user_money' 	=> $user_info['user_money'],
+				),
+			);
+			RC_Api::api('sms', 'send_event_sms', $options);
+		}
 
 		return $this->showmessage('退款操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('refund/admin_payrecord/detail', array('refund_id' => $refund_id))));
 	}
