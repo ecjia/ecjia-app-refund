@@ -233,3 +233,14 @@
     margin-bottom: 5px;
 }
 
+.order-money-info{
+	background-color: #F4F4F4;
+    border: 1px solid #F4F4F4;
+    border-radius: 4px;
+    padding: 10px;
+}
+.order-money-info p{
+	margin: 0px;
+	padding:10px;
+}
+

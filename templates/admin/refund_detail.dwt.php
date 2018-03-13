@@ -183,10 +183,50 @@
 			           		</div>
 			           		 <!-- {/foreach} -->
 			           		<hr>
-			                <p>运费：{$order_info.shipping_fee}</p>
-			                <p>订单总额：{$order_amount}（退款：{$refund_total_amount}）</p>
+			                <p>订单实付金额：{$order_money_total} <span><a id="order-money-info" href="javascript:;">查看更多</a></span></p>
+			                <div class="order-money-info" style="display: none;">
+			                	{if $order_info.goods_amount gt '0.00'}
+				                <p>商品总金额：<span>{$order_info.goods_amount_price}</span></p>
+				                {/if}
+				                
+				                {if $order_info.tax gt '0.00'}
+				                <p>发票税额：<span>{$order_info.tax_price}</span></p>
+				                {/if}
+				                
+				                {if $order_info.shipping_fee gt '0.00'}
+				                <p>配送费用：<span>{$order_info.shipping_fee_price}</span></p>
+				                {/if}
+				                
+				                {if $order_info.insure_fee gt '0.00'}
+				                <p>保价费用：<span>{$order_info.insure_fee_price}</span></p>
+				                {/if}
+				                
+				                {if $order_info.pay_fee gt '0.00'}
+				                <p>支付费用：<span>{$order_info.pay_fee_price}</span></p>
+				                {/if}
+				                
+				                {if $order_info.pack_fee gt '0.00'}
+				                <p>包装费用：<span>{$order_info.pack_fee_price}</span></p>
+				                {/if}
+				                
+				                {if $order_info.card_fee gt '0.00'}
+				                <p>贺卡费用：<span>{$order_info.card_fee_price}</span></p>
+				                {/if}
+				                
+				                {if $order_info.integral_money gt '0.00'}
+				                <p>积分金额：<span>{$order_info.integral_money_price}</span></p>
+				                {/if}
+				                
+				                {if $order_info.bonus gt '0.00'}
+				                <p>红包金额：<span>{$order_info.bonus_price}</span></p>
+				                {/if}
+				                
+				                {if $order_info.discount gt '0.00'}
+				                <p>折扣金额：<span>{$order_info.discount_price}</span></p>
+				                {/if}
+			                </div>
 			                <hr>
-			                <p>订单编号：{$order_info.order_sn} <span><a id="order-info" href="javascript:;">查看更多</a></span></p>
+			                <p>订单编号：<a target="_blank" href='{url path="orders/admin/info" args="order_id={$order_info.order_id}"}'>{$order_info.order_sn}</a><span><a id="order-info" href="javascript:;">查看更多</a></span></p>
 			                <div class="order-info" style="display: none;">
 				                <p>支付方式：{$order_info.pay_name}</p>
 				                <p>下单时间：{$order_info.add_time}</p>
