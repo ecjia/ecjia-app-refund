@@ -43,7 +43,7 @@
 				
 				<div class="control-group">
 					<label class="control-label">退款金额：</label>
-					<div class="controls l_h30">{$payrecord_info.order_money_paid_type}</div>
+					<div class="controls l_h30 ecjiafc-red ecjiafc-font">{$payrecord_info.order_money_paid_type}</div>
 				</div>
 				
 				<div class="control-group">
@@ -68,43 +68,45 @@
 				
 				{if !$payrecord_info.action_back_content}
 					<h3>退款操作</h3>
-					{if $payrecord_info.back_pay_fee neq '0.00'}
+					{if $payrecord_info.back_pay_fee gt '0.00'}
 						<div class="control-group">
 							<label class="control-label">扣除支付手续费：</label>
-							<div class="controls l_h30 ecjiafc-red"><strong>-{$payrecord_info.back_pay_fee_type}</strong></div>
+							<div class="controls l_h30"><strong>-{$payrecord_info.back_pay_fee_type}</strong></div>
 						</div>
 					{/if}
 					
-					{if $payrecord_info.back_shipping_fee neq '0.00'}
+					{if $payrecord_info.back_shipping_fee gt '0.00'}
 					<div class="control-group">
 						<label class="control-label">扣除配送费：</label>
-						<div class="controls l_h30 ecjiafc-red"><strong>-{$payrecord_info.back_shipping_fee_type}</strong></div>
+						<div class="controls l_h30"><strong>-{$payrecord_info.back_shipping_fee_type}</strong></div>
 					</div>
 					{/if}
 					
-					{if $payrecord_info.back_insure_fee neq '0.00'}
+					{if $payrecord_info.back_insure_fee gt '0.00'}
 					<div class="control-group">
 						<label class="control-label">扣除保价费：</label>
-						<div class="controls l_h30 ecjiafc-red"><strong>-{$payrecord_info.back_insure_fee_type}</strong></div>
+						<div class="controls l_h30"><strong>-{$payrecord_info.back_insure_fee_type}</strong></div>
 					</div>
 					{/if}
 					
-					{if $payrecord_info.back_inv_tax neq '0.00'}
+					{if $payrecord_info.back_inv_tax gt '0.00'}
 					<div class="control-group">
 						<label class="control-label">退回发票费：</label>
-						<div class="controls l_h30 ecjiafc-red"><strong>{$payrecord_info.back_inv_tax_type}</strong></div>
+						<div class="controls l_h30"><strong>{$payrecord_info.back_inv_tax_type}</strong></div>
 					</div>
 					{/if}
 					
 					<div class="control-group">
 						<label class="control-label">实际退款金额：</label>
-						<div class="controls l_h30 ecjiafc-red"><strong>{$payrecord_info.back_money_total_type}</strong></div>
+						<div class="controls l_h30 ecjiafc-red ecjiafc-font">{$payrecord_info.back_money_total_type}</div>
 					</div>
 					
+					{if $payrecord_info.back_integral gt '0'}
 					<div class="control-group">
 						<label class="control-label">退回积分：</label>
-						<div class="controls l_h30 ecjiafc-red"><strong>{$payrecord_info.back_integral}</strong></div>
+						<div class="controls l_h30 ecjiafc-red ecjiafc-font"><strong>{$payrecord_info.back_integral}</strong></div>
 					</div>
+					{/if}
 					
 					<div class="control-group">
 						<label class="control-label">退款方式：</label>
@@ -152,31 +154,31 @@
 					
 					<div class="control-group">
 						<label class="control-label">应退款金额：</label>
-						<div class="controls l_h30">{$payrecord_info.order_money_paid_type}</div>
+						<div class="controls l_h30 ecjiafc-red ecjiafc-font">{$payrecord_info.order_money_paid_type}</div>
 					</div>
 					
-					{if $payrecord_info.back_pay_fee neq '0.00'}
+					{if $payrecord_info.back_pay_fee gt '0.00'}
 						<div class="control-group">
 							<label class="control-label">扣除支付手续费：</label>
 							<div class="controls l_h30">-{$payrecord_info.back_pay_fee_type}</div>
 						</div>
 					{/if}
 					
-					{if $payrecord_info.back_shipping_fee neq '0.00'}
+					{if $payrecord_info.back_shipping_fee gt '0.00'}
 					<div class="control-group">
 						<label class="control-label">扣除配送费：</label>
 						<div class="controls l_h30">-{$payrecord_info.back_shipping_fee_type}</div>
 					</div>
 					{/if}
 					
-					{if $payrecord_info.back_insure_fee neq '0.00'}
+					{if $payrecord_info.back_insure_fee gt '0.00'}
 					<div class="control-group">
 						<label class="control-label">扣除保价费：</label>
 						<div class="controls l_h30">-{$payrecord_info.back_insure_fee_type}</div>
 					</div>
 					{/if}
 					
-					{if $payrecord_info.back_inv_tax neq '0.00'}
+					{if $payrecord_info.back_inv_tax gt '0.00'}
 					<div class="control-group">
 						<label class="control-label">退回发票费：</label>
 						<div class="controls l_h30">{$payrecord_info.back_inv_tax_type}</div>
@@ -185,13 +187,13 @@
 					
 					<div class="control-group">
 						<label class="control-label">实际退款金额：</label>
-						<div class="controls l_h30 ecjiafc-red"><strong>{$payrecord_info.back_money_total_type}</strong></div>
+						<div class="controls l_h30 ecjiafc-red ecjiafc-font"><strong>{$payrecord_info.back_money_total_type}</strong></div>
 					</div>
 					
-					{if $payrecord_info.back_integral neq '0'}
+					{if $payrecord_info.back_integral gt '0'}
 						<div class="control-group">
 							<label class="control-label">积分：</label>
-							<div class="controls l_h30 ecjiafc-red"><strong>{$payrecord_info.back_integral}</strong></div>
+							<div class="controls l_h30 ecjiafc-red ecjiafc-font"><strong>{$payrecord_info.back_integral}</strong></div>
 						</div>
 					{/if}
 					
@@ -223,14 +225,54 @@
 						<div class="accordion-body in collapse reply_admin_list" id="refund_goods_content">
 							<div class="accordion-inner">
 							 	<div class="goods-content">
-					           		<p>订单编号：{$order_info.order_sn}</p>
-					           		<hr>
-					                <p>运费：{$order_info.shipping_fee}</p>
-					                <p>订单总额：{$order_amount}（退款：{$payrecord_info.order_money_paid}）</p>
+					           		<p>订单编号：<a target="_blank" href='{url path="orders/admin/info" args="order_id={$order_info.order_id}"}'>{$order_info.order_sn}</a></p>
+					                <p>订单实付金额：{$order_money_total}</p>
+					                <p><div class="order-money-info">
+					                	{if $order_info.goods_amount gt '0.00'}
+						                <p>商品总金额：<span>{$order_info.goods_amount_price}</span></p>
+						                {/if}
+						                
+						                {if $order_info.tax gt '0.00'}
+						                <p>发票税额：<span>{$order_info.tax_price}</span></p>
+						                {/if}
+						                
+						                {if $order_info.shipping_fee gt '0.00'}
+						                <p>配送费用：<span>{$order_info.shipping_fee_price}</span></p>
+						                {/if}
+						                
+						                {if $order_info.insure_fee gt '0.00'}
+						                <p>保价费用：<span>{$order_info.insure_fee_price}</span></p>
+						                {/if}
+						                
+						                {if $order_info.pay_fee gt '0.00'}
+						                <p>支付费用：<span>{$order_info.pay_fee_price}</span></p>
+						                {/if}
+						                
+						                {if $order_info.pack_fee gt '0.00'}
+						                <p>包装费用：<span>{$order_info.pack_fee_price}</span></p>
+						                {/if}
+						                
+						                {if $order_info.card_fee gt '0.00'}
+						                <p>贺卡费用：<span>{$order_info.card_fee_price}</span></p>
+						                {/if}
+						                
+						                {if $order_info.integral_money gt '0.00'}
+						                <p>积分金额：<span>{$order_info.integral_money_price}</span></p>
+						                {/if}
+						                
+						                {if $order_info.bonus gt '0.00'}
+						                <p>红包金额：<span>{$order_info.bonus_price}</span></p>
+						                {/if}
+						                
+						                {if $order_info.discount gt '0.00'}
+						                <p>折扣金额：<span>{$order_info.discount_price}</span></p>
+						                {/if}
+					                </div></p>
+					                <p>配送状态：{if $order_info.shipping_status eq '1'}已发货{elseif $order_info.shipping_status eq '2'}已收货{elseif $order_info.shipping_status eq '3'}备货中{elseif $order_info.shipping_status eq '4'}已发货(部分商品){elseif $order_info.shipping_status eq '5'}发货中(处理分单){else}未发货{/if}</p>
 					                <p>支付方式：{$order_info.pay_name}</p>
 					                <p>下单时间：{$order_info.add_time}</p>
 					                <p>付款时间：{$order_info.pay_time}</p>
-					                <a id="order-info" href='{url path="refund/admin/refund_detail" args="refund_id={$refund_info.refund_id}"}'>点此处查看退款单详细信息 >></a>
+					                <a target="_blank" id="order-info" href='{url path="refund/admin/refund_detail" args="refund_id={$refund_info.refund_id}"}'>点此处查看退款单详细信息 >></a>
 						        </div>
 							</div>
 						</div>
