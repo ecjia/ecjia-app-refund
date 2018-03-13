@@ -144,9 +144,7 @@
                     var option = {'type' : 'agree','action_note' : action_note,'refund_id' : refund_id,'return_shipping_range':arr};
                     $.post(url, option, function (data) {
                          if (data.state == 'success') {
-                        	
 							$('#actionmodal').modal('hide');
-							alert(1);
 							ecjia.merchant.showmessage(data);
 						 } else {
 							var $info = $('<div class="staticalert alert alert-danger ui_showmessage"><a data-dismiss="alert" class="close">×</a>' + data.message + '</div>');
