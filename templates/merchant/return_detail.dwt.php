@@ -97,6 +97,7 @@
 	            	暂无
 					{/if}
                 </p>
+                <p>申请时间：{$refund_info.add_time}</p>
 			</div>
         </section>
         

@@ -51,7 +51,7 @@
 					<div class="controls l_h30">{if $refund_info.refund_content}{$refund_info.refund_content}{else}暂无{/if}</div>
 				</div>
 				
-				<div class="control-group formSep">
+				<div class="control-group">
 					<label class="control-label">上传凭证：</label>
 					<div class="controls l_h30 refund_content">
 						{if $refund_img_list}
@@ -64,6 +64,11 @@
 			        	暂无
 						{/if}
 					</div>
+				</div>
+				
+				<div class="control-group formSep">
+					<label class="control-label">申请时间：</label>
+					<div class="controls l_h30">{$refund_info.add_time}</div>
 				</div>
 				
 				{if !$payrecord_info.action_back_content}
