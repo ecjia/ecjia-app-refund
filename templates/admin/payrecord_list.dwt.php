@@ -59,9 +59,9 @@
 				    <th class="w150">订单编号</th>
 				    <th class="w100">申请类型</th>
 				    <th class="w100">退款金额</th>
-				    <th class="w50">申请时间</th>
+				    <th class="w100">申请时间</th>
 				    {if $smarty.get.back_type eq 'have'}
-					    <th class="50">退款时间</th>
+					    <th class="w100">退款时间</th>
 				    {/if}
 				    <th class="w100">处理状态</th>
 			  	</tr>
