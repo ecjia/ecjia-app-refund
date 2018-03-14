@@ -130,21 +130,13 @@ class admin_payrecord extends ecjia_admin {
 		$refund_id = intval($_GET['refund_id']);
 		$this->assign('refund_id', $refund_id);
 		
-		//退款订单信息
-		$refund_info = RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
-		$this->assign('refund_info', $refund_info);
-		
 		//获取用户退货退款原因
 		$reason_list = RefundReasonList::get_refund_reason();
 		$this->assign('reason_list', $reason_list);
 		
 		//退款上传凭证素材
-		$refund_img_list = RC_DB::table('term_attachment')->where('object_id', $refund_info['refund_id'])->where('object_app', 'ecjia.refund')->where('object_group','refund')->select('file_path','file_name')->get();
+		$refund_img_list = RC_DB::table('term_attachment')->where('object_id', $refund_id)->where('object_app', 'ecjia.refund')->where('object_group','refund')->select('file_path','file_name')->get();
 		$this->assign('refund_img_list', $refund_img_list);
-		
-		//退款售后订单关联通订单信息
-		$order_info = OrderInfo::get_order_info($refund_info['order_id']);
-		$this->assign('order_info', $order_info);
 		
 		//打款表信息
 		$payrecord_info = RC_DB::table('refund_payrecord')->where('refund_id', $refund_id)->first();
@@ -162,9 +154,26 @@ class admin_payrecord extends ecjia_admin {
 		$payrecord_info['back_inv_tax_type']  = price_format($payrecord_info['back_inv_tax']);
 		$this->assign('payrecord_info', $payrecord_info);
 		
-		//普通订单实付金额
-		$order_money_total = OrderInfo::order_money_total($refund_info['order_id']);
-		$this->assign('order_money_total', $order_money_total);
+		//售后订单信息
+		$refund_info = RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
+		$refund_info['goods_amount_price'] = price_format($refund_info['goods_amount']);
+		$refund_info['shipping_fee_price'] = price_format($refund_info['shipping_fee']);
+		$refund_info['pay_fee_price'] = price_format($refund_info['pay_fee']);
+		$refund_info['pack_fee_price'] = price_format($refund_info['pack_fee']);
+		$refund_info['insure_fee_price'] = price_format($refund_info['insure_fee']);
+		$refund_info['card_fee_price'] = price_format($refund_info['card_fee']);
+		$refund_info['tax_price'] = price_format($refund_info['inv_tax']);
+		$refund_info['integral_money_price'] = price_format($refund_info['integral_money']);
+		$refund_info['bonus_price'] = price_format($refund_info['bonus']);
+		$refund_info['discount_price'] = price_format($refund_info['discount']);
+		if ($refund_info['add_time']) {
+			$refund_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $refund_info['add_time']);
+		}
+		$this->assign('refund_info', $refund_info);
+		
+		//售后表实付金额计算
+		$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus']);
+		$this->assign('refund_total_amount', $refund_total_amount);
 		
 		$this->assign('form_action', RC_Uri::url('refund/admin_payrecord/update'));
 		
