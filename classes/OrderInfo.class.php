@@ -90,6 +90,7 @@ class OrderInfo
 	/**
 	 * 普通订单实付金额计算
 	 * 实付金额 = 商品总金额 + 发票税额 + 配送费用 + 保价费用 + 支付费用 + 包装费用 + 贺卡费用 - 积分金额 - 红包金额 -折扣 
+	 * 接口：实付金额 = $item->goods_amount + $item->shipping_fee + $item->insure_fee + $item->pay_fee + $item->pack_fee + $item->card_fee + $item->tax - $item->integral_money - $item->bonus - $item->discount;
 	 */
 	public static function order_money_total($order_id){
 		if (!empty($order_id)) {

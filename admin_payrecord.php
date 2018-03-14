@@ -79,7 +79,7 @@ class admin_payrecord extends ecjia_admin {
 		
 		RC_Loader::load_app_class('OrderStatusLog', 'orders', false);
 		RC_Loader::load_app_class('RefundStatusLog', 'refund', false);
-		RC_Loader::load_app_class('OrderInfo', 'refund', false);
+		RC_Loader::load_app_class('RefundOrderInfo', 'refund', false);
 		
 		//时间控件
 		RC_Style::enqueue_style('datepicker', RC_Uri::admin_url('statics/lib/datepicker/datepicker.css'));
@@ -155,20 +155,7 @@ class admin_payrecord extends ecjia_admin {
 		$this->assign('payrecord_info', $payrecord_info);
 		
 		//售后订单信息
-		$refund_info = RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
-		$refund_info['goods_amount_price'] = price_format($refund_info['goods_amount']);
-		$refund_info['shipping_fee_price'] = price_format($refund_info['shipping_fee']);
-		$refund_info['pay_fee_price'] = price_format($refund_info['pay_fee']);
-		$refund_info['pack_fee_price'] = price_format($refund_info['pack_fee']);
-		$refund_info['insure_fee_price'] = price_format($refund_info['insure_fee']);
-		$refund_info['card_fee_price'] = price_format($refund_info['card_fee']);
-		$refund_info['tax_price'] = price_format($refund_info['inv_tax']);
-		$refund_info['integral_money_price'] = price_format($refund_info['integral_money']);
-		$refund_info['bonus_price'] = price_format($refund_info['bonus']);
-		$refund_info['discount_price'] = price_format($refund_info['discount']);
-		if ($refund_info['add_time']) {
-			$refund_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $refund_info['add_time']);
-		}
+		$refund_info = RefundOrderInfo::get_refund_order_info($refund_id);
 		$this->assign('refund_info', $refund_info);
 		
 		//售后表实付金额计算
