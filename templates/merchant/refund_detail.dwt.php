@@ -147,8 +147,8 @@
 	           		</div>
            		</div>
            		<!-- {/foreach} -->
-           		<hr>
                 {if $order_data}
+                	<hr>
 	               	<p>订单实付金额：{$order_money_total} <span><a id="order-money-info" href="javascript:;">查看更多</a></span></p>
 	                <div class="order-money-info" style="display: none;">
 	                	{if $order_info.goods_amount gt '0.00'}
@@ -205,6 +205,7 @@
 		                <p>联系电话：{$order_info.mobile}</p>
 	                </div>
                 {else}
+                	<hr>
 	                <p>订单实付金额：{$refund_total_amount} <span><a id="order-money-info" href="javascript:;">查看更多</a></span></p>
 	                <div class="order-money-info" style="display: none;">
 	                	{if $refund_info.goods_amount gt '0.00'}
