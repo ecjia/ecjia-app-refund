@@ -247,7 +247,7 @@
 					{/if}
 					
 					{if $payrecord_info.back_inv_tax gt '0.00'}
-						<p>退回发票费：<font class="ecjiafc-red"><strong>{$payrecord_info.back_inv_tax_type}</strong></font></p>
+						<p>退回发票费：{$payrecord_info.back_inv_tax_type}</p>
 					{/if}
 					
 					<p>实际退款金额：<font class="ecjiafc-red ecjiafc-font">{$payrecord_info.back_money_total_type}</font></p>

@@ -71,28 +71,28 @@
 					{if $payrecord_info.back_pay_fee gt '0.00'}
 						<div class="control-group">
 							<label class="control-label">扣除支付手续费：</label>
-							<div class="controls l_h30"><strong>-{$payrecord_info.back_pay_fee_type}</strong></div>
+							<div class="controls l_h30">-{$payrecord_info.back_pay_fee_type}</div>
 						</div>
 					{/if}
 					
 					{if $payrecord_info.back_shipping_fee gt '0.00'}
 					<div class="control-group">
 						<label class="control-label">扣除配送费：</label>
-						<div class="controls l_h30"><strong>-{$payrecord_info.back_shipping_fee_type}</strong></div>
+						<div class="controls l_h30">-{$payrecord_info.back_shipping_fee_type}</div>
 					</div>
 					{/if}
 					
 					{if $payrecord_info.back_insure_fee gt '0.00'}
 					<div class="control-group">
 						<label class="control-label">扣除保价费：</label>
-						<div class="controls l_h30"><strong>-{$payrecord_info.back_insure_fee_type}</strong></div>
+						<div class="controls l_h30">-{$payrecord_info.back_insure_fee_type}</div>
 					</div>
 					{/if}
 					
 					{if $payrecord_info.back_inv_tax gt '0.00'}
 					<div class="control-group">
 						<label class="control-label">退回发票费：</label>
-						<div class="controls l_h30"><strong>{$payrecord_info.back_inv_tax_type}</strong></div>
+						<div class="controls l_h30">{$payrecord_info.back_inv_tax_type}</div>
 					</div>
 					{/if}
 					
