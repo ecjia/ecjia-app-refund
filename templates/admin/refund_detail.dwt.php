@@ -171,19 +171,21 @@
 				<div class="accordion-body in collapse reply_admin_list" id="refund_goods_content">
 					<div class="accordion-inner">
 					 	<div class="goods-content">
-			           		<!-- {foreach from=$goods_list item=list} -->
-			           		<div class="goods-info">
-			           			<div class="goods-img">
-				           			<img src="{$list.image}">
-					           	</div>
-				           		<div class="goods-desc">
-				           			 <p>{$list.goods_name}</p>
-				           			 <p>{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.goods_number}</p>
+					 		{if $goods_list}
+				           		<!-- {foreach from=$goods_list item=list} -->
+				           		<div class="goods-info">
+				           			<div class="goods-img">
+					           			<img src="{$list.image}">
+						           	</div>
+					           		<div class="goods-desc">
+					           			 <p>{$list.goods_name}</p>
+					           			 <p>{$list.goods_price}&nbsp;&nbsp;&nbsp;x{$list.goods_number}</p>
+					           		</div>
 				           		</div>
-			           		</div>
-			           		<!-- {/foreach} -->
+				           		<!-- {/foreach} -->
+				           		<hr>
+			           		{/if}
 			                {if $order_data}
-			               		<hr>
 				          		<p>订单实付金额：{$order_money_total} <span><a id="order-money-info" href="javascript:;">查看更多</a></span></p>
 				                <div class="order-money-info" style="display: none;">
 				                	{if $order_info.goods_amount gt '0.00'}
@@ -240,7 +242,6 @@
 					                <p>联系电话：{$order_info.mobile}</p>
 				                </div>
 			                {else}
-			                	<hr>
 				            	<p>订单实付金额：{$refund_total_amount} <span><a id="order-money-info" href="javascript:;">查看更多</a></span></p>
 				                <div class="order-money-info" style="display: none;">
 				                	{if $refund_info.goods_amount gt '0.00'}
