@@ -84,7 +84,7 @@
  				{if $key eq $refund_info.refund_reason}{$val}{/if}
 				<!-- {/foreach} -->
 				</p>
-				<p>退款金额：{$refund_total_amount}</p>
+				<p>退款金额：<font class="ecjiafc-red ecjiafc-font">{$refund_total_amount}</font></p>
 				<p>退款说明：{if $refund_info.refund_content}{$refund_info.refund_content}{else}暂无{/if}</p>
 				<p>上传凭证： 
 					{if $refund_img_list}
@@ -233,7 +233,7 @@
 				<h4>商城平台退款详情</h4>
 				<div class="adm_check">
 					<p>退款方式：{if $payrecord_info.action_back_type eq 'original'}原路退回{else}退回余额{/if}</p>
-					<p>应退款金额：{$payrecord_info.order_money_paid_type}</p>
+					<p>应退款金额：<font class="ecjiafc-red ecjiafc-font">{$payrecord_info.order_money_paid_type}</font></p>
 					{if $payrecord_info.back_pay_fee gt '0.00'}
 						<p>扣除支付手续费：-{$payrecord_info.back_pay_fee_type}</p>
 					{/if}
@@ -250,9 +250,9 @@
 						<p>退回发票费：<font class="ecjiafc-red"><strong>{$payrecord_info.back_inv_tax_type}</strong></font></p>
 					{/if}
 					
-					<p>实际退款金额：<font class="ecjiafc-red"><strong>{$payrecord_info.back_money_total_type}</strong></font></p>
+					<p>实际退款金额：<font class="ecjiafc-red ecjiafc-font">{$payrecord_info.back_money_total_type}</font></p>
 					{if $payrecord_info.back_integral gt '0'}
-						<p>积分：<font class="ecjiafc-red"><strong>{$payrecord_info.back_integral}</strong></font></p>
+						<p>积分：<font class="ecjiafc-red ecjiafc-font">{$payrecord_info.back_integral}</font></p>
 					{/if}
 					<p>退款时间：{$payrecord_info.action_back_time}</p>
 				</div>

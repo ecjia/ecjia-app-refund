@@ -268,7 +268,7 @@
 						                <p>折扣金额：<span>{$refund_info.discount_price}</span></p>
 						                {/if}
 					                </div></p>
-					                <p>配送状态：{if $refund_info.shipping_whether eq '1'}已发货{else}未发货{/if}</p>
+					                <p>是否配送：{if $refund_info.shipping_whether eq '1'}已配送{else}未配送{/if}</p>
 					                <p>支付方式：{$refund_info.pay_name}</p>
 					                <p>申请时间：{$refund_info.add_time}</p>
 					                <p>审核时间：{if $payrecord_info.add_time}{$payrecord_info.add_time}{/if}</p>
