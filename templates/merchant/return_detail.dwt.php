@@ -339,8 +339,8 @@
 		                <p>商品总金额：<span>{$refund_info.goods_amount_price}</span></p>
 		                {/if}
 		                
-		                {if $refund_info.tax gt '0.00'}
-		                <p>发票税额：<span>{$refund_info.tax_price}</span></p>
+		                {if $refund_info.inv_tax gt '0.00'}
+		                <p>发票税额：<span>{$refund_info.inv_tax_price}</span></p>
 		                {/if}
 		                
 		                {if $refund_info.shipping_fee gt '0.00'}

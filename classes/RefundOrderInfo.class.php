@@ -64,7 +64,7 @@ class RefundOrderInfo
 			$refund_info['pack_fee_price'] = price_format($refund_info['pack_fee']);
 			$refund_info['insure_fee_price'] = price_format($refund_info['insure_fee']);
 			$refund_info['card_fee_price'] = price_format($refund_info['card_fee']);
-			$refund_info['tax_price'] = price_format($refund_info['inv_tax']);
+			$refund_info['inv_tax_price'] = price_format($refund_info['inv_tax']);
 			$refund_info['integral_money_price'] = price_format($refund_info['integral_money']);
 			$refund_info['bonus_price'] = price_format($refund_info['bonus']);
 			$refund_info['discount_price'] = price_format($refund_info['discount']);
