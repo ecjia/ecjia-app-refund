@@ -172,8 +172,7 @@ class admin_payrecord extends ecjia_admin {
 		$this->assign('refund_info', $refund_info);
 		
 		//售后表实付金额计算
-// 		$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus']);
-		$refund_total_amount = price_format($refund_info['goods_amount'] + $refund_info['tax'] + $refund_info['shipping_fee'] + $refund_info['insure_fee'] + $refund_info['pay_fee'] + $refund_info['pack_fee'] +  $refund_info['card_fee'] - $refund_info['integral_money'] - $refund_info['bonus'] - $refund_info['discount']);
+		$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus']);
 		$this->assign('refund_total_amount', $refund_total_amount);
 		
 		$this->assign('form_action', RC_Uri::url('refund/admin_payrecord/update'));
