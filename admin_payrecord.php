@@ -247,7 +247,8 @@ class admin_payrecord extends ecjia_admin {
 		RC_DB::table('refund_order_action')->insertGetId($data);
 		
 		//记录到结算表
-		RC_Api::api('commission', 'add_bill_detail', array('order_type' => 'refund', 'order_id' => $refund_order['order_id'], 'store_id' => $refund_order['store_id']));
+// 		RC_Api::api('commission', 'add_bill_detail', array('order_type' => 'refund', 'order_id' => $refund_order['order_id'], 'store_id' => $refund_order['store_id']));
+		RC_Api::api('commission', 'add_bill_queue', array('order_type' => 'refund', 'order_id' => $refund_order['order_id']));
 		
 		//售后订单状态变动日志表
 		RefundStatusLog::refund_payrecord(array('refund_id' => $refund_id, 'back_money' => $back_money_total));
