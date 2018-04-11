@@ -446,6 +446,7 @@ class merchant extends ecjia_merchant {
 			'action_user_id'	=>  $_SESSION['staff_id'],
 			'action_user_name'	=>	$_SESSION['staff_name'],
 			'status'		    =>  $status,
+			'return_status'		=>  1,
 			'action_note'		=>  $action_note,
 			'log_time'			=>  RC_Time::gmtime(),
 		);
