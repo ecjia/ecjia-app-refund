@@ -2,9 +2,9 @@
 
 namespace Ecjia\App\Refund;
 
-use Royalcms\Component\App\AppServiceProvider;
+use Royalcms\Component\App\AppParentServiceProvider;
 
-class RefundServiceProvider extends  AppServiceProvider
+class RefundServiceProvider extends  AppParentServiceProvider
 {
     
     public function boot()
