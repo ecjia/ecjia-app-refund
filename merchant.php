@@ -247,6 +247,13 @@ class merchant extends ecjia_merchant {
 			);
 			RC_DB::table('refund_payrecord')->insertGetId($data);
 			$log_msg = '同意';
+			/*如果订单是众包或商家配送的话；找出对应的配送单更改配送单状态为取消配送*/
+// 			if ($refund_info['shipping_code'] == 'ship_o2o_express' || $refund_info['shipping_code'] == 'ship_ecjia_express') {
+// 				$express_order_info = RC_DB::table('express_order')->where('order_id', $refund_info['order_id'])->get();
+// 				if (!empty($express_order_info)) {
+// 					$result = RC_Api::api('express', 'cancel_express', $express_order_info);
+// 				}
+// 			}
 		} else {
 			$status = 11;
 			$refund_status = 0;
@@ -433,6 +440,8 @@ class merchant extends ecjia_merchant {
 				$return_shipping_range = implode(",", $return_shipping_range);
 			}
 			$log_msg = '同意';
+			/*如果订单是众包或商家配送的话；找出对应的配送单更改配送单状态为取消配送*/
+			
 		} else {
 			$status = 11;
 			$log_msg = '不同意';
