@@ -44,7 +44,7 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-use Ecjia\System\Notifications\RefundBalanceArrived;
+use Ecjia\App\Refund\Notifications\RefundBalanceArrived;
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
