@@ -81,5 +81,10 @@ return array(
 					array('reason_id' => 96,'reason_name' => '未在时效内送达'),
 					array('reason_id' => 97,'reason_name' => '服务态度问题')
 	),
+	'merchant_refuse'	=> array(
+			array('reason_id' => 31,'reason_name' => '该订单商品已售完'),
+			array('reason_id' => 32,'reason_name' => '由于天气原因，本店铺暂不接单'),
+			array('reason_id' => 33,'reason_name' => '商家忙碌，暂时无法接单'),
+	),
 			
 );
