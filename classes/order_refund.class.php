@@ -253,9 +253,6 @@ class order_refund {
 			'message' 		=> $options['message'],
 			'add_time'		=> RC_Time::gmtime()
 		);
-		RC_Logger::getLogger('error')->info('test222');
-		RC_Logger::getLogger('error')->info($options);
-		RC_Logger::getLogger('error')->info('test333');
 		RC_DB::table('order_status_log')->insert($data);
 	}
 	
