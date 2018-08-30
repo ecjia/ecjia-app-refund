@@ -199,6 +199,9 @@ class admin_payrecord extends ecjia_admin {
 		}
 		//用户表和资金变动表变动
 		$refund_order = RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
+		if(empty($refund_order)) {
+		    return $this->showmessage('退款单信息不存在', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+		}
 		$user_id = $refund_order['user_id'];
 		if ($back_type == 'surplus') {//退回余额  （消费积分和金额）
 			$action_note = '退款金额已退回余额'.$back_money_total.'元，退回积分为：'.$back_integral;
@@ -216,8 +219,10 @@ class admin_payrecord extends ecjia_admin {
 			RC_DB::table('account_log')->insertGetId($account_log);
 			
 			//更新用户表
-			$step = $back_money_total." ,pay_points = pay_points + ('$back_integral')";
-			RC_DB::table('users')->where('user_id', $user_id)->increment('user_money', $step);
+// 			$step = $back_money_total." ,pay_points = pay_points + ('$back_integral')";
+// 			RC_DB::table('users')->where('user_id', $user_id)->increment('user_money', $step);
+			RC_DB::table('users')->where('user_id', $user_id)->increment('user_money', $back_money_total);
+			RC_DB::table('users')->where('user_id', $user_id)->increment('pay_points', $back_integral);
 			
 			/*所退款订单，下单有没赠送积分；有赠送的话，赠送的积分扣除*/
 			$order_give_integral_info = RC_DB::table('account_log')->where('user_id', $user_id)->where('from_type', 'order_give_integral')->where('from_value', $refund_order['order_sn'])->first();
