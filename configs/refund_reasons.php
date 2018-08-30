@@ -86,5 +86,8 @@ return array(
 			array('reason_id' => 32,'reason_name' => '由于天气原因，本店铺暂不接单'),
 			array('reason_id' => 33,'reason_name' => '商家忙碌，暂时无法接单'),
 	),
+	'auto_refuse'	=> array(
+			array('reason_id' => 34,'reason_name' => '由于特殊情况，商家暂时无法接单，系统已自动申请退款'),
+	),
 			
 );
