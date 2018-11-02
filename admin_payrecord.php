@@ -297,6 +297,9 @@ class admin_payrecord extends ecjia_admin {
 			RC_Api::api('sms', 'send_event_sms', $options);
 		}
 		
+		//更新商家会员
+		RC_Api::api('customer', 'store_user_buy', array('store_id' => $refund_order['store_id'], 'user_id' => $user_id));
+		
 		//消息通知
 		$orm_user_db = RC_Model::model('orders/orm_users_model');
 		$user_ob = $orm_user_db->find($user_id);
