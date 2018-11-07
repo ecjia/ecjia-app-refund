@@ -313,7 +313,9 @@ class admin_payrecord extends ecjia_admin {
 						'amount'				=> $back_money_total,
 						'formatted_amount' 		=> price_format($back_money_total),
 						'user_money'			=> $user_info['user_money'],
-						'formatted_user_money'	=> price_format($user_info['user_money'])
+						'formatted_user_money'	=> price_format($user_info['user_money']),
+						'refund_id'				=> $refund_order['refund_id'],
+						'refund_sn'				=> $refund_order['refund_sn'],
 				),
 		);
 			
