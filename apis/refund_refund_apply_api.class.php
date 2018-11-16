@@ -116,8 +116,13 @@ class refund_refund_apply_api extends Component_Event_Api {
 					'refund_reason'		=> $options['refund_reason'],
 					'return_status'		=> 1,//买家未发货
 					'add_time'			=> RC_Time::gmtime(),
-					'referer'			=> ! empty($device['client']) ? $device['client'] : 'mobile'
+					//'referer'			=> ! empty($order_info['referer']) ? $device['client'] : 'mobile'
 			);
+			if (!empty($options['is_cashdesk'])) {
+				$refund_data['referer'] = 'ecjia-cashdesk';
+			} else {
+				$refund_data['referer'] = 'mobile';
+			}
 			
 			//插入售后申请表数据
 			$refund_id = RC_DB::table('refund_order')->insertGetId($refund_data);
