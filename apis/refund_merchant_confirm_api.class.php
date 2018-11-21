@@ -56,6 +56,15 @@ class refund_merchant_confirm_api extends Component_Event_Api {
 			$back_shipping_fee = 0;
 			$back_insure_fee   = 0;
 		}
+		/*退现金时，退款金额判断；用户端输入的金额；实际存打款表*/
+		if ($options['refund_way'] == 'cash') {
+			if ($options['refund_money'] > 0) {
+				if ($options['refund_money'] < $back_money_total) {
+					$back_money_total = $options['refund_money'];
+				}
+			}
+		}
+		
 		$data = array(
 				'store_id'				=>	empty($options['store_id']) ? 0 : $options['store_id'],
 				'order_id'				=>	$refund_info['order_id'],
