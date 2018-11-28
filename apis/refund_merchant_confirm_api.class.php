@@ -66,7 +66,7 @@ class refund_merchant_confirm_api extends Component_Event_Api {
 		}
 		
 		/*判断当前退款申请,有没refund_payrecord数据（因为进行中的和未审核的可继续退款）*/
-		$refund_payrecord_info = RC_DB::table('refund_payrecord')->where('refund_id', $refund_id)->where('order_id', $refund_info['order_id'])->first();
+		$refund_payrecord_info = RC_DB::table('refund_payrecord')->where('refund_id', $refund_id)->where('store_id', $refund_info['store_id'])->where('order_id', $refund_info['order_id'])->first();
 		
 		if (empty($refund_payrecord_info)) {
 			$data = array(
