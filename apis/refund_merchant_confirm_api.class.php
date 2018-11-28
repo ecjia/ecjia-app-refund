@@ -66,8 +66,9 @@ class refund_merchant_confirm_api extends Component_Event_Api {
 		}
 		
 		/*判断当前退款申请,有没refund_payrecord数据（因为进行中的和未审核的可继续退款）*/
-		$refund_payrecord = RC_DB::table('refund_payrecord')->where('refund_id', $refund_id)->first();
-		if (empty($refund_payrecord)) {
+		$refund_payrecord_info = RC_DB::table('refund_payrecord')->where('refund_id', $refund_id)->where('order_id', $refund_info['order_id'])->first();
+		
+		if (empty($refund_payrecord_info)) {
 			$data = array(
 					'store_id'				=>	empty($options['store_id']) ? 0 : $options['store_id'],
 					'order_id'				=>	$refund_info['order_id'],
@@ -127,9 +128,11 @@ class refund_merchant_confirm_api extends Component_Event_Api {
 			\Ecjia\App\Refund\Helper::assign_adminlog_content();
 			RC_Api::api('merchant', 'admin_log', array('text'=> $options['staff_name'].'操作售后订单'.$refund_sn.'为确认收货'.'【来源掌柜】', 'action'=>'check', 'object'=>'refund_order'));
 			
-			return $refund_payrecord_id;
+			$refund_payrecord_info = RC_DB::table('refund_payrecord')->where('id', $refund_payrecord_id)->first();
+			
+			return $refund_payrecord_info;
 		} else {
-			return $refund_payrecord['id'];
+			return $refund_payrecord_info;
 		}
 		
 	}

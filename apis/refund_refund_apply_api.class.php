@@ -40,6 +40,7 @@ class refund_refund_apply_api extends Component_Event_Api {
 		RC_Loader::load_app_class('order_refund', 'refund', false);
 		//过滤掉已取消的和退款处理成功的，保留在处理中的申请
 		$order_refund_info = order_refund::currorder_refund_info($order_id);
+		
 		if (!empty($order_refund_info)) {
 			$refund_id = $order_refund_info['refund_id'];
 			//已存在处理中的申请或退款成功的申请
@@ -49,7 +50,7 @@ class refund_refund_apply_api extends Component_Event_Api {
 				return new ecjia_error('error_apply', '当前订单已申请了售后！');
 			} 
 			//，未审核的及进行中的可继续退款
-			return $refund_id;
+			return $order_refund_info;
 		} else {
 			//退款编号
 			$refund_sn = ecjia_order_refund_sn();
@@ -188,7 +189,9 @@ class refund_refund_apply_api extends Component_Event_Api {
 			$opt = array('status' => '申请退款', 'refund_id' => $refund_id, 'message' => '收银台退款申请已提交成功！');
 			order_refund::refund_status_log($opt);
 			
-			return $refund_id;
+			$refund_order_info = RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
+			
+			return $refund_order_info;
 		}
 	}
 }
