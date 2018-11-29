@@ -154,10 +154,11 @@ class refund_refund_apply_api extends Component_Event_Api {
 									/* 如果使用库存，则增加库存（不论何时减库存都需要） */
 									if (ecjia::config('use_storage') == '1') {
 										if ($res['send_number'] > 0) {
-											RC_DB::table('goods')->where('goods_id', $res['goods_id'])->increment('goods_number', $res['send_number']);
 											//货品库存增加
 											if ($res['product_id'] > 0) {
 												RC_DB::table('products')->where('product_id', $res['product_id'])->increment('product_number', $res['send_number']);
+											} else {
+												RC_DB::table('goods')->where('goods_id', $res['goods_id'])->increment('goods_number', $res['send_number']);
 											}
 										}
 									}
