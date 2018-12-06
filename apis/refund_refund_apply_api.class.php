@@ -15,11 +15,7 @@ class refund_refund_apply_api extends Component_Event_Api {
 			return new ecjia_error('invalid_parameter', '调用api文件,refund_apply,参数无效');
 		}
 		 $res = $this->generate_refund_order($options);
-		 if (!is_ecjia_error($res)) {
-		 	return $res;
-		 } else {
-		 	return new ecjia_error('refund_apply_fail', '退款申请失败！');
-		 }
+		 return $res;
 	}
 	
 	
