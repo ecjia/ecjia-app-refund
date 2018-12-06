@@ -41,6 +41,10 @@ class refund_refund_apply_api extends Component_Event_Api {
 		//过滤掉已取消的和退款处理成功的，保留在处理中的申请
 		$order_refund_info = order_refund::currorder_refund_info($order_id);
 		
+		RC_Logger::getLogger('error')->info('test111');
+		RC_Logger::getLogger('error')->info($order_refund_info);
+		RC_Logger::getLogger('error')->info('test222');
+		
 		if (!empty($order_refund_info)) {
 			$refund_id = $order_refund_info['refund_id'];
 			
@@ -60,6 +64,7 @@ class refund_refund_apply_api extends Component_Event_Api {
 				   || (($order_refund_info['status'] == Ecjia\App\Refund\RefundStatus::AGREE) && ($order_refund_info['refund_staus'] == Ecjia\App\Refund\RefundStatus::UNTRANSFER))
 				   || (($order_refund_info['status'] == Ecjia\App\Refund\RefundStatus::AGREE) && ($order_refund_info['refund_staus'] == Ecjia\App\Refund\RefundStatus::TRANSFERED))
 				) {
+					RC_Logger::getLogger('error')->info('test333');
 					return new ecjia_error('error_apply', '当前订单已申请了售后！');
 				}
 			}
