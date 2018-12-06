@@ -14,7 +14,12 @@ class refund_refund_apply_api extends Component_Event_Api {
 		if (!is_array($options)) {
 			return new ecjia_error('invalid_parameter', '调用api文件,refund_apply,参数无效');
 		}
-		return $this->generate_refund_order($options);
+		 $res = $this->generate_refund_order($options);
+		 if (!is_ecjia_error($res)) {
+		 	return $res;
+		 } else {
+		 	return new ecjia_error('refund_apply_fail', '退款申请失败！');
+		 }
 	}
 	
 	
@@ -42,6 +47,7 @@ class refund_refund_apply_api extends Component_Event_Api {
 		$order_refund_info = order_refund::currorder_refund_info($order_id);
 		
 		RC_Logger::getLogger('error')->info('testxxx');
+		RC_Logger::getLogger('error')->info($order_id);
 		RC_Logger::getLogger('error')->info($options);
 		RC_Logger::getLogger('error')->info('testyyy');
 		
@@ -63,10 +69,10 @@ class refund_refund_apply_api extends Component_Event_Api {
 					return $order_refund_info;
 				}
 			} else {
+				RC_Logger::getLogger('error')->info('test555');
 				//已存在处理中的申请或退款成功的申请
-				if (($order_refund_info['status'] == Ecjia\App\Refund\RefundStatus::UNCHECK) 
-				   || (($order_refund_info['status'] == Ecjia\App\Refund\RefundStatus::AGREE) && ($order_refund_info['refund_staus'] == Ecjia\App\Refund\RefundStatus::UNTRANSFER))
-				   || (($order_refund_info['status'] == Ecjia\App\Refund\RefundStatus::AGREE) && ($order_refund_info['refund_staus'] == Ecjia\App\Refund\RefundStatus::TRANSFERED))
+				if (($order_refund_info['status'] == '0') || ($order_refund_info['status'] == '1' && $order_refund_info['refund_staus'] == '1')
+				   || ($order_refund_info['status'] == '1' && $order_refund_info['refund_staus'] == '2')
 				) {
 					RC_Logger::getLogger('error')->info('test333');
 					return new ecjia_error('error_apply', '当前订单已申请了售后！');
