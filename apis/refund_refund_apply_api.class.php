@@ -41,6 +41,10 @@ class refund_refund_apply_api extends Component_Event_Api {
 		//过滤掉已取消的和退款处理成功的，保留在处理中的申请
 		$order_refund_info = order_refund::currorder_refund_info($order_id);
 		
+		RC_Logger::getLogger('error')->info('testxxx');
+		RC_Logger::getLogger('error')->info($options);
+		RC_Logger::getLogger('error')->info('testyyy');
+		
 		RC_Logger::getLogger('error')->info('test111');
 		RC_Logger::getLogger('error')->info($order_refund_info);
 		RC_Logger::getLogger('error')->info('test222');
