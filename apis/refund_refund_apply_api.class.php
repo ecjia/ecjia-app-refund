@@ -66,6 +66,8 @@ class refund_refund_apply_api extends Component_Event_Api {
 				) {
 					RC_Logger::getLogger('error')->info('test333');
 					return new ecjia_error('error_apply', '当前订单已申请了售后！');
+				} else {
+					return $order_refund_info;
 				}
 			}
 		} else {
