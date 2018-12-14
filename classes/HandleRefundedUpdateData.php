@@ -89,7 +89,6 @@ class HandleRefundedUpdateData
 	 * @param array $refund_result['order_info'] 订单信息       
 	 * @param array $refund_result['refund_payrecord_info'] 订单退款，打款信息   必传
 	 * @param array $refund_result['refund_order_info'] 退款申请单信息    
-	 * @param array $refund_result['notify_data'] 通知数据
 	 * @param string $refund_result['back_type'] 退款类型
 	 * @param string $refund_result['refund_way'] 退款方式   必传
 	 * @param int $refund_result['is_cashdesk'] 是否是收银台申请退款
