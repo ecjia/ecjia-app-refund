@@ -12,6 +12,7 @@ use RC_Logger;
 use OrderStatusLog;
 use order_ship;
 use RefundStatusLog;
+use Ecjia\App\Refund\RefundOrder;
 
 /**
  * 订单退款完成；更新各项数据
