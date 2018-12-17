@@ -138,7 +138,7 @@ class refund_refund_apply_api extends Component_Event_Api {
 			if (!empty($options['is_cashdesk'])) {
 				$refund_data['referer'] = 'ecjia-cashdesk';
 			} else {
-				$refund_data['referer'] = 'mobile';
+				$refund_data['referer'] = ! empty($device['client']) ? $device['client'] : 'mobile';
 			}
 			
 			//插入售后申请表数据

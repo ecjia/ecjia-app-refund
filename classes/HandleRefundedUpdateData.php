@@ -39,7 +39,7 @@ class HandleRefundedUpdateData
 		 * 4、更新售后订单状态日志 & 操作记录表 UpdateRefundOrderStatus()
 		 * 5、更新结算记录 UpdateBillOrder()
 		 * 6、更新商家会员 UpdateMerchantUser()
-		 * 7、退款短信通知 SendSmsNotice()
+		 * 7、退款短信通知 SendRefundSmsNotice()
 		 * 8、返回退款打印数据 RefundPrintData()
 		 */
 		
@@ -76,7 +76,9 @@ class HandleRefundedUpdateData
 		}
 		
 		//退款短信通知
-		self::SendSmsNotice();
+		if ($order_info['user_id'] > 0) {
+			//self::SendRefundSmsNotice($order_info['user_id'], $refund_result['refund_payrecord_info']['back_money_total']);
+		}
 		
 		//返回退款打印数据
 		$refund_print_data = self::RefundPrintData($refund_order_info['refund_id'], $order_info, $refund_payrecord_info['id']);
@@ -193,7 +195,7 @@ class HandleRefundedUpdateData
 	/**
 	 * 退款短信通知
 	 */
-	public static function SendSmsNotice()
+	public static function SendRefundSmsNotice()
 	{
 		
 	}
