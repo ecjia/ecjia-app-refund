@@ -12,7 +12,7 @@ use RC_Logger;
 use OrderStatusLog;
 use order_ship;
 use RefundStatusLog;
-use Ecjia\App\Refund\RefundOrder;
+
 
 /**
  * 订单退款完成；更新各项数据
@@ -216,7 +216,8 @@ class HandleRefundedUpdateData
 			$order_goods 			= self::getOrderGoods($refund_info['order_id']);
 			$total_discount 		= $order_info['discount'] + $order_info['integral_money'] + $order_info['bonus'];
 			$money_paid 			= $refund_info['money_paid'] + $refund_info['surplus'];
-			$refund_total_amount	= Ecjia\App\Refund\RefundOrder::get_back_total_money($refund_info);
+			$refund_total_amount	= self::getBackTotalMoney($refund_info);
+			
 		
 			$user_info = [];
 			//有没用户
@@ -310,5 +311,22 @@ class HandleRefundedUpdateData
 		}
 	
 		return array('list' => $list, 'total_goods_number' => $total_goods_number, 'taotal_goods_amount' => $taotal_goods_amount);
+	}
+	
+	
+	/**
+	 * 退款金额
+	 * @param array $refund_info
+	 */
+	public static function getBackTotalMoney($refund_info){
+		//退款总金额
+		$back_money_total = '0.00';
+		$shipping_status = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->pluck('shipping_status');
+		if ($shipping_status > SS_UNSHIPPED) {
+			$back_money_total  = $refund_info['money_paid'] + $refund_info['surplus'] - $refund_info['pay_fee'] - $refund_info['shipping_fee'] - $refund_info['insure_fee'];
+		} else {
+			$back_money_total  = $refund_info['money_paid'] + $refund_info['surplus'] - $refund_info['pay_fee'];
+		}
+		return $back_money_total;
 	}
 }
