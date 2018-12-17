@@ -212,7 +212,7 @@ class HandleRefundedUpdateData
 			$payment_record_info	= self::paymentRecordInfo($refund_info['order_sn'], 'buy');
 			$refund_payrecord_info  = RC_DB::table('refund_payrecord')->where('id', $refund_payrecord_id)->first();
 		
-			$order_goods 			= $this->getOrderGoods($refund_info['order_id']);
+			$order_goods 			= self::getOrderGoods($refund_info['order_id']);
 			$total_discount 		= $order_info['discount'] + $order_info['integral_money'] + $order_info['bonus'];
 			$money_paid 			= $refund_info['money_paid'] + $refund_info['surplus'];
 			$refund_total_amount	= Ecjia\App\Refund\RefundOrder::get_back_total_money($refund_info);
@@ -240,20 +240,20 @@ class HandleRefundedUpdateData
 					'goods_list'					=> $order_goods['list'],
 					'total_goods_number' 			=> $order_goods['total_goods_number'],
 					'total_goods_amount'			=> $order_goods['taotal_goods_amount'],
-					'formatted_total_goods_amount'	=> $order_goods['taotal_goods_amount'] > 0 ? price_format($order_goods['taotal_goods_amount'], false) : '',
+					'formatted_total_goods_amount'	=> $order_goods['taotal_goods_amount'] > 0 ? ecjia_price_format($order_goods['taotal_goods_amount'], false) : '',
 					'total_discount'				=> $total_discount,
-					'formatted_total_discount'		=> $total_discount > 0 ? price_format($total_discount, false) : '',
+					'formatted_total_discount'		=> $total_discount > 0 ? ecjia_price_format($total_discount, false) : '',
 					'money_paid'					=> $money_paid,
-					'formatted_money_paid'			=> $money_paid > 0 ? price_format($money_paid, false) : '',
+					'formatted_money_paid'			=> $money_paid > 0 ? ecjia_price_format($money_paid, false) : '',
 					'integral'						=> intval($refund_info['integral']),
 					'integral_money'				=> $refund_info['integral_money'],
-					'formatted_integral_money'		=> $refund_info['integral_money'] > 0 ? price_format($refund_info['integral_money'], false) : '',
+					'formatted_integral_money'		=> $refund_info['integral_money'] > 0 ? ecjia_price_format($refund_info['integral_money'], false) : '',
 					'pay_name'						=> !empty($order_info['pay_name']) ? $order_info['pay_name'] : '',
 					'payment_account'				=> empty($payment_record_info['payer_login']) ? '' : $payment_record_info['payer_login'],
 					'user_info'						=> $user_info,
 					'refund_sn'						=> $refund_info['refund_sn'],
 					'refund_total_amount'			=> $refund_total_amount,
-					'formatted_refund_total_amount' => $refund_total_amount > 0 ? price_format($refund_total_amount, false) : '',
+					'formatted_refund_total_amount' => $refund_total_amount > 0 ? ecjia_price_format($refund_total_amount, false) : '',
 					'cashier_name'					=> empty($refund_payrecord_info['action_user_name']) ? '' : $refund_payrecord_info['action_user_name']
 			);
 		}
@@ -287,7 +287,7 @@ class HandleRefundedUpdateData
 	/**
 	 * 订单商品
 	 */
-	protected function getOrderGoods($order_id)
+	public static function getOrderGoods($order_id)
 	{
 		$field = 'goods_id, goods_name, goods_number, (goods_number*goods_price) as subtotal';
 		$order_goods = RC_DB::table('order_goods')->where('order_id', $order_id)->select(RC_DB::raw($field))->get();
