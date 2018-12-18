@@ -117,12 +117,18 @@
 						<label class="control-label">退款方式：</label>
 						<div class="controls back-logo-wrap">
 						     <ul>
-						         <li class="back-logo active" data-type="surplus">
+                                 {if $payrecord_info.back_pay_code eq 'pay_wxpay'}
+                                 <li class="back-logo active" data-type="pay_wxpay">
+                                     <img src="{$pay_wxpay_img}">
+                                     <img class="back-logo-select" src="{$selected_img}">
+                                 </li>
+                                 {/if}
+						         <li class="back-logo {if $payrecord_info.back_pay_code neq 'pay_wxpay'}active{/if}" data-type="surplus">
 						             <img src="{$surplus_img}">
 						             <img class="back-logo-select" src="{$selected_img}">
 						         </li>
 						     </ul>
-						     <input name="back_type" value="surplus" type="hidden">
+						     <input name="back_type" value="{if $payrecord_info.back_pay_code eq 'pay_wxpay'}pay_wxpay{else}surplus{/if}" type="hidden">
 						</div>
 					</div>
 					

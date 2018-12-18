@@ -170,6 +170,7 @@ class admin_payrecord extends ecjia_admin {
 		$this->assign('original_img', RC_App::apps_url('statics/images/original_pic.png', __FILE__));
 		$this->assign('surplus_img', RC_App::apps_url('statics/images/surplus_pic.png', __FILE__));
 		$this->assign('selected_img', RC_App::apps_url('statics/images/selected.png', __FILE__));
+        $this->assign('pay_wxpay_img', RC_App::apps_url('statics/images/pay_wxpay_img.png', __FILE__));
 		
 		$this->display('payrecord_detail.dwt');
 	}
@@ -242,7 +243,9 @@ class admin_payrecord extends ecjia_admin {
 				);
 				RC_Api::api('user', 'account_change_log',$options);
 			}
-		}
+		} elseif ($back_type == 'pay_wxpay') {
+		    // TODO 微信原路退回
+        }
 		
 		//更新打款表
 		$data = array(
