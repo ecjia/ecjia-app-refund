@@ -53,7 +53,7 @@
 				<option value="2" {if $smarty.get.refund_status eq 2}selected{/if}>已打款</option>
 			</select>
 			
-			<input type="text" name="keywords" value="{$smarty.get.keywords}" placeholder="请输入商家名称或退款编号"/> 
+			<input type="text" name="keywords" value="{$smarty.get.keywords}" placeholder="请输入商家名称或退款/订单编号"/>
 			<input class="btn screen-btn" type="submit" value="搜索">
 		</form>
 	</div>

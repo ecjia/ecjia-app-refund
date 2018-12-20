@@ -602,7 +602,7 @@ class merchant extends ecjia_merchant {
 		
 		$filter['keywords']  = trim($_GET['keywords']);
 		if ($filter['keywords']) {
-			$db_refund_view ->whereRaw('(order_sn  like  "%'.mysql_like_quote($filter['keywords']).'%"  or refund_sn like "%'.mysql_like_quote($filter['keywords']).'%")');
+			$db_refund_view ->whereRaw('(refund_sn like "%'.mysql_like_quote($filter['keywords']).'%" or order_sn like "%'.mysql_like_quote($filter['keywords']).'%")');
 		}
 		$status = $_GET['status'];
 		if (!empty($status) || $status == '0') {

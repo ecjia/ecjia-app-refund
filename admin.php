@@ -360,7 +360,9 @@ class admin extends ecjia_admin {
 		}
 		$filter['keywords']  = trim($_GET['keywords']);
 		if ($filter['keywords']) {
-			$db_refund_view ->whereRaw('(refund_sn  like  "%'.mysql_like_quote($filter['keywords']).'%"  or s.merchants_name like "%'.mysql_like_quote($filter['keywords']).'%")');
+			$db_refund_view ->whereRaw('(refund_sn like "%'.mysql_like_quote($filter['keywords']).'%"  
+			or s.merchants_name like "%'.mysql_like_quote($filter['keywords']).'%" 
+			or ro.order_sn like "%'.mysql_like_quote($filter['keywords']).'%")');
 		}
 		
 		$refund_status = $_GET['refund_status'];
