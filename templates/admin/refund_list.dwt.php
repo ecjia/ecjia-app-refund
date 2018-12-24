@@ -37,6 +37,13 @@
 			<span class="badge badge-info">{if $data.count.return_refund}{$data.count.return_refund}{else}0{/if}</span>
 			</a>
 		</li>
+		
+		<li class="{if $filter.refund_type eq 'cancel'}active{/if}">
+			<a class="data-pjax" href='{url path="refund/admin/init" args="refund_type=cancel{if $filter.keywords}&keywords={$filter.keywords}{/if}"}{if $filter.refund_status}&refund_status={$filter.refund_status}{/if}'>
+			撤单退款
+			<span class="badge badge-info">{if $data.count.cancel}{$data.count.cancel}{else}0{/if}</span>
+			</a>
+		</li>
 	</ul>
 	
 	<div class="choose_list f_r">

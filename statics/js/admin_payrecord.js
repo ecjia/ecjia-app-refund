@@ -52,6 +52,16 @@
     				});
     			});
         		
+        	    $('select[name="adm_back_content"]').off('change').on('change', function () {
+        		    var reply_text = $("#adm_reply_content option:selected").text();
+        		    var reply_val  = $("#adm_reply_content option:selected").val();
+            		if (reply_text != '' && reply_val !=''){
+    	           		 $('#back_content').val(reply_text);
+            		} else {
+            			 $('#back_content').val('');
+            		}
+            	})
+        		
             	$(".back-logo").click(function() {
             		$(".back-logo").removeClass('active');
             		$(this).addClass('active');

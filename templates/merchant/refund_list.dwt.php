@@ -41,6 +41,14 @@ ecjia.merchant.refund_list.init();
         				<span class="badge badge-info">{if $refund_list.count.return_refund}{$refund_list.count.return_refund}{else}0{/if}</span>
         				</a>
         			</li>
+        			
+        			<li class="{if $filter.refund_type eq 'cancel'}active{/if}">
+        				<a class="data-pjax" href='{url path="refund/merchant/init" args="refund_type=cancel{if $filter.keywords}&keywords={$filter.keywords}{/if}"}{if $filter.status}&status={$filter.status}{/if}'>
+        				撤单退款
+        				<span class="badge badge-info">{if $refund_list.count.cancel}{$refund_list.count.cancel}{else}0{/if}</span>
+        				</a>
+        			</li>
+        			
         		</ul>
             </div>
             
