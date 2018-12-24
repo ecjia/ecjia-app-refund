@@ -374,7 +374,7 @@ class admin_payrecord extends ecjia_admin {
 		$count = $db_refund_view->count();
 		$page = new ecjia_page($count, 10, 5);
 		$data = $db_refund_view
-		->select('id','order_sn','order_id','refund_sn','refund_id','refund_type','order_money_paid','back_surplus','action_back_time','action_back_type','add_time',RC_DB::raw('s.merchants_name'))
+		->select('id','order_sn','order_id','refund_sn', 'back_pay_name', 'back_pay_code', 'refund_id','refund_type','order_money_paid','back_surplus','action_back_time','action_back_type','add_time',RC_DB::raw('s.merchants_name'))
 		->orderby('id', 'DESC')
 		->take(10)
 		->skip($page->start_id-1)

@@ -57,7 +57,7 @@
 				    <th class="w150">退款编号</th>
 				    <th class="w150">商家名称</th>
 				    <th class="w150">订单编号</th>
-				    <th class="w100">申请类型</th>
+				    <th class="w100">支付方式</th>
 				    <th class="w100">退款金额</th>
 				    <th class="w100">申请时间</th>
 				    {if $smarty.get.back_type eq 'have'}
@@ -77,7 +77,7 @@
 		      	<td>{$list.merchants_name}</td>
 		      	<td>{$list.order_sn}</td>
 		      	<td>
-    				{if $list.refund_type eq 'refund'}仅退款{else}退货退款{/if}
+    				{if $list.back_pay_name}{$list.back_pay_name}{/if}
     			</td>
 		      	<td>{$list.order_money_paid}</td>
 		      	<td>{$list.add_time}</td>
