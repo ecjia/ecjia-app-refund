@@ -41,6 +41,7 @@
 				<option value="" >申请类型</option>
 				<option value="refund" {if $smarty.get.refund_type eq 'refund'}selected{/if}>仅退款</option>
 				<option value="return" {if $smarty.get.refund_type eq 'return'}selected{/if}>退货退款</option>
+				<option value="cancel" {if $smarty.get.refund_type eq 'cancel'}selected{/if}>撤单退款</option>
 			</select>
 			
 			<input type="text" name="keywords" value="{$smarty.get.keywords}" placeholder="请输入商家名称或退款编号"/> 
