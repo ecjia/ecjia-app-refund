@@ -203,6 +203,7 @@ class admin_payrecord extends ecjia_admin {
 		if(empty($refund_order)) {
 		    return $this->showmessage('退款单信息不存在', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
+
 		$user_id = $refund_order['user_id'];
 		$integral_name = ecjia::config('integral_name');
 		if (empty($integral_name)) {
@@ -245,6 +246,15 @@ class admin_payrecord extends ecjia_admin {
 			}
 		} elseif ($back_type == 'pay_wxpay') {
 		    // TODO 微信原路退回
+            //打款表信息
+            $payrecord_info = RC_DB::table('refund_payrecord')->where('refund_id', $refund_id)->first();
+
+            $result = (new Ecjia\App\Payment\Refund\RefundManager($refund_order['order_sn'], null, null))->refund($payrecord_info['back_money_total'], $payrecord_info['action_user_name']);
+            if (is_ecjia_error($result)) {
+                return $result;
+            }
+
+            dd($result);
         }
 		
 		//更新打款表
