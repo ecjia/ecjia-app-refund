@@ -7,7 +7,9 @@
  */
 namespace Ecjia\App\Refund\Models;
 
-class RefundPayRecordModel
+use Royalcms\Component\Database\Eloquent\Model;
+
+class RefundPayRecordModel extends Model
 {
     protected $table = 'refund_payrecord';
 

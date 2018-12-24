@@ -8,8 +8,9 @@
 
 namespace Ecjia\App\Refund\Models;
 
+use Royalcms\Component\Database\Eloquent\Model;
 
-class RefundOrderModel
+class RefundOrderModel extends Model
 {
 
     protected $table = 'refund_order';
