@@ -140,8 +140,8 @@
 					<div class="control-group">
 						<label class="control-label">操作备注：</label>
 						<div class="controls">
-							<textarea name="back_content" style="margin-bottom: 10px;" id="back_content" class="span10" placeholder="请输入退款备注"></textarea>
-							<select name="adm_back_content" id="adm_reply_content" class="form-control w400">
+							<textarea name="back_content" style="margin-bottom: 10px;" class="span10" placeholder="请输入退款备注"></textarea>
+							<select class="form-control adm_reply_content w400">
 		                        <option value="">请选择……</option>
 								<option value="1">退款完成</option>
 								<option value="2">退款金额已原路退回</option>
