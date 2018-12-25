@@ -140,8 +140,8 @@
 					<div class="control-group">
 						<label class="control-label">操作备注：</label>
 						<div class="controls">
-							<textarea name="back_content" style="margin-bottom: 10px;" id="back_content" class="span12" placeholder="请输入退款备注"></textarea>
-							<select name="adm_back_content" id="adm_reply_content" class="form-control span12">
+							<textarea name="back_content" style="margin-bottom: 10px;" id="back_content" class="span10" placeholder="请输入退款备注"></textarea>
+							<select name="adm_back_content" id="adm_reply_content" class="form-control w400">
 		                        <option value="">请选择……</option>
 								<option value="1">退款完成</option>
 								<option value="2">退款金额已原路退回</option>
@@ -149,8 +149,8 @@
 								<option value="4">金额已退回账户余额</option>
 								<option value="5">退回商品金额及红包、积分</option>
 							</select>
+							<span class="input-must">*</span>
 							<span class="help-block">可使用快捷用语</span>
-							<span class="input-must">{lang key='system::system.require_field'}</span>
 						</div>
 					</div>
 	
