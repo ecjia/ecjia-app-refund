@@ -12,6 +12,7 @@ ecjia.merchant.refund_list.init();
 	<div class="col-lg-12">
 		<h2 class="page-header">
 			<!-- {if $ur_here}{$ur_here}{/if} -->
+			<a  class="btn btn-primary data-pjax" href='{RC_Uri::url("orders/mh_back/init")}' id="sticky_a" style="float:right;margin-top:-3px;">旧版退货单列表</a>
 		</h2>
 	</div>
 </div>
