@@ -234,27 +234,25 @@ class admin_payrecord extends ecjia_admin {
 			$order_give_integral_info = RC_DB::table('account_log')->where('user_id', $user_id)->where('from_type', 'order_give_integral')->where('from_value', $refund_order['order_sn'])->first();
 			if (!empty($order_give_integral_info)) {
 				$options = array(
-						'user_id'			=> $order_give_integral_info['user_id'],
-						'rank_points'		=> intval($order_give_integral_info['rank_points'])*(-1),
-						'pay_points'		=> intval($order_give_integral_info['pay_points'])*(-1),
-						'change_desc'		=> '订单退款，扣除订单'.$refund_order['order_sn'].'下单时赠送的'.$integral_name,
-						'change_type'		=> ACT_REFUND,
-						'from_type'			=> 'refund_deduct_integral',
-						'from_value'		=> $refund_order['order_sn']
+                    'user_id'			=> $order_give_integral_info['user_id'],
+                    'rank_points'		=> intval($order_give_integral_info['rank_points'])*(-1),
+                    'pay_points'		=> intval($order_give_integral_info['pay_points'])*(-1),
+                    'change_desc'		=> '订单退款，扣除订单'.$refund_order['order_sn'].'下单时赠送的'.$integral_name,
+                    'change_type'		=> ACT_REFUND,
+                    'from_type'			=> 'refund_deduct_integral',
+                    'from_value'		=> $refund_order['order_sn']
 				);
 				RC_Api::api('user', 'account_change_log',$options);
 			}
 		} elseif ($back_type == 'pay_wxpay') {
-		    // TODO 微信原路退回
             //打款表信息
             $payrecord_info = RC_DB::table('refund_payrecord')->where('refund_id', $refund_id)->first();
 
             $result = (new Ecjia\App\Payment\Refund\RefundManager($refund_order['order_sn'], null, null))->refund($payrecord_info['back_money_total'], $payrecord_info['action_user_name']);
             if (is_ecjia_error($result)) {
-                return $result;
+                return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
-
-            dd($result);
+            return $this->showmessage('退款操作成功，等待微信到款通知即可', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('refund/admin_payrecord/detail', array('refund_id' => $refund_id))));
         }
 		
 		//更新打款表
