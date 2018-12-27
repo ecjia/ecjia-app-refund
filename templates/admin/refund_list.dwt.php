@@ -11,7 +11,9 @@
 <div>
 	<h3 class="heading">
 		<!-- {if $ur_here}{$ur_here}{/if} -->
+		<a class="btn plus_or_reply data-pjax" href='{RC_Uri::url("orders/admin_order_back/init")}'>旧版退货单列表</a>
 	</h3>
+	
 </div>
 
 <!-- 批量操作和搜索 -->
@@ -86,7 +88,7 @@
 		      	<td class="hide-edit-area">
 					{$list.refund_sn}
 		     	  	<div class="edit-list">
-				        {if $list.refund_type eq 'refund'}
+				        {if $list.refund_type eq 'refund' OR $list.refund_type eq 'cancel'}
 							<a class="data-pjax" href='{url path="refund/admin/refund_detail" args="refund_id={$list.refund_id}"}' title="查看详情">{t}查看详情{/t}</a>
 						{else}
 							<a class="data-pjax" href='{url path="refund/admin/return_detail" args="refund_id={$list.refund_id}"}' title="查看详情">{t}查看详情{/t}</a>
@@ -96,7 +98,7 @@
 		      	<td>{$list.merchants_name}</td>
 		      	<td>{$list.order_sn}</td>
 		      	<td>
-    				{if $list.refund_type eq 'refund'}仅退款{else}退货退款{/if}
+    				{if $list.refund_type eq 'refund'}仅退款{elseif $list.refund_type eq 'return'}退货退款{else}撤单退款{/if}
     			</td>
 		      	<td>{$list.refund_total_amount}</td>
 		      	<td>{$list.add_time}</td>
