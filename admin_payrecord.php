@@ -244,6 +244,10 @@ class admin_payrecord extends ecjia_admin {
 				);
 				RC_Api::api('user', 'account_change_log',$options);
 			}
+
+            //更新打款表
+            (new \Ecjia\App\Refund\Models\RefundPayRecordModel)->updateRefundPayrecord($id, 'surplus', $back_content, $_SESSION['admin_id'], $_SESSION['admin_name']);
+
 		} elseif ($back_type == 'pay_wxpay') {
             //打款表信息
             $payrecord_info = RC_DB::table('refund_payrecord')->where('refund_id', $refund_id)->first();
@@ -252,18 +256,13 @@ class admin_payrecord extends ecjia_admin {
             if (is_ecjia_error($result)) {
                 return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
+
+            //更新打款表
+            (new \Ecjia\App\Refund\Models\RefundPayRecordModel)->updateRefundPayrecord($id, 'original', $back_content, $_SESSION['admin_id'], $_SESSION['admin_name']);
+
             return $this->showmessage('退款操作成功，等待微信到款通知即可', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('refund/admin_payrecord/detail', array('refund_id' => $refund_id))));
         }
-		
-		//更新打款表
-		$data = array(
-			'action_back_type'			=>	$back_type,
-			'action_back_time'			=>	RC_Time::gmtime(),
-			'action_back_content'		=>	$back_content,	
-			'action_user_id'	=>	$_SESSION['admin_id'],	
-			'action_user_name'	=>	$_SESSION['admin_name']
-		);
-		RC_DB::table('refund_payrecord')->where('id', $id)->update($data);
+
 		
 		//更新售后订单表
 		$data = array(

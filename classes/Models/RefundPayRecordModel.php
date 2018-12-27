@@ -71,4 +71,26 @@ class RefundPayRecordModel extends Model
         return $this->belongsTo('Ecjia\App\Refund\Models\RefundOrderModel', 'refund_id', 'refund_id');
     }
 
+    /**
+     * 更新打款表
+     * @param $back_type
+     * @param $back_content
+     * @param $user_id
+     * @param $user_name
+     * @param string $user_type
+     */
+    public function updateRefundPayrecord($id, $back_type, $back_content, $user_id, $user_name, $user_type = 'admin')
+    {
+        //更新打款表
+        $data = array(
+            'action_back_type'			=>	$back_type,
+            'action_back_time'			=>	\RC_Time::gmtime(),
+            'action_back_content'		=>	$back_content,
+            'action_user_id'	        =>	$user_id,
+            'action_user_name'	        =>	$user_name,
+            'action_user_type'	        =>	$user_type
+        );
+        $this->where('id', $id)->update($data);
+    }
+
 }

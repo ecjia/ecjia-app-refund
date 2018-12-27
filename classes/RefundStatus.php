@@ -85,6 +85,8 @@ class RefundStatus
      */
     const SHIP_NOSHIP           = 0;//无需退货
 
+    const SHIP_UNSHIP           = 1;//买家未发货
+
     const SHIP_SHIPPED          = 2;//买家发货
 
     const SHIP_CONFIRM_RECV     = 3;//确认收货

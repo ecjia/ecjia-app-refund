@@ -10,6 +10,16 @@ namespace Ecjia\App\Refund\RefundProcess;
 
 use RC_Notification;
 use RC_DB;
+use RC_Time;
+use RC_Loader;
+use RC_Api;
+use RC_Model;
+use RefundStatusLog;
+use OrderStatusLog;
+use Ecjia\App\Refund\RefundStatus;
+use Ecjia\App\Refund\Models\RefundOrderModel;
+use Ecjia\App\Refund\Notifications\RefundBalanceArrived;
+use ecjia;
 
 /**
  * 消费订单退款成功后续处理
@@ -19,15 +29,27 @@ use RC_DB;
 class BuyOrderRefundProcess
 {
 
-    public function __construct()
+    /**
+     * @var \Ecjia\App\Refund\Models\RefundOrderModel
+     */
+    protected $refund_order;
+
+    public function __construct($refund_id = null, $refund_sn = null)
     {
+        if (! is_null($refund_id)) {
+            $this->refund_order = RefundOrderModel::where('refund_id', $refund_id)->first();
+        }
+        else {
+            $this->refund_order = RefundOrderModel::where('refund_sn', $refund_sn)->first();
+        }
 
     }
 
+    /**
+     * 执行
+     */
     public function run()
     {
-        //更新打款表 update_refund_payrecord
-        $this->updateRefundPayrecord();
 
         //更新售后订单表 update_refund_order
         $this->updateRefundOrder();
@@ -50,31 +72,16 @@ class BuyOrderRefundProcess
         $this->sendDatatbaseNotice();
     }
 
-    /**
-     * 更新打款表
-     */
-    protected function updateRefundPayrecord()
-    {
-        $data = array(
-            'action_back_type'			=>	$back_type,
-            'action_back_time'			=>	RC_Time::gmtime(),
-            'action_back_content'		=>	$back_content,
-            'action_user_id'	=>	$_SESSION['admin_id'],
-            'action_user_name'	=>	$_SESSION['admin_name']
-        );
-        RC_DB::table('refund_payrecord')->where('id', $id)->update($data);
-    }
+
 
     /**
      * 更新售后订单表
      */
     protected function updateRefundOrder()
     {
-        $data = array(
-            'refund_status'	=> 2,
-            'refund_time'	=> RC_Time::gmtime(),
-        );
-        RC_DB::table('refund_order')->where('refund_id', $refund_id)->update($data);
+        $this->refund_order->refund_status = RefundStatus::PAY_TRANSFERED;
+        $this->refund_order->refund_time = RC_Time::gmtime();
+        $this->refund_order->save();
     }
 
     /**
@@ -82,7 +89,9 @@ class BuyOrderRefundProcess
      */
     protected function updateRefundStatusLog()
     {
-        RefundStatusLog::refund_payrecord(array('refund_id' => $refund_id, 'back_money' => $back_money_total));
+        //兼容旧的类手动加载
+        RC_Loader::load_app_class('RefundStatusLog', 'refund', false);
+        RefundStatusLog::refund_payrecord(array('refund_id' => $this->refund_order->refund_id, 'back_money' => $this->refund_order->refundPayRecord->back_money_total));
     }
 
     /**
@@ -90,17 +99,24 @@ class BuyOrderRefundProcess
      */
     protected function updateOrderAction()
     {
+        $integral_name = ecjia::config('integral_name');
+        if (empty($integral_name)) {
+            $integral_name = '积分';
+        }
+
+        $action_note = '退款金额已退回'.$this->refund_order->refundPayRecord->back_pay_name.$this->refund_order->refundPayRecord->back_money_total.'元，退回'.$integral_name.'为：'.$this->refund_order->refundPayRecord->back_integral;
+
         //更新订单操作表
         $data = array(
-            'refund_id' 		=> $refund_id,
-            'action_user_type'	=>	'admin',
-            'action_user_id'	=>  $_SESSION['admin_id'],
-            'action_user_name'	=>	$_SESSION['admin_name'],
-            'status'		    =>  1,
-            'refund_status'		=>  2,
-            'return_status'		=>  $return_status,
-            'action_note'		=>  $action_note,
-            'log_time'			=>  RC_Time::gmtime(),
+            'refund_id' 		=> $this->refund_order->refund_id,
+            'action_user_type'	=> $this->refund_order->refundPayRecord->action_user_type,
+            'action_user_id'	=> $this->refund_order->refundPayRecord->action_user_id,
+            'action_user_name'	=> $this->refund_order->refundPayRecord->action_user_name,
+            'status'		    => RefundStatus::ORDER_AGREE,
+            'refund_status'		=> RefundStatus::PAY_TRANSFERED,
+            'return_status'		=> $this->refund_order->return_status,
+            'action_note'		=> $action_note,
+            'log_time'			=> RC_Time::gmtime(),
         );
         RC_DB::table('refund_order_action')->insertGetId($data);
     }
@@ -110,8 +126,13 @@ class BuyOrderRefundProcess
      */
     protected function updateOrderStatusLog()
     {
-        $order_id = RC_DB::table('refund_order')->where('refund_id', $refund_id)->pluck('order_id');
-        OrderStatusLog::refund_payrecord(array('order_id' => $order_id, 'back_money' => $back_money_total));
+        //兼容旧的类手动加载
+        RC_Loader::load_app_class('OrderStatusLog', 'orders', false);
+        $order_id = RC_DB::table('refund_order')->where('refund_id', $this->refund_order->refund_id)->pluck('order_id');
+        OrderStatusLog::refund_payrecord(array(
+            'order_id' => $order_id,
+            'back_money' => $this->refund_order->refundPayRecord->back_money_total
+        ));
     }
 
     /**
@@ -119,7 +140,10 @@ class BuyOrderRefundProcess
      */
     protected function updateMerchantCommission()
     {
-        RC_Api::api('commission', 'add_bill_queue', array('order_type' => 'refund', 'order_id' => $refund_order['refund_id']));
+        RC_Api::api('commission', 'add_bill_queue', array(
+            'order_type' => 'refund',
+            'order_id' => $this->refund_order->refund_id
+        ));
     }
 
     /**
@@ -127,8 +151,11 @@ class BuyOrderRefundProcess
      */
     protected function updateMerchantCustomer()
     {
-        if (!empty($user_id) && !empty($refund_order['store_id'])) {
-            RC_Api::api('customer', 'store_user_buy', array('store_id' => $refund_order['store_id'], 'user_id' => $user_id));
+        if (! empty($this->refund_order->user_id) && !empty($this->refund_order->store_id)) {
+            RC_Api::api('customer', 'store_user_buy', array(
+                'store_id' => $this->refund_order->store_id,
+                'user_id' => $this->refund_order->user_id
+            ));
         }
     }
 
@@ -137,14 +164,14 @@ class BuyOrderRefundProcess
      */
     protected function sendSmsNotice()
     {
-        $user_info = RC_DB::table('users')->where('user_id', $user_id)->select('user_name', 'pay_points', 'user_money', 'mobile_phone')->first();
+        $user_info = RC_DB::table('users')->where('user_id', $this->refund_order->user_id)->select('user_name', 'pay_points', 'user_money', 'mobile_phone')->first();
         if (!empty($user_info['mobile_phone'])) {
             $options = array(
                 'mobile' => $user_info['mobile_phone'],
                 'event'	 => 'sms_refund_balance_arrived',
                 'value'  =>array(
                     'user_name' 	=> $user_info['user_name'],
-                    'amount' 		=> $back_money_total,
+                    'amount' 		=> $this->refund_order->refundPayRecord->back_money_total,
                     'user_money' 	=> $user_info['user_money'],
                 ),
             );
@@ -158,26 +185,26 @@ class BuyOrderRefundProcess
     protected function sendDatatbaseNotice()
     {
         $orm_user_db = RC_Model::model('orders/orm_users_model');
-        $user_ob = $orm_user_db->find($user_id);
+        $user = $orm_user_db->find($this->refund_order->user_id);
 
-        if ($user_ob) {
+        if ($user) {
             $user_refund_data = array(
                 'title'	=> '退款到余额',
-                'body'	=> '尊敬的'.$user_info['user_name'].'，退款业务已受理成功，退回余额'.$back_money_total.'元，目前可用余额'.$user_info['user_money'].'元。',
+                'body'	=> '尊敬的'.$user->user_name.'，退款业务已受理成功，退回余额'.$this->refund_order->refundPayRecord->back_money_total.'元，目前可用余额'.$user->user_money.'元。',
                 'data'	=> array(
-                    'user_id'				=> $user_id,
-                    'user_name'				=> $user_info['user_name'],
-                    'amount'				=> $back_money_total,
-                    'formatted_amount' 		=> price_format($back_money_total),
-                    'user_money'			=> $user_info['user_money'],
-                    'formatted_user_money'	=> price_format($user_info['user_money']),
-                    'refund_id'				=> $refund_order['refund_id'],
-                    'refund_sn'				=> $refund_order['refund_sn'],
+                    'user_id'				=> $this->refund_order->user_id,
+                    'user_name'				=> $user->user_name,
+                    'amount'				=> $this->refund_order->refundPayRecord->back_money_total,
+                    'formatted_amount' 		=> ecjia_price_format($this->refund_order->refundPayRecord->back_money_total),
+                    'user_money'			=> $user->user_money,
+                    'formatted_user_money'	=> ecjia_price_format($user->user_money),
+                    'refund_id'				=> $this->refund_order->refund_id,
+                    'refund_sn'				=> $this->refund_order->refund_sn,
                 ),
             );
 
             $push_refund_data = new RefundBalanceArrived($user_refund_data);
-            RC_Notification::send($user_ob, $push_refund_data);
+            RC_Notification::send($user, $push_refund_data);
         }
     }
 
