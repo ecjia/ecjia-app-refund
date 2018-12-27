@@ -88,7 +88,7 @@
 		      	<td class="hide-edit-area">
 					{$list.refund_sn}
 		     	  	<div class="edit-list">
-				        {if $list.refund_type eq 'refund'}
+				        {if $list.refund_type eq 'refund' OR $list.refund_type eq 'cancel'}
 							<a class="data-pjax" href='{url path="refund/admin/refund_detail" args="refund_id={$list.refund_id}"}' title="查看详情">{t}查看详情{/t}</a>
 						{else}
 							<a class="data-pjax" href='{url path="refund/admin/return_detail" args="refund_id={$list.refund_id}"}' title="查看详情">{t}查看详情{/t}</a>
