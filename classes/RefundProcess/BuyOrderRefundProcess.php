@@ -8,6 +8,7 @@
 
 namespace Ecjia\App\Refund\RefundProcess;
 
+use Ecjia\App\Refund\Exceptions\RefundException;
 use RC_Notification;
 use RC_DB;
 use RC_Time;
@@ -43,6 +44,9 @@ class BuyOrderRefundProcess
             $this->refund_order = RefundOrderModel::where('refund_sn', $refund_sn)->first();
         }
 
+        if (empty($this->refund_order)) {
+            throw new RefundException(sprintf('Refund order %s (%s) not found.', $refund_sn, $refund_id));
+        }
     }
 
     /**
