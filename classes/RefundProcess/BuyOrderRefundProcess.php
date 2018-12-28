@@ -54,7 +54,9 @@ class BuyOrderRefundProcess
      */
     public function run()
     {
-
+		//更新用户积分 refund_back_pay_points
+    	$this->refundBackPayPoints();
+    	
         //更新售后订单表 update_refund_order
         $this->updateRefundOrder();
         //售后订单状态变动日志表 update_refund_status_log
@@ -75,7 +77,14 @@ class BuyOrderRefundProcess
         //消息通知 send_datatbase_notice
         $this->sendDatatbaseNotice();
     }
-
+	
+    /**
+     * 更新用户积分；下单使用积分退还，下单赠送积分扣除
+     */
+    protected function refundBackPayPoints()
+    {
+    	RC_Api::api('finance', 'refund_back_pay_points', array('refund_id' => $this->refund_order->refund_id));
+    }
 
 
     /**
