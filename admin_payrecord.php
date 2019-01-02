@@ -161,6 +161,17 @@ class admin_payrecord extends ecjia_admin {
 		$refund_info = RefundOrderInfo::get_refund_order_info($refund_id);
 		$this->assign('refund_info', $refund_info);
 		
+		//退款流水
+		$payment_refund = RC_DB::table('payment_refund')->where('order_sn', $refund_info['order_sn'])->first();
+		if ($payment_refund) {
+			$payment_refund['refund_create_time'] 	=  empty($payment_refund['refund_create_time']) ? '' : RC_Time::local_date('Y-m-d H:i:s', $payment_refund['refund_create_time']);
+			$payment_refund['refund_confirm_time'] 	=  empty($payment_refund['refund_confirm_time']) ? '' : RC_Time::local_date('Y-m-d H:i:s', $payment_refund['refund_confirm_time']);
+			$payment_refund['label_refund_status'] 	= $this->label_refund_status($payment_refund['refund_status']);
+		} else {
+			$payment_refund = [];
+		}
+		$this->assign('payment_refund', $payment_refund);
+		
 		//售后表实付金额计算
 		$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus']);
 		$this->assign('refund_total_amount', $refund_total_amount);
@@ -401,6 +412,27 @@ class admin_payrecord extends ecjia_admin {
 			}
 		}
 		return array('list' => $list, 'filter' => $filter, 'page' => $page->show(5), 'desc' => $page->page_desc(), 'count' => $refund_count);
+	}
+	
+	
+	/**
+	 * 退款状态处理
+	 */
+	private function label_refund_status($refund_status)
+	{
+		$label_refund_status = '';
+		if ($refund_status == '0') {
+			$label_refund_status = '待处理';
+		} elseif ($refund_status == '1') {
+			$label_refund_status = '已退款';
+		} elseif ($refund_status == '2') {
+			$label_refund_status = '退款处理中';
+		} elseif ($refund_status == '11') {
+			$label_refund_status == '退款失败';
+		}elseif ($refund_status == '12') {
+			$label_refund_status = '退款关闭';
+		}
+		return $label_refund_status;
 	}
 }
 

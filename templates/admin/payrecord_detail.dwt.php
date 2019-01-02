@@ -301,6 +301,30 @@
 							</div>
 						</div>
 					</div>
+					{if $payment_refund}
+					<div class="accordion-group">
+						<div class="accordion-heading">
+							<a class="accordion-toggle collapsed move-mod-head" data-toggle="collapse" data-target="#payment_refund">
+								<strong>退款流水</strong>
+							</a>
+						</div>
+						<div class="accordion-body in collapse " id="payment_refund">
+							<div class="accordion-inner">
+							 	<div class="goods-content">
+					           		<p>退款流水状态：{$payment_refund.label_refund_status}</p>
+					           		{if $payment_refund.refund_status eq '11'}
+					           			<p>退款失败原因：{$payment_refund.last_error_message}</p>
+					           		{/if}
+					                <p>退款订单流水号：{$payment_refund.refund_out_no}</p>
+					                <p>支付公司退款流水号：{$payment_refund.refund_trade_no}</p>
+					                <p>退款创建时间：{if $payment_refund.refund_create_time}{$payment_refund.refund_create_time}{/if}</p>
+					                <p>退款确认时间：{if $payment_refund.refund_confirm_time}{$payment_refund.refund_confirm_time}{/if}</p>
+					                <a target="_blank" id="order-info" href='{url path="refund/admin_payment_refund/payment_refund_info" args="id={$payment_refund.id}"}'>点此处查看退款流水详细信息 >></a>
+						        </div>
+							</div>
+						</div>
+					</div>
+				  {/if}	
 				</div>
 			</div>
 		</div>
