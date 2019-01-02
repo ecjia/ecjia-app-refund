@@ -47,6 +47,8 @@
 namespace Ecjia\App\Refund;
 
 use ecjia_error;
+use ecjia_shipping;
+use ecjia;
 use RC_Loader;
 use RC_DB;
 use RC_Time;
@@ -56,89 +58,60 @@ use RC_Time;
  */
 class ReturnAutoApply
 {
-    /**
-     * 售后申请单生成
-     * @param   array $options 条件参数
-     * @return  int   售后申请id
-     */
 
-    public function generateRefundOrder($options)
+    protected $order_id;
+
+    protected $order_info;
+
+    public function __construct($order_id)
     {
-        $device   = $options['device'];
-        $order_id = $options['order_id'];
+        $this->order_id = $order_id;
 
-        //当前订单是否可申请售后
-        $order_info = $options['order_info'];
-        if (in_array($order_info['pay_status'], array(PS_UNPAYED))
-            || in_array($order_info['order_status'], array(OS_CANCELED, OS_INVALID))
-            || ($order_info['is_delete'] == 1)) {
+        $this->order_info = RC_DB::table('order_info')->where('order_id', $order_id)->first();
+    }
+
+    /**
+     * 自动申请退款单
+     */
+    public function autoApplyRefundOrder($refund_way)
+    {
+        if (in_array($this->order_info['pay_status'], array(PS_UNPAYED))
+            || in_array($this->order_info['order_status'], array(OS_CANCELED, OS_INVALID))
+            || ($this->order_info['is_delete'] == 1)) {
             return new ecjia_error('error_apply', '当前订单不可申请售后！');
         }
 
         //获取订单退款信息
-        $order_refund_info = $this->getOrderRefund_info($order_id);
+        $order_refund_info = $this->getRefundOrderInfo();
 
         //存在退款信息
         if (!empty($order_refund_info)) {
             //检查退款状态
-            $result = $this->checkRefundStatus($order_refund_info, $options['refund_way']);
+            $result = $this->checkRefundStatus($order_refund_info, $refund_way);
         } else {
             //退款
-            $result = $this->refundOrderProcess($options, $order_id);
+            $result = $this->createRefundOrder();
         }
 
         return $result;
     }
 
-    /*
-     * 获取退款信息
+    /**
+     * 创建退款单
+     * 默认申请仅退款
+     * @param string $refund_type
+     * @return mixed
      */
-    protected function getOrderRefund_info($order_id)
-    {
-        //查询当前订单有没申请过售后
-        RC_Loader::load_app_class('order_refund', 'refund', false);
-        //过滤掉已取消的和退款处理成功的，保留在处理中的申请
-        $order_refund_info = order_refund::currorder_refund_info($order_id);
-
-        return $order_refund_info;
-    }
-
-    /*
-     * 检查退款状态
-     */
-    protected function checkRefundStatus($order_refund_info, $refund_way)
-    {
-        //原路退回，未审核的及进行中的可继续退款
-        if ($refund_way == 'original') {
-            //已存在处理中的申请或退款成功的申请
-            if (($order_refund_info['status'] == Ecjia\App\Refund\RefundStatus::ORDER_REFUSED)
-                || (($order_refund_info['status'] == Ecjia\App\Refund\RefundStatus::ORDER_AGREE) && ($order_refund_info['refund_status'] == Ecjia\App\Refund\RefundStatus::PAY_TRANSFERED))
-            ) {
-                return new ecjia_error('error_apply', '当前订单已申请了售后！');
-            } else {
-                return $order_refund_info;
-            }
-        } else {
-            //已存在处理中的申请或退款成功的申请
-            if (
-                ($order_refund_info['status'] == Ecjia\App\Refund\RefundStatus::ORDER_UNCHECK)
-                || ($order_refund_info['status'] == Ecjia\App\Refund\RefundStatus::ORDER_AGREE && $order_refund_info['refund_status'] == Ecjia\App\Refund\RefundStatus::PAY_UNTRANSFER)
-                || ($order_refund_info['status'] == Ecjia\App\Refund\RefundStatus::ORDER_AGREE && $order_refund_info['refund_status'] == Ecjia\App\Refund\RefundStatus::PAY_TRANSFERED)
-            ) {
-                return new ecjia_error('error_apply', '当前订单已申请了售后！');
-            } else {
-                return $order_refund_info;
-            }
-        }
-    }
-
-    /*
-     * 执行退款
-     */
-    protected function refundOrderProcess($options, $order_id)
+    public function createRefundOrder($refund_type = 'refund')
     {
         //退款编号
         $refund_sn = ecjia_order_refund_sn();
+
+        $refund_content = '活动失败，系统自动退款'; //退款说明
+        $refund_reason = '36'; //退款原因编号
+
+        //@todo 查询订单信息
+        $order_info = $this->order_info;
 
         //配送方式信息
         if (!empty($order_info['shipping_id'])) {
@@ -150,16 +123,16 @@ class ReturnAutoApply
             $shipping_code = NULL;
             $shipping_name = '无需物流';
         }
+
         //支付方式信息
         if (!empty($order_info['pay_id'])) {
-            $payment_info = with(new Ecjia\App\Payment\PaymentPlugin)->getPluginDataById($order_info['pay_id']);
+            $payment_info = with(new \Ecjia\App\Payment\PaymentPlugin)->getPluginDataById($order_info['pay_id']);
             $pay_code     = $payment_info['pay_code'];
             $pay_name     = $payment_info['pay_name'];
         } else {
             $pay_code = NULL;
             $pay_name = '';
         }
-        $refund_type = $options['refund_type'];
 
         //订单的配送状态，订单是否配送了
         if ($order_info['shipping_status'] > SS_UNSHIPPED) {
@@ -174,7 +147,7 @@ class ReturnAutoApply
             'user_name'        => !empty($order_info['user_name']) ? $order_info['user_name'] : '',
             'refund_type'      => $refund_type,
             'refund_sn'        => $refund_sn,
-            'order_id'         => $order_id,
+            'order_id'         => $this->order_id,
             'order_sn'         => $order_info['order_sn'],
             'shipping_code'    => $shipping_code,
             'shipping_name'    => $shipping_name,
@@ -198,19 +171,13 @@ class ReturnAutoApply
             'inv_tax'          => $order_info['tax'],
             'order_amount'     => $order_info['order_amount'],
             'money_paid'       => $order_info['money_paid'],
-            'status'           => 0,//待审核
-            'refund_content'   => $options['refund_content'],
-            'refund_reason'    => $options['refund_reason'],
-            'return_status'    => 1,//买家未发货
+            'status'           => 1,//默认已经同意
+            'refund_content'   => $refund_content,
+            'refund_reason'    => $refund_reason,
+            'return_status'    => 0,//默认不需要退货
             'add_time'         => RC_Time::gmtime(),
-//            'referer'			=> ! empty($order_info['referer']) ? $device['client'] : 'mobile'
+            'referer'		   => 'system'
         );
-
-        if (!empty($options['is_cashdesk'])) {
-            $refund_data['referer'] = 'ecjia-cashdesk';
-        } else {
-            $refund_data['referer'] = !empty($device['client']) ? $device['client'] : 'mobile';
-        }
 
         //插入售后申请表数据
         $refund_id = RC_DB::table('refund_order')->insertGetId($refund_data);
@@ -218,30 +185,73 @@ class ReturnAutoApply
         if ($refund_id) {
             if ($refund_type == 'refund') {
                 //仅退款
-                $this->refundProcess($order_id);
+                $this->refundProcess($this->order_id);
             } elseif ($refund_type == 'return') {
                 //退货退款
-                $this->returnProcess($order_id, $refund_id);
+                $this->returnProcess($this->order_id, $refund_id);
             }
         }
 
         //更改订单状态
-        RC_DB::table('order_info')->where('order_id', $order_id)->update(array('order_status' => OS_RETURNED));
+        RC_DB::table('order_info')->where('order_id', $this->order_id)->update(array('order_status' => OS_RETURNED));
 
         //订单操作记录log
-        order_refund::order_action($order_id, OS_RETURNED, $order_info['shipping_status'], $order_info['pay_status'], '商家收银台退款', '商家');
+        \order_refund::order_action($this->order_id, OS_RETURNED, $order_info['shipping_status'], $order_info['pay_status'], '商家收银台退款', '商家');
 
         //订单状态log记录
-        $pra = array('order_status' => '申请退款', 'order_id' => $order_id, 'message' => '收银台退款申请已提交成功！');
-        order_refund::order_status_log($pra);
+        $pra = array('order_status' => '申请退款', 'order_id' => $this->order_id, 'message' => '收银台退款申请已提交成功！');
+        \order_refund::order_status_log($pra);
 
         //售后申请状态记录
         $opt = array('status' => '申请退款', 'refund_id' => $refund_id, 'message' => '收银台退款申请已提交成功！');
-        order_refund::refund_status_log($opt);
+        \order_refund::refund_status_log($opt);
 
         $refund_order_info = RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
 
         return $refund_order_info;
+    }
+
+    /**
+     * 获取退款单信息
+     * @return array
+     */
+    public function getRefundOrderInfo()
+    {
+        //查询当前订单有没申请过售后
+        RC_Loader::load_app_class('order_refund', 'refund', false);
+        //过滤掉已取消的和退款处理成功的，保留在处理中的申请
+        $order_refund_info = \order_refund::currorder_refund_info($this->order_id);
+
+        return $order_refund_info;
+    }
+
+    /*
+     * 检查退款状态
+     */
+    protected function checkRefundStatus($order_refund_info, $refund_way)
+    {
+        //原路退回，未审核的及进行中的可继续退款
+        if ($refund_way == 'original') {
+            //已存在处理中的申请或退款成功的申请
+            if (($order_refund_info['status'] == \Ecjia\App\Refund\RefundStatus::ORDER_REFUSED)
+                || (($order_refund_info['status'] == \Ecjia\App\Refund\RefundStatus::ORDER_AGREE) && ($order_refund_info['refund_status'] == \Ecjia\App\Refund\RefundStatus::PAY_TRANSFERED))
+            ) {
+                return new ecjia_error('error_apply', '当前订单已申请了售后！');
+            } else {
+                return $order_refund_info;
+            }
+        } else {
+            //已存在处理中的申请或退款成功的申请
+            if (
+                ($order_refund_info['status'] == \Ecjia\App\Refund\RefundStatus::ORDER_UNCHECK)
+                || ($order_refund_info['status'] == \Ecjia\App\Refund\RefundStatus::ORDER_AGREE && $order_refund_info['refund_status'] == \Ecjia\App\Refund\RefundStatus::PAY_UNTRANSFER)
+                || ($order_refund_info['status'] == \Ecjia\App\Refund\RefundStatus::ORDER_AGREE && $order_refund_info['refund_status'] == \Ecjia\App\Refund\RefundStatus::PAY_TRANSFERED)
+            ) {
+                return new ecjia_error('error_apply', '当前订单已申请了售后！');
+            } else {
+                return $order_refund_info;
+            }
+        }
     }
 
     /*
@@ -271,11 +281,11 @@ class ReturnAutoApply
     protected function returnProcess($order_id, $refund_id)
     {
         //获取订单的发货单列表
-        $delivery_list = order_refund::currorder_delivery_list($order_id);
+        $delivery_list = \order_refund::currorder_delivery_list($order_id);
         if (!empty($delivery_list)) {
             foreach ($delivery_list as $row) {
                 //获取发货单的发货商品列表
-                $delivery_goods_list = order_refund::delivery_goodsList($row['delivery_id']);
+                $delivery_goods_list = \order_refund::delivery_goodsList($row['delivery_id']);
                 if (!empty($delivery_goods_list)) {
                     foreach ($delivery_goods_list as $res) {
                         $refund_goods_data = array(
