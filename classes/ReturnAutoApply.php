@@ -63,17 +63,25 @@ class ReturnAutoApply
 
     protected $order_info;
 
-    public function __construct($order_id)
+    protected $action;
+
+    public function __construct($order_id, $action)
     {
         $this->order_id = $order_id;
 
-        $this->order_info = RC_DB::table('order_info')->where('order_id', $order_id)->first();
+        $order_info = RC_DB::table('order_info')->where('order_id', $order_id)->first();
+
+        $order_info['user_name'] = RC_DB::table('users')->where('user_id', $order_info['user_id'])->pluck('user_name');
+
+        $this->order_info = $order_info;
+
+        $this->action = $action;
     }
 
     /**
      * 自动申请退款单
      */
-    public function autoApplyRefundOrder($refund_way)
+    public function autoApplyRefundOrder($refund_way = null)
     {
         if (in_array($this->order_info['pay_status'], array(PS_UNPAYED))
             || in_array($this->order_info['order_status'], array(OS_CANCELED, OS_INVALID))
@@ -108,9 +116,8 @@ class ReturnAutoApply
         $refund_sn = ecjia_order_refund_sn();
 
         $refund_content = '活动失败，系统自动退款'; //退款说明
-        $refund_reason = '36'; //退款原因编号
+        $refund_reason  = '36'; //退款原因编号
 
-        //@todo 查询订单信息
         $order_info = $this->order_info;
 
         //配送方式信息
@@ -171,12 +178,12 @@ class ReturnAutoApply
             'inv_tax'          => $order_info['tax'],
             'order_amount'     => $order_info['order_amount'],
             'money_paid'       => $order_info['money_paid'],
-            'status'           => 1,//默认已经同意
+            'status'           => 0,//默认待审核
             'refund_content'   => $refund_content,
             'refund_reason'    => $refund_reason,
             'return_status'    => 0,//默认不需要退货
             'add_time'         => RC_Time::gmtime(),
-            'referer'		   => 'system'
+            'referer'          => 'system'
         );
 
         //插入售后申请表数据
@@ -196,17 +203,20 @@ class ReturnAutoApply
         RC_DB::table('order_info')->where('order_id', $this->order_id)->update(array('order_status' => OS_RETURNED));
 
         //订单操作记录log
-        \order_refund::order_action($this->order_id, OS_RETURNED, $order_info['shipping_status'], $order_info['pay_status'], '商家收银台退款', '商家');
+        \order_refund::order_action($this->order_id, OS_RETURNED, $order_info['shipping_status'], $order_info['pay_status'], $refund_content, '商家');
 
         //订单状态log记录
-        $pra = array('order_status' => '申请退款', 'order_id' => $this->order_id, 'message' => '收银台退款申请已提交成功！');
+        $pra = array('order_status' => '申请退款', 'order_id' => $this->order_id, 'message' => '活动失败退款申请已提交成功！');
         \order_refund::order_status_log($pra);
 
         //售后申请状态记录
-        $opt = array('status' => '申请退款', 'refund_id' => $refund_id, 'message' => '收银台退款申请已提交成功！');
+        $opt = array('status' => '申请退款', 'refund_id' => $refund_id, 'message' => '活动失败退款申请已提交成功！');
         \order_refund::refund_status_log($opt);
 
         $refund_order_info = RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
+
+        //对退款单做同意处理
+        $this->agreeRefundOrder($refund_order_info);
 
         return $refund_order_info;
     }
@@ -228,7 +238,7 @@ class ReturnAutoApply
     /*
      * 检查退款状态
      */
-    protected function checkRefundStatus($order_refund_info, $refund_way)
+    protected function checkRefundStatus($order_refund_info, $refund_way = null)
     {
         //原路退回，未审核的及进行中的可继续退款
         if ($refund_way == 'original') {
@@ -252,6 +262,92 @@ class ReturnAutoApply
                 return $order_refund_info;
             }
         }
+    }
+
+    protected function agreeRefundOrder($refund_info)
+    {
+        $status            = 1;
+        $refund_status     = 1;
+        $payment_record_id = RC_DB::table('payment_record')->where('order_sn', $refund_info['order_sn'])->pluck('id');
+
+        //实际支付费用
+        $order_money_paid = $refund_info['surplus'] + $refund_info['money_paid'];
+        //退款总金额
+        $shipping_status = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->pluck('shipping_status');
+        if ($shipping_status > SS_UNSHIPPED) {
+            $back_money_total  = $refund_info['money_paid'] + $refund_info['surplus'] - $refund_info['pay_fee'] - $refund_info['shipping_fee'] - $refund_info['insure_fee'];
+            $back_shipping_fee = $refund_info['shipping_fee'];
+            $back_insure_fee   = $refund_info['insure_fee'];
+        } else {
+            $back_money_total  = $refund_info['money_paid'] + $refund_info['surplus'] - $refund_info['pay_fee'];
+            $back_shipping_fee = 0;
+            $back_insure_fee   = 0;
+        }
+        $data = array(
+            'store_id'            => $refund_info['store_id'],
+            'order_id'            => $refund_info['order_id'],
+            'order_sn'            => $refund_info['order_sn'],
+            'refund_id'           => $refund_info['refund_id'],
+            'refund_sn'           => $refund_info['refund_sn'],
+            'refund_type'         => $refund_info['refund_type'],
+            'goods_amount'        => $refund_info['goods_amount'],
+            'back_pay_code'       => $refund_info['pay_code'],
+            'back_pay_name'       => $refund_info['pay_name'],
+            'back_pay_fee'        => $refund_info['pay_fee'],
+            'back_shipping_fee'   => $back_shipping_fee,
+            'back_insure_fee'     => $back_insure_fee,
+            'back_pack_id'        => $refund_info['pack_id'],
+            'back_pack_fee'       => $refund_info['pack_fee'],
+            'back_card_id'        => $refund_info['card_id'],
+            'back_card_fee'       => $refund_info['card_fee'],
+            'back_bonus_id'       => $refund_info['bonus_id'],
+            'back_bonus'          => $refund_info['bonus'],
+            'back_surplus'        => $refund_info['surplus'],
+            'back_integral'       => $refund_info['integral'],
+            'back_integral_money' => $refund_info['integral_money'],
+            'back_inv_tax'        => $refund_info['inv_tax'],
+            'order_money_paid'    => $order_money_paid,
+            'back_money_total'    => $back_money_total,
+            'payment_record_id'   => $payment_record_id,
+            'add_time'            => RC_Time::gmtime()
+        );
+        RC_DB::table('refund_payrecord')->insertGetId($data);
+        $log_msg = '同意';
+        /*如果订单是众包或商家配送的话；找出对应的配送单更改配送单状态为取消配送*/
+        if ($refund_info['shipping_code'] == 'ship_o2o_express' || $refund_info['shipping_code'] == 'ship_ecjia_express') {
+            $express_order_info = RC_DB::table('express_order')->where('order_id', $refund_info['order_id'])->get();
+            if (!empty($express_order_info)) {
+                $result = RC_Api::api('express', 'cancel_express', $express_order_info);
+            }
+        }
+
+        $refund_id = $refund_info['refund_id'];
+        RC_DB::table('refund_order')->where('refund_id', $refund_id)->update(array('status' => $status, 'refund_status' => $refund_status));
+
+        $action_note = '活动失败自动退款';
+        $action = $this->action;
+        //录入退款操作日志表
+        $data = array(
+            'refund_id'        => $refund_id,
+            'action_user_type' => $action['user_type'],
+            'action_user_id'   => $action['user_id'],
+            'action_user_name' => $action['user_name'],
+            'status'           => $status,
+            'refund_status'    => $refund_status,
+            'action_note'      => $action_note,
+            'log_time'         => RC_Time::gmtime(),
+        );
+        RC_DB::table('refund_order_action')->insertGetId($data);
+
+        //售后订单状态变动日志表
+        \RefundStatusLog::refund_order_process(array('refund_id' => $refund_id, 'status' => $status));
+
+        //普通订单状态变动日志表
+        \OrderStatusLog::refund_order_process(array('order_id' => $refund_info['order_id'], 'status' => $status));
+
+        //普通订单操作日志表
+        $order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->select('shipping_status', 'pay_status')->first();
+        \order_refund::order_action($refund_info['order_id'], OS_RETURNED, $order_info['shipping_status'], $order_info['pay_status'], $action_note, '商家');
     }
 
     /*

@@ -10,7 +10,7 @@
 			</li>
 			
 			<li>
-				<div class="{if $refund_info.refund_status eq '1' or $refund_info.status eq '11'}step-cur{elseif $refund_info.status gt '0'}step-done{/if}">
+				<div class="{if $refund_info.refund_status eq '1' or $refund_info.status eq '11' or $refund_info.status eq '1'}step-cur{elseif $refund_info.status gt '0'}step-done{/if}">
 					{if $refund_info.status eq '11'}
 						<div class="step-failed">{if $refund_info.refund_status neq '2'}2{/if}</div>
 					{else}
