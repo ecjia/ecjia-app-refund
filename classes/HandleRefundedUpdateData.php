@@ -82,7 +82,7 @@ class HandleRefundedUpdateData
 		}
 		
 		//返回退款打印数据
-		$refund_print_data = self::RefundPrintData($refund_order_info['refund_id'], $order_info, $refund_payrecord_info['id']);
+		$refund_print_data = self::RefundPrintData($refund_order_info['refund_id'], $order_info, $refund_payrecord_info['id'], $refund_result['refund_way']);
 		
 		return $refund_print_data;
 	}
@@ -148,8 +148,12 @@ class HandleRefundedUpdateData
 		
 		RC_DB::table('refund_order')->where('refund_id', $refund_result['refund_order_info']['refund_id'])->update($data);
 		
+		if ($refund_result['refund_way'] == 'original') {
+			$back_money_total 	= $refund_result['refund_payrecord_info']['back_money_total'] + $refund_result['refund_payrecord_info']['back_pay_fee'];
+		} else {
+			$back_money_total 	= $refund_result['refund_payrecord_info']['back_money_total'];
+		}
 		
-		$back_money_total 	= $refund_result['refund_payrecord_info']['back_money_total'];
 		$back_integral 		= $refund_result['refund_order_info']['integral'];
 		
 		//更新售后订单操作表
@@ -224,9 +228,8 @@ class HandleRefundedUpdateData
 	/**
 	 * 退款打印数据
 	 */
-	public static function RefundPrintData($refund_id = 0, $order_info, $refund_payrecord_id = 0)
+	public static function RefundPrintData($refund_id = 0, $order_info, $refund_payrecord_id = 0, $refund_way)
 	{
-
 		$print_data = [];
 		if (!empty($refund_id)) {
 			$refund_info 			= RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
@@ -236,7 +239,7 @@ class HandleRefundedUpdateData
 			$order_goods 			= self::getOrderGoods($refund_info['order_id']);
 			$total_discount 		= $order_info['discount'] + $order_info['integral_money'] + $order_info['bonus'];
 			$money_paid 			= $refund_info['money_paid'] + $refund_info['surplus'];
-			$refund_total_amount	= self::getBackTotalMoney($refund_info);
+			$refund_total_amount	= Ecjia\App\Refund\RefundOrder::get_back_total_money($refund_info, $refund_way);
 			
 		
 			$user_info = [];
