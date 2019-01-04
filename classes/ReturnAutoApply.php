@@ -53,6 +53,10 @@ use RC_Loader;
 use RC_DB;
 use RC_Time;
 
+use order_refund;
+use OrderStatusLog;
+use RefundStatusLog;
+
 /**
  * 退款自动申请
  */
@@ -112,6 +116,10 @@ class ReturnAutoApply
      */
     public function createRefundOrder($refund_type = 'refund')
     {
+        RC_Loader::load_app_class('order_refund', 'refund', false);
+        RC_Loader::load_app_class('OrderStatusLog', 'orders', false);
+        RC_Loader::load_app_class('RefundStatusLog', 'refund', false);
+
         //退款编号
         $refund_sn = ecjia_order_refund_sn();
 
@@ -339,6 +347,10 @@ class ReturnAutoApply
         );
         RC_DB::table('refund_order_action')->insertGetId($data);
 
+        RC_Loader::load_app_class('order_refund', 'refund', false);
+        RC_Loader::load_app_class('OrderStatusLog', 'orders', false);
+        RC_Loader::load_app_class('RefundStatusLog', 'refund', false);
+
         //售后订单状态变动日志表
         \RefundStatusLog::refund_order_process(array('refund_id' => $refund_id, 'status' => $status));
 
@@ -376,6 +388,8 @@ class ReturnAutoApply
      */
     protected function returnProcess($order_id, $refund_id)
     {
+        RC_Loader::load_app_class('order_refund', 'refund', false);
+
         //获取订单的发货单列表
         $delivery_list = \order_refund::currorder_delivery_list($order_id);
         if (!empty($delivery_list)) {
