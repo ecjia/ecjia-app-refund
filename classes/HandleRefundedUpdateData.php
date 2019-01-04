@@ -58,7 +58,7 @@ class HandleRefundedUpdateData
 			return $bak_integral;
 		}
 		
-		//更新打款表
+		//更新打款表，原路退回退还支付手续费
 		self::UpdateRefundPayrecord($refund_result);
 		
 		//更新订单日志状态 & 操作记录表
@@ -78,7 +78,7 @@ class HandleRefundedUpdateData
 		
 		//退款短信通知
 		if ($order_info['user_id'] > 0) {
-			//self::SendRefundSmsNotice($order_info['user_id'], $refund_result['refund_payrecord_info']['back_money_total']);
+			self::SendRefundSmsNotice($order_info['user_id'], $refund_result);
 		}
 		
 		//返回退款打印数据
@@ -103,6 +103,7 @@ class HandleRefundedUpdateData
 				$action_back_content = '收银台申请退款，现金退款成功';
 			} elseif ($refund_result['refund_way'] == 'original')  {
 				$action_back_content = '收银台申请退款，原路退回成功';
+				$final_refund_amount = $refund_result['refund_payrecord_info']['back_money_total'] + $refund_result['refund_payrecord_info']['back_pay_fee'];
 			} else {
 				$action_back_content = '';
 			}
@@ -111,6 +112,7 @@ class HandleRefundedUpdateData
 				$action_back_content = '申请退款，现金退款成功';
 			} elseif ($refund_result['refund_way'] == 'original')  {
 				$action_back_content = '申请退款，原路退回成功';
+				$final_refund_amount = $refund_result['refund_payrecord_info']['back_money_total'] + $refund_result['refund_payrecord_info']['back_pay_fee'];
 			} else {
 				$action_back_content = '';
 			}
@@ -125,7 +127,10 @@ class HandleRefundedUpdateData
 				'action_user_id' 		=> empty($refund_result['staff_id']) ? 0 : $refund_result['staff_id'],
 				'action_user_name' 		=> empty($refund_result['staff_name']) ? 0 : $refund_result['staff_name'],
 		);
-		
+		//原路退回，支付手续费退还
+		if ($refund_result['refund_way'] == 'original') {
+			$data['back_money_total'] = $final_refund_amount;
+		}
 		RC_DB::table('refund_payrecord')->where('id', $refund_result['refund_payrecord_info']['id'])->update($data);
 	}
 	
@@ -196,9 +201,24 @@ class HandleRefundedUpdateData
 	/**
 	 * 退款短信通知
 	 */
-	public static function SendRefundSmsNotice()
+	public static function SendRefundSmsNotice($user_id, $refund_result)
 	{
-		
+		//原路退款短信通知
+		if ($refund_result['refund_way'] == 'original') {
+			$user_info = RC_Api::api('user', 'user_info', array('user_id' => $user_id));
+			if (!empty($user_info['mobile_phone'])) {
+				$back_pay_name = $refund_result['refund_payrecord_info']['back_pay_name'];
+				$options = array(
+						'mobile' => $user_info['mobile_phone'],
+						'event'	 => 'sms_refund_original_arrived',
+						'value'  =>array(
+								'user_name' 	=> $user_info['user_name'],
+								'back_pay_name' => $back_pay_name,
+						),
+				);
+				RC_Api::api('sms', 'send_event_sms', $options);
+			}
+		}
 	}
 	
 	/**

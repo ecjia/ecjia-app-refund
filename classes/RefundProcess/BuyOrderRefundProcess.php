@@ -177,18 +177,20 @@ class BuyOrderRefundProcess
      */
     protected function sendSmsNotice()
     {
+        //原路退款短信通知
         $user_info = RC_DB::table('users')->where('user_id', $this->refund_order->user_id)->select('user_name', 'pay_points', 'user_money', 'mobile_phone')->first();
+        $refund_payrecord_info = RC_DB::table('refund_payrecord')->where('refund_id', $this->refund_order->refund_id)->first();
         if (!empty($user_info['mobile_phone'])) {
-            $options = array(
-                'mobile' => $user_info['mobile_phone'],
-                'event'	 => 'sms_refund_balance_arrived',
-                'value'  =>array(
-                    'user_name' 	=> $user_info['user_name'],
-                    'amount' 		=> $this->refund_order->refundPayRecord->back_money_total,
-                    'user_money' 	=> $user_info['user_money'],
-                ),
-            );
-            RC_Api::api('sms', 'send_event_sms', $options);
+        	$back_pay_name = $refund_payrecord_info['back_pay_name'];
+        	$options = array(
+        			'mobile' => $user_info['mobile_phone'],
+        			'event'	 => 'sms_refund_original_arrived',
+        			'value'  =>array(
+        					'user_name' 	=> $user_info['user_name'],
+        					'back_pay_name' => $back_pay_name,
+        			),
+        	);
+        	RC_Api::api('sms', 'send_event_sms', $options);
         }
     }
 
