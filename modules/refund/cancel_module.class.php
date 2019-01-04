@@ -81,7 +81,7 @@ class refund_cancel_module extends api_front implements api_interface {
 		
         RC_DB::table('refund_order')->where('refund_sn', $refund_sn)->update(array('status' => $cancel_status));
         
-        $order_info = RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->select('order_status', 'shipping_status', 'pay_status')->first();
+        $order_info = $this->get_order_info($refund_info['order_id']);
         
         //退货退款撤销，refund_goods表退货商品删除
         if ($refund_info['refund_type'] == 'return') {
@@ -141,7 +141,8 @@ class refund_cancel_module extends api_front implements api_interface {
         if ($order_info['shipping_status'] == SS_SHIPPED) {
         	$data = array('order_status' => OS_SPLITED);
         }else{
-        	$data = array('order_status' => OS_CONFIRMED);
+        	$order_status = $this->getBeforeRefundOrderStatus($refund_info['order_id']);
+        	$data = array('order_status' => $order_status);
         }
         RC_DB::table('order_info')->where('order_id', $refund_info['order_id'])->update($data);
         
@@ -155,6 +156,28 @@ class refund_cancel_module extends api_front implements api_interface {
 		order_refund::refund_status_log($opt);
         
         return array();
+	}
+	
+	
+	/**
+	 * 获取申请退款前的订单状态
+	 */
+	private function getBeforeRefundOrderStatus($order_id)
+	{
+		$berore_refund_status = 0;
+		$order_status_arr = RC_DB::table('order_action')->where('order_id', $order_id)->orderBy('log_time', 'desc')->lists('order_status');
+		$refund_key = array_search(OS_RETURNED, $order_status_arr); 
+		$berore_refund_status = $order_status_arr[$refund_key + 1];
+		return $berore_refund_status;
+	}
+	
+	/**
+	 * 获取订单信息
+	 */
+	private function get_order_info($order_id)
+	{
+		$order_info = RC_Api::api('orders', 'order_info', array('order_id' => $order_id));
+		return $order_info;
 	}
 }
 
