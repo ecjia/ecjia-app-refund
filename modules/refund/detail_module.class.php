@@ -301,7 +301,8 @@ class refund_detail_module extends api_front implements api_interface {
 				'selected_returnway_info'	=> $selected_returnway_info,
 				'refund_logs'				=> $logs,
 				'goods_list'				=> $goods_list,
-				'refused_reasons'			=> $refused_reasons
+				'refused_reasons'			=> $refused_reasons,
+				'refund_pay_fee'			=> $refund_order_info['pay_fee'],
 		);
 		return  $arr;
 	}
