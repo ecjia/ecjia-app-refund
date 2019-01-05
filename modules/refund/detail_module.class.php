@@ -303,6 +303,8 @@ class refund_detail_module extends api_front implements api_interface {
 				'goods_list'				=> $goods_list,
 				'refused_reasons'			=> $refused_reasons,
 				'refund_pay_fee'			=> $refund_order_info['pay_fee'],
+				'pay_code'					=> $refund_order_info['pay_code'],
+				'pay_name'					=> $refund_order_info['pay_name'],
 		);
 		return  $arr;
 	}
