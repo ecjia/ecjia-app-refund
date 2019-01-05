@@ -78,7 +78,7 @@
             		} else {
             			$(".surplus-pay-fee").hide();
             			$(".wxpay-pay-fee").show();
-            			var back_total = Number(back_money_total) + Number(back_pay_fee) + '.00';
+            			var back_total = Number(back_money_total) + Number(back_pay_fee);
             		}
             		var back_total = '￥' + back_total;
             		$(".real-refund-amount").html(back_total);
