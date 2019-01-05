@@ -269,12 +269,10 @@ class admin_payrecord extends ecjia_admin {
 		} elseif ($back_type == 'pay_wxpay') {
             //打款表信息
             $payrecord_info = RC_DB::table('refund_payrecord')->where('refund_id', $refund_id)->first();
-            //原路退回支付手续费退还
-            $refund_amount = $payrecord_info['back_money_total'] + $payrecord_info['back_pay_fee'];
             //更新打款表实际退款金额
-            RC_DB::table('refund_payrecord')->where('id', $id)->update(array('back_money_total' => $refund_amount));
+            RC_DB::table('refund_payrecord')->where('id', $id)->update(array('back_money_total' => $back_money_total));
             
-            $result = (new Ecjia\App\Payment\Refund\RefundManager($refund_order['order_sn'], null, null))->refund($refund_amount, $payrecord_info['action_user_name']);
+            $result = (new Ecjia\App\Payment\Refund\RefundManager($refund_order['order_sn'], null, null))->refund($back_money_total, $payrecord_info['action_user_name']);
             if (is_ecjia_error($result)) {
                 return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
