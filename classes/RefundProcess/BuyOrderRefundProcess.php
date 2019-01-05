@@ -54,6 +54,8 @@ class BuyOrderRefundProcess
      */
     public function run()
     {
+    	\RC_Logger::getLogger('error')->info('test333');
+    	
 		//更新用户积分 refund_back_pay_points
     	$this->refundBackPayPoints();
     	
@@ -92,9 +94,6 @@ class BuyOrderRefundProcess
      */
     protected function updateRefundOrder()
     {
-    	\RC_Logger::getLogger('pay')->info('test111');
-    	\RC_Logger::getLogger('pay')->info('test222');
-    	
         $this->refund_order->refund_status = RefundStatus::PAY_TRANSFERED;
         $this->refund_order->refund_time = RC_Time::gmtime();
         $this->refund_order->save();
