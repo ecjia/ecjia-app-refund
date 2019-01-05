@@ -82,6 +82,7 @@
             		}
             		var back_total = '￥' + back_total;
             		$(".real-refund-amount").html(back_total);
+            		$("input[name='back_money_total']").val(back_total);
             	});
             	
 			    var $form = $("form[name='theForm']");
