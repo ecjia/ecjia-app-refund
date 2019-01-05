@@ -64,9 +64,24 @@
 	            });
         		
             	$(".back-logo").click(function() {
+            		var data_type 			= $(this).attr('data-type');
+            		var back_money_total 	= $(this).attr('back_money_total');
+            		var back_pay_fee	 	= $(this).attr('back_pay_fee');
             		$(".back-logo").removeClass('active');
             		$(this).addClass('active');
-            		$("input[name='back_type']").val($(this).attr('data-type'));
+            		$("input[name='back_type']").val(data_type);
+            		
+            		if (data_type == 'surplus') {
+            			var back_total = back_money_total;
+            			$(".wxpay-pay-fee").hide();
+            			$(".surplus-pay-fee").show();
+            		} else {
+            			$(".surplus-pay-fee").hide();
+            			$(".wxpay-pay-fee").show();
+            			var back_total = Number(back_money_total) + Number(back_pay_fee) + '.00';
+            		}
+            		var back_total = '￥' + back_total;
+            		$(".real-refund-amount").html(back_total);
             	});
             	
 			    var $form = $("form[name='theForm']");

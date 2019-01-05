@@ -242,7 +242,7 @@ class merchant extends ecjia_merchant {
 				'back_inv_tax'			=> $refund_info['inv_tax'],
 				'order_money_paid'		=> $order_money_paid,
 				'back_money_total'		=> $back_money_total,
-				'payment_record_id'		=> $payment_record_id,
+				'payment_record_id'		=> empty($payment_record_id) ? 0 : $payment_record_id,
 				'add_time'	=> RC_Time::gmtime()
 			);
 			RC_DB::table('refund_payrecord')->insertGetId($data);

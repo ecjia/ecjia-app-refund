@@ -5,7 +5,14 @@
 <script type="text/javascript">
     ecjia.admin.payrecord_info.init();
 </script>
-
+<style>
+.wxpay-pay-fee:{
+	display:none;
+}
+.surplus-pay-fee{
+	display:none;
+}
+</style>
 <!-- {/block} -->
 
 <!-- {block name="main_content"} -->
@@ -78,8 +85,13 @@
 				
 				{if !$payrecord_info.action_back_content}
 					<h3>退款操作</h3>
-					{if $payrecord_info.back_pay_fee gt '0.00'}
-						<div class="control-group">
+					{if $payrecord_info.back_pay_fee gt '0'}
+						<div class="control-group {if $payrecord_info.back_pay_code eq 'pay_wxpay'}wxpay-pay-fee{/if}">
+							<label class="control-label">退还支付手续费：</label>
+							<div class="controls l_h30">{$payrecord_info.back_pay_fee_type}</div>
+						</div>
+				
+						<div class="control-group  {if $payrecord_info.back_pay_code eq 'pay_wxpay'}surplus-pay-fee{/if}">
 							<label class="control-label">扣除支付手续费：</label>
 							<div class="controls l_h30">-{$payrecord_info.back_pay_fee_type}</div>
 						</div>
@@ -108,7 +120,7 @@
 					
 					<div class="control-group">
 						<label class="control-label">实际退款金额：</label>
-						<div class="controls l_h30 ecjiafc-red ecjiafc-font">{$payrecord_info.back_money_total_type}</div>
+						<div class="controls l_h30 ecjiafc-red ecjiafc-font real-refund-amount">{$payrecord_info.back_money_total_type}</div>
 					</div>
 					
 					{if $payrecord_info.back_integral gt '0'}
@@ -123,12 +135,12 @@
 						<div class="controls back-logo-wrap">
 						     <ul>
                                  {if $payrecord_info.back_pay_code eq 'pay_wxpay'}
-                                 <li class="back-logo active" data-type="pay_wxpay">
+                                 <li class="back-logo active" data-type="pay_wxpay" back_money_total="{$payrecord_info.back_money_total}" back_pay_fee="{$payrecord_info.back_pay_fee}">
                                      <img src="{$pay_wxpay_img}">
                                      <img class="back-logo-select" src="{$selected_img}">
                                  </li>
                                  {/if}
-						         <li class="back-logo {if $payrecord_info.back_pay_code neq 'pay_wxpay'}active{/if}" data-type="surplus">
+						         <li class="back-logo {if $payrecord_info.back_pay_code neq 'pay_wxpay'}active{/if}" data-type="surplus" back_money_total="{$payrecord_info.back_money_total}" back_pay_fee="{$payrecord_info.back_pay_fee}">
 						             <img src="{$surplus_img}">
 						             <img class="back-logo-select" src="{$selected_img}">
 						         </li>
@@ -160,7 +172,7 @@
 							<input type="hidden" name="id" value="{$payrecord_info.id}" />
 							<input type="hidden" name="refund_id" value="{$payrecord_info.refund_id}" />
 							<input type="hidden" name="refund_type" value="{$payrecord_info.refund_type}" />
-							<input type="hidden" name="back_money_total" value="{$payrecord_info.back_money_total}" />
+							<input type="hidden" name="back_money_total" value="{$payrecord_info.real_back_money_total}" />
 							<input type="hidden" name="back_integral" value="{$payrecord_info.back_integral}" />
 						</div>
 					</div>
@@ -181,11 +193,18 @@
 						<div class="controls l_h30 ecjiafc-red ecjiafc-font">{$payrecord_info.order_money_paid_type}</div>
 					</div>
 					
-					{if $payrecord_info.back_pay_fee gt '0.00'}
-						<div class="control-group">
-							<label class="control-label">扣除支付手续费：</label>
-							<div class="controls l_h30">-{$payrecord_info.back_pay_fee_type}</div>
-						</div>
+					{if $payrecord_info.back_pay_fee gt '0'}
+						{if $payrecord_info.back_pay_code eq 'pay_wxpay'}
+							<div class="control-group">
+								<label class="control-label">退还支付手续费：</label>
+								<div class="controls l_h30">{$payrecord_info.back_pay_fee_type}</div>
+							</div>
+						{else}
+							<div class="control-group">
+								<label class="control-label">扣除支付手续费：</label>
+								<div class="controls l_h30">-{$payrecord_info.back_pay_fee_type}</div>
+							</div>
+						{/if}
 					{/if}
 					
 					{if $payrecord_info.back_shipping_fee gt '0.00'}
