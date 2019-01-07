@@ -111,8 +111,20 @@
 			    }
 			    var options = $.extend(ecjia.admin.defaultOptions.validate, option);
 			    $form.validate(options);
-			
-            }
+
+			    app.payrecord_info.query();
+
+            },
+
+        	query: function () {
+				$('.payrecord_query').off('click').on('click', function () {
+					var $this = $(this),
+						url = $this.attr('data-url');
+					$.post(url, function (data) {
+						ecjia.admin.showmessage(data);
+					});
+				});
+			},
       };
     
 })(ecjia.admin, jQuery);

@@ -330,7 +330,10 @@
 						<div class="accordion-body in collapse " id="payment_refund">
 							<div class="accordion-inner">
 							 	<div class="goods-content">
-					           		<p>退款流水状态：{$payment_refund.label_refund_status}</p>
+					           		<p>
+                                        退款流水状态：{$payment_refund.label_refund_status}
+                                        <a class="btn m_l5 payrecord_query" href="javascript:;" data-url="{RC_Uri::url('refund/admin_payrecord/query')}&id={$payment_refund.id}">对账查询</a>
+                                    </p>
 					           		{if $payment_refund.refund_status eq '11'}
 					           			<p>退款失败原因：{$payment_refund.last_error_message}</p>
 					           		{/if}
@@ -343,7 +346,7 @@
 							</div>
 						</div>
 					</div>
-				  {/if}	
+				    {/if}
 				</div>
 			</div>
 		</div>
