@@ -56,7 +56,6 @@ class refund_admin_purview_api extends Component_Event_Api {
 		$purviews = array(
 			array('action_name' => '退货退款管理', 	'action_code' => 'refund_manage', 	'relevance' => ''),
 			array('action_name' => '交易退款', 	'action_code' => 'payrecord_manage', 	'relevance' => ''),
-			array('action_name' => '退款流水', 	'action_code' => 'payment_refund_manage', 	'relevance' => ''),
 		);
 		return $purviews;
 	}
