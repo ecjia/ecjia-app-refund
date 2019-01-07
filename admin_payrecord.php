@@ -150,14 +150,22 @@ class admin_payrecord extends ecjia_admin {
 			$payrecord_info['action_back_time'] = RC_Time::local_date(ecjia::config('time_format'), $payrecord_info['action_back_time']);
 		}
 		//原路退回，支付手续费退还
-		if ($payrecord_info['back_pay_code'] == 'pay_wxpay') {
-			$payrecord_info['real_back_money_total'] = $payrecord_info['back_money_total'] + $payrecord_info['back_pay_fee'];
+		if (empty($payrecord_info['action_back_type'])) { //未确认退款方式是原路退还是退余额
+			if ($payrecord_info['back_pay_code'] == 'pay_wxpay') {
+				$payrecord_info['real_back_money_total'] = $payrecord_info['back_money_total'] + $payrecord_info['back_pay_fee'];
+			} else {
+				$payrecord_info['real_back_money_total'] = $payrecord_info['back_money_total'];
+			}
 		} else {
-			$payrecord_info['real_back_money_total'] = $payrecord_info['back_money_total'];
+			if ($payrecord_info['action_back_type'] == 'original') {//退款方式已确认
+				$payrecord_info['real_back_money_total'] = $payrecord_info['back_money_total'] + $payrecord_info['back_pay_fee'];
+			} else {
+				$payrecord_info['real_back_money_total'] = $payrecord_info['back_money_total'];
+			}
 		}
 		
 		$payrecord_info['order_money_paid_type'] = price_format($payrecord_info['order_money_paid']);
-		$payrecord_info['back_money_total_type'] = price_format($payrecord_info['real_back_money_total']);
+		$payrecord_info['back_money_total_type'] = ecjia_price_format($payrecord_info['real_back_money_total'], false);
 		$payrecord_info['back_pay_fee_type'] 	= price_format($payrecord_info['back_pay_fee']);
 		$payrecord_info['back_shipping_fee_type']= price_format($payrecord_info['back_shipping_fee']);
 		$payrecord_info['back_insure_fee_type']  = price_format($payrecord_info['back_insure_fee']);
@@ -207,6 +215,7 @@ class admin_payrecord extends ecjia_admin {
 		$back_money_total = $_POST['back_money_total'];
 		$back_integral 	 = $_POST['back_integral'];
 		$back_content    = trim($_POST['back_content']);
+		$back_money_total = sprintf("%.2f", $back_money_total);
 		if (empty($back_content)) {
 			return $this->showmessage('请输入退款备注', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
@@ -243,8 +252,6 @@ class admin_payrecord extends ecjia_admin {
 			RC_DB::table('account_log')->insertGetId($account_log);
 			
 			//更新用户表
-// 			$step = $back_money_total." ,pay_points = pay_points + ('$back_integral')";
-// 			RC_DB::table('users')->where('user_id', $user_id)->increment('user_money', $step);
 			RC_DB::table('users')->where('user_id', $user_id)->increment('user_money', $back_money_total);
 			RC_DB::table('users')->where('user_id', $user_id)->increment('pay_points', $back_integral);
 			
@@ -269,6 +276,7 @@ class admin_payrecord extends ecjia_admin {
 		} elseif ($back_type == 'pay_wxpay') {
             //打款表信息
             $payrecord_info = RC_DB::table('refund_payrecord')->where('refund_id', $refund_id)->first();
+            
             //更新打款表实际退款金额
             RC_DB::table('refund_payrecord')->where('id', $id)->update(array('back_money_total' => $back_money_total));
             
