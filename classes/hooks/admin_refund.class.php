@@ -57,7 +57,7 @@ class refund_admin_plugin {
 	public static function payrecord_admin_menu_api($menus) {
 		$menu = array(
 				ecjia_admin::make_admin_menu('21_payrecord_list', '交易退款', RC_Uri::url('refund/admin_payrecord/init'), 21)->add_purview('payrecord_manage'),
-				ecjia_admin::make_admin_menu('22_payment_refund', '退款流水', RC_Uri::url('refund/admin_payment_refund/init'), 22)->add_purview('payment_refund_manage'),
+				ecjia_admin::make_admin_menu('22_payment_refund', '退款流水', RC_Uri::url('payment/admin_payment_refund/init'), 22)->add_purview('payment_refund_manage'),
 		);
 		$menus->add_submenu($menu);
 		return $menus;
