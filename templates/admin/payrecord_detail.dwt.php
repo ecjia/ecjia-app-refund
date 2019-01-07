@@ -194,7 +194,7 @@
 					</div>
 					
 					{if $payrecord_info.back_pay_fee gt '0'}
-						{if $payrecord_info.back_pay_code eq 'pay_wxpay'}
+						{if $payrecord_info.action_back_type eq 'original'}
 							<div class="control-group">
 								<label class="control-label">退还支付手续费：</label>
 								<div class="controls l_h30">{$payrecord_info.back_pay_fee_type}</div>
