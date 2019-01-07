@@ -277,14 +277,12 @@ class admin_payrecord extends ecjia_admin {
             //打款表信息
             $payrecord_info = RC_DB::table('refund_payrecord')->where('refund_id', $refund_id)->first();
             
-            //更新打款表实际退款金额
-            RC_DB::table('refund_payrecord')->where('id', $id)->update(array('back_money_total' => $back_money_total));
-            
             $result = (new Ecjia\App\Payment\Refund\RefundManager($refund_order['order_sn'], null, null))->refund($back_money_total, $payrecord_info['action_user_name']);
             if (is_ecjia_error($result)) {
                 return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
-
+            //更新打款表实际退款金额
+            RC_DB::table('refund_payrecord')->where('id', $id)->update(array('back_money_total' => $back_money_total));
             //更新打款表
             (new \Ecjia\App\Refund\Models\RefundPayRecordModel)->updateRefundPayrecord($id, 'original', $back_content, $_SESSION['admin_id'], $_SESSION['admin_name']);
 
