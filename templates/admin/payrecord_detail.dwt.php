@@ -331,7 +331,7 @@
 							<div class="accordion-inner">
 							 	<div class="goods-content">
 					           		<p>
-                                        退款流水状态：{$payment_refund.label_refund_status}
+                                       	 退款流水状态：{$payment_refund.label_refund_status}
                                     </p>
 					           		{if $payment_refund.refund_status eq '11'}
 					           			<p>退款失败原因：{$payment_refund.last_error_message}</p>
@@ -340,7 +340,7 @@
 					                <p>支付公司退款流水号：{$payment_refund.refund_trade_no}</p>
 					                <p>退款创建时间：{if $payment_refund.refund_create_time}{$payment_refund.refund_create_time}{/if}</p>
 					                <p>退款确认时间：{if $payment_refund.refund_confirm_time}{$payment_refund.refund_confirm_time}{/if}</p>
-					                <a target="_blank" id="order-info" href='{url path="refund/admin_payment_refund/payment_refund_info" args="id={$payment_refund.id}"}'>点此处查看退款流水详细信息 >></a>
+					                <a target="_blank" id="order-info" href='{url path="payment/admin_payment_refund/payment_refund_info" args="id={$payment_refund.id}"}'>点此处查看退款流水详细信息 >></a>
 						        </div>
 							</div>
 						</div>
