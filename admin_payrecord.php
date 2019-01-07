@@ -157,11 +157,7 @@ class admin_payrecord extends ecjia_admin {
 				$payrecord_info['real_back_money_total'] = $payrecord_info['back_money_total'];
 			}
 		} else {
-			if ($payrecord_info['action_back_type'] == 'original') {//退款方式已确认
-				$payrecord_info['real_back_money_total'] = $payrecord_info['back_money_total'] + $payrecord_info['back_pay_fee'];
-			} else {
-				$payrecord_info['real_back_money_total'] = $payrecord_info['back_money_total'];
-			}
+			$payrecord_info['real_back_money_total'] = $payrecord_info['back_money_total'];
 		}
 		
 		$payrecord_info['order_money_paid_type'] = price_format($payrecord_info['order_money_paid']);
