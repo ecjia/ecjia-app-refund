@@ -58,8 +58,6 @@ class BuyOrderRefundProcess
      */
     public function run()
     {
-    	\RC_Logger::getLogger('error')->info('test333');
-    	
 		//更新用户积分 refund_back_pay_points
     	$this->refundBackPayPoints();
     	
