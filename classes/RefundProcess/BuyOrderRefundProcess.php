@@ -39,13 +39,17 @@ class BuyOrderRefundProcess
     {
         if (! is_null($refund_id)) {
             $this->refund_order = RefundOrderModel::where('refund_id', $refund_id)->first();
+
+            if (empty($this->refund_order)) {
+                throw new RefundException(sprintf('Refund order id %s not found.', $refund_id));
+            }
         }
         else {
             $this->refund_order = RefundOrderModel::where('refund_sn', $refund_sn)->first();
-        }
 
-        if (empty($this->refund_order)) {
-            throw new RefundException(sprintf('Refund order %s (%s) not found.', $refund_sn, $refund_id));
+            if (empty($this->refund_order)) {
+                throw new RefundException(sprintf('Refund order sn %s not found.', $refund_sn));
+            }
         }
     }
 
