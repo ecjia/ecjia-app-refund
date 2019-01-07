@@ -117,14 +117,12 @@ class admin_payment_refund extends ecjia_admin {
 		$payment_refund_info['refund_create_time'] 	= !empty($payment_refund_info['refund_create_time']) ? RC_Time::local_date('Y-m-d H:i:s', $payment_refund_info['refund_create_time']) : '';
 		$payment_refund_info['refund_confirm_time'] = !empty($payment_refund_info['refund_confirm_time']) ? RC_Time::local_date('Y-m-d H:i:s', $payment_refund_info['refund_confirm_time']) : '';
 	
-		//获取订单信息
-		$order = RC_Api::api('orders', 'order_sn_info', array('order_sn' => $payment_refund_info['order_sn']));
-		if (is_ecjia_error($order)) {
-			$order = [];
-		}
+		//获取退款单信息
+		$refund_order = RC_DB::table('refund_order')->where('order_sn', $payment_refund_info['order_sn'])->where('status', '<>', 10)->first();
+		
 	
 		$this->assign('payment_refund_info', $payment_refund_info);
-		$this->assign('order', $order);
+		$this->assign('refund_order', $refund_order);
 		$this->assign('os', RC_Lang::get('orders::order.os'));
 		$this->assign('ps', RC_Lang::get('orders::order.ps'));
 		$this->assign('ss', RC_Lang::get('orders::order.ss'));

@@ -22,7 +22,7 @@
         <div class="form-inline foldable-list">
             <div class="accordion-group">
                 <div class="accordion-heading">
-                    <a class="accordion-toggle acc-in" data-toggle="collapse" data-target="#collapseOne"><strong>资金流水记录</strong></a>
+                    <a class="accordion-toggle acc-in" data-toggle="collapse" data-target="#collapseOne"><strong>退款资金流水记录</strong></a>
                 </div>
                 <div class="accordion-body in in_visable collapse" id="collapseOne">
                     <table class="table table-oddtd m_b0">
@@ -62,6 +62,12 @@
                             <td><div align="right"><strong>退款时间</strong></div></td>
                             <td>{$payment_refund_info.refund_confirm_time}</td>
                         </tr>
+                        <tr>
+				        	<td><div align="right"><strong>退款编号：</strong></div></td>
+				        	<td colspan='3'>
+				        		 <a target="_blank" href='{url path="refund/admin_payrecord/detail" args="refund_id={$refund_order.refund_id}"}'>{$refund_order.refund_sn}</a>
+				        	</td>
+				        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -69,47 +75,55 @@
 
 			<div class="accordion-group">
 				<div class="accordion-heading">
-				    <a class="accordion-toggle acc-in" data-toggle="collapse" data-target="#collapseTwo"><strong>订单信息</strong></a>
+				    <a class="accordion-toggle acc-in" data-toggle="collapse" data-target="#collapseTwo"><strong>退款单信息</strong></a>
 				</div>
 				<div class="accordion-body in in_visable collapse" id="collapseTwo">
 				    <table class="table table-oddtd m_b0">
 				        <tbody class="first-td-no-leftbd">
 				        	 <tr>
-					        	<td><div align="right"><strong>订单状态：</strong></div></td>
-					        	<td colspan='3'>{$os[$order.order_status]},{$ps[$order.pay_status]},{$ss[$order.shipping_status]}</td>
+					        	<td><div align="right"><strong>退款状态：</strong></div></td>
+					        	<td colspan='3'>
+					        		{if $refund_order.refund_status eq '0'}
+					        			无打款请求
+					        		{elseif  $refund_order.refund_status eq '1'}
+					        			待退款
+					        		{else}
+					        			已退款
+					        		{/if}
+					        	</td>
 					        </tr>
 					        <tr>
 					            <td><div align="right"><strong>商品总金额</strong></div></td>
-					            <td>{$order.formated_goods_amount}</td>
+					            <td>{$refund_order.goods_amount}</td>
 					            <td><div align="right"><strong>折扣</strong></div></td>
-					            <td>{$order.discount}</td>
+					            <td>{$refund_order.discount}</td>
 					        </tr>
 					        <tr>
 					            <td><div align="right"><strong>发票税额</strong></div></td>
-					            <td>{$order.tax}</td>
-					            <td><div align="right"><strong>订单总金额</strong></div></td>
-					            <td>{$order.formated_total_fee}</td>
+					            <td>{$refund_order.inv_tax}</td>
+					            <td><div align="right"><strong>应退款总金额</strong></div></td>
+					            <td>{$refund_order.money_paid + $refund_order.surplus}</td>
 					        </tr>
 					        <tr>
 					            <td><div align="right"><strong>配送费用</strong></div></td>
-					            <td>{$order.shipping_fee}</td>
+					            <td>{$refund_order.shipping_fee}</td>
 					            <td><div align="right"><strong>已付款金额</strong></div></td>
-					            <td>{$order.formated_money_paid} </td>
+					            <td>{$refund_order.money_paid} </td>
 					        </tr>
 					        <tr>
 					            <td><div align="right"><strong>保价费用</strong></div></td>
 					            <td>{if $exist_real_goods}{else}0{/if}</td>
 					            <td><div align="right"><strong>使用余额</strong></div></td>
-					            <td>{$order.surplus}</td>
+					            <td>{$refund_order.surplus}</td>
 					        <tr>
 					            <td><div align="right"><strong>支付费用</strong></div></td>
-					            <td>{$order.pay_fee}</td>
+					            <td>{$refund_order.pay_fee}</td>
 					            <td><div align="right"><strong>贺卡费用</strong></div></td>
-					            <td>{$order.card_fee}</td>
+					            <td>{$refund_order.card_fee}</td>
 					        </tr>
 					        <tr>
 					            <td><div align="right"><strong>包装费用</strong></div></td>
-					            <td>{$order.pack_fee}</td>
+					            <td>{$refund_order.pack_fee}</td>
 					            <td><div align="right"><strong>{if $order.order_amount >= 0} 应付款金额 {else} 应退款金额 {/if}</strong></div></td>
 					            <td>{$order.formated_order_amount}</td>
 					        </tr>
