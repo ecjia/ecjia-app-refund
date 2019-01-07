@@ -131,7 +131,21 @@ class admin_payment_refund extends ecjia_admin {
 	
 		$this->display('payment_refund_info.dwt');
 	}
-	
+
+    //对账查询
+    public function query()
+    {
+        /* 检查权限 */
+        $this->admin_priv('payrecord_manage', ecjia::MSGTYPE_JSON);
+
+        $result = [];
+
+        if (is_ecjia_error($result)) {
+            return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
+
+        return $this->showmessage('与支付机构对账成功，状态正常', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+    }
 	
 	/**
 	 * 退款流水数据

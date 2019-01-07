@@ -23,7 +23,7 @@
                 }
                 ecjia.pjax(url);
             });
-            $(".select-button").click(function () {
+            $(".select-button").off('click').click(function () {
                 var start_date = $("input[name='start_date']").val();
                 var end_date = $("input[name='end_date']").val();
                 
@@ -41,6 +41,18 @@
                 if (end_date != '') url += '&end_date=' + end_date;
  
                 ecjia.pjax(url);
+            });
+
+            app.payment_refund_list.query();
+        },
+
+        query: function () {
+            $('.payrecord_query').off('click').on('click', function () {
+                var $this = $(this),
+                    url = $this.attr('data-url');
+                $.post(url, function (data) {
+                    ecjia.admin.showmessage(data);
+                });
             });
         },
     };
