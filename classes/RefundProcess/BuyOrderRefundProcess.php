@@ -19,7 +19,7 @@ use RefundStatusLog;
 use OrderStatusLog;
 use Ecjia\App\Refund\RefundStatus;
 use Ecjia\App\Refund\Models\RefundOrderModel;
-use Ecjia\App\Refund\Notifications\RefundBalanceArrived;
+use Ecjia\App\Refund\Notifications\RefundOriginalArrived;
 use ecjia;
 
 /**
@@ -223,7 +223,7 @@ class BuyOrderRefundProcess
                 ),
             );
 
-            $push_refund_data = new RefundBalanceArrived($user_refund_data);
+            $push_refund_data = new RefundOriginalArrived($user_refund_data);
             RC_Notification::send($user, $push_refund_data);
         }
     }
