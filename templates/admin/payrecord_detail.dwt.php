@@ -79,12 +79,12 @@
 				{if !$payrecord_info.action_back_content}
 					<h3>退款操作</h3>
 					{if $payrecord_info.back_pay_fee gt '0'}
-						<div class="control-group refund-original {if $payrecord_info.back_pay_code eq 'pay_surplus'}refund-pay-fee{/if}">
+						<div class="control-group refund-original {if $payrecord_info.back_pay_type eq 'surplus'}refund-pay-fee{/if}">
 							<label class="control-label">退还支付手续费：</label>
 							<div class="controls l_h30">{$payrecord_info.back_pay_fee_type}</div>
 						</div>
 				
-						<div class="control-group refund-balance {if $payrecord_info.back_pay_code eq 'pay_wxpay'}refund-pay-fee{/if}">
+						<div class="control-group refund-balance {if $payrecord_info.back_pay_type eq 'original'}refund-pay-fee{/if}">
 							<label class="control-label">扣除支付手续费：</label>
 							<div class="controls l_h30">-{$payrecord_info.back_pay_fee_type}</div>
 						</div>
@@ -128,19 +128,19 @@
 						<div class="controls back-logo-wrap">
 						     <ul>
 
-                                 <!--{if $payrecord_info.back_pay_code eq 'pay_wxpay'}-->
-                                 <li class="back-logo active" data-type="pay_wxpay" back_money_total="{$payrecord_info.back_money_total}" back_pay_fee="{$payrecord_info.back_pay_fee}">
+                                 <!--{if $payrecord_info.back_pay_type eq 'original'}-->
+                                 <li class="back-logo active" data-type="original" back_money_total="{$payrecord_info.back_money_total}" back_pay_fee="{$payrecord_info.back_pay_fee}">
                                      <img src="{$original_img}">
                                      <img class="back-logo-select" src="{$selected_img}">
                                  </li>
                                 <!--{/if}-->
 
-						         <li class="back-logo {if $payrecord_info.back_pay_code neq 'pay_wxpay'}active{/if}" data-type="surplus" back_money_total="{$payrecord_info.back_money_total}" back_pay_fee="{$payrecord_info.back_pay_fee}">
+						         <li class="back-logo {if $payrecord_info.back_pay_type neq 'original'}active{/if}" data-type="surplus" back_money_total="{$payrecord_info.back_money_total}" back_pay_fee="{$payrecord_info.back_pay_fee}">
 						             <img src="{$surplus_img}">
 						             <img class="back-logo-select" src="{$selected_img}">
 						         </li>
 						     </ul>
-						     <input name="back_type" value="{if $payrecord_info.back_pay_code eq 'pay_wxpay'}pay_wxpay{else}surplus{/if}" type="hidden">
+						     <input name="back_type" value="{if $payrecord_info.back_pay_type eq 'original'}original{else}surplus{/if}" type="hidden">
 						</div>
 					</div>
 					

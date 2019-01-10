@@ -158,14 +158,14 @@ class admin_payrecord extends ecjia_admin
         //支持原路退回的支付插件
         $pay_original = config('app-refund::refund_original.pay_code');
         if (in_array($payrecord_info['back_pay_code'], $pay_original)) {
-            $payrecord_info['back_pay_code'] = 'pay_wxpay';
+            $payrecord_info['back_pay_type'] = 'original'; //原路退回
         } else {
-            $payrecord_info['back_pay_code'] = 'pay_surplus';
+            $payrecord_info['back_pay_type'] = 'surplus';
         }
 
         //原路退回，支付手续费退还
         if (empty($payrecord_info['action_back_type'])) { //未确认退款方式是原路退还是退余额
-            if ($payrecord_info['back_pay_code'] == 'pay_wxpay') {
+            if ($payrecord_info['back_pay_type'] == 'original') {
                 $payrecord_info['real_back_money_total'] = $payrecord_info['back_money_total'] + $payrecord_info['back_pay_fee'];
             } else {
                 $payrecord_info['real_back_money_total'] = $payrecord_info['back_money_total'];
@@ -284,7 +284,7 @@ class admin_payrecord extends ecjia_admin
             //更新打款表
             (new \Ecjia\App\Refund\Models\RefundPayRecordModel)->updateRefundPayrecord($id, 'surplus', $back_content, $_SESSION['admin_id'], $_SESSION['admin_name']);
 
-        } elseif ($back_type == 'pay_wxpay') {
+        } elseif ($back_type == 'original') {
             //打款表信息
             $payrecord_info = RC_DB::table('refund_payrecord')->where('refund_id', $refund_id)->first();
 
