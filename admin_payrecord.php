@@ -151,7 +151,7 @@ class admin_payrecord extends ecjia_admin {
 		}
 		
 		//退款退回方式处理；兼容默认选中处理，默认（微信支付，小程序微信支付，门店微信支付，APP微信支付）支持微信退回，其余均退回余额
-		$paywxpay_arr = array('pay_wxpay', 'pay_wxpay_app', 'pay_wxpay_shop', 'pay_wxpay_weapp');
+		$paywxpay_arr = array('pay_wxpay', 'pay_wxpay_app', 'pay_wxpay_shop', 'pay_wxpay_weapp', 'pay_koolyun_wxpay');
 		if (in_array($payrecord_info['back_pay_code'], $paywxpay_arr)) {
 			$payrecord_info['back_pay_code'] = 'pay_wxpay';
 		} else {
