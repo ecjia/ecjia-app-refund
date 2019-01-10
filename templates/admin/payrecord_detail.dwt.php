@@ -5,14 +5,7 @@
 <script type="text/javascript">
     ecjia.admin.payrecord_info.init();
 </script>
-<style>
-.wxpay-pay-fee:{
-	display:none;
-}
-.surplus-pay-fee{
-	display:none;
-}
-</style>
+
 <!-- {/block} -->
 
 <!-- {block name="main_content"} -->
@@ -86,12 +79,12 @@
 				{if !$payrecord_info.action_back_content}
 					<h3>退款操作</h3>
 					{if $payrecord_info.back_pay_fee gt '0'}
-						<div class="control-group {if $payrecord_info.back_pay_code eq 'pay_wxpay'}wxpay-pay-fee{/if}">
+						<div class="control-group refund-original {if $payrecord_info.back_pay_code eq 'pay_surplus'}refund-pay-fee{/if}">
 							<label class="control-label">退还支付手续费：</label>
 							<div class="controls l_h30">{$payrecord_info.back_pay_fee_type}</div>
 						</div>
 				
-						<div class="control-group  {if $payrecord_info.back_pay_code eq 'pay_wxpay'}surplus-pay-fee{/if}">
+						<div class="control-group refund-balance {if $payrecord_info.back_pay_code eq 'pay_wxpay'}refund-pay-fee{/if}">
 							<label class="control-label">扣除支付手续费：</label>
 							<div class="controls l_h30">-{$payrecord_info.back_pay_fee_type}</div>
 						</div>

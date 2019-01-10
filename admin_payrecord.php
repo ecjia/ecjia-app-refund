@@ -149,6 +149,15 @@ class admin_payrecord extends ecjia_admin {
 		if ($payrecord_info['action_back_time']) {
 			$payrecord_info['action_back_time'] = RC_Time::local_date(ecjia::config('time_format'), $payrecord_info['action_back_time']);
 		}
+		
+		//退款退回方式处理；兼容默认选中处理，默认（微信支付，小程序微信支付，门店微信支付，APP微信支付）支持微信退回，其余均退回余额
+		$paywxpay_arr = array('pay_wxpay', 'pay_wxpay_app', 'pay_wxpay_shop', 'pay_wxpay_weapp');
+		if (in_array($payrecord_info['back_pay_code'], $paywxpay_arr)) {
+			$payrecord_info['back_pay_code'] = 'pay_wxpay';
+		} else {
+			$payrecord_info['back_pay_code'] = 'pay_surplus';
+		}
+		
 		//原路退回，支付手续费退还
 		if (empty($payrecord_info['action_back_type'])) { //未确认退款方式是原路退还是退余额
 			if ($payrecord_info['back_pay_code'] == 'pay_wxpay') {
