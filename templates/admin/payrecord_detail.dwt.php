@@ -128,9 +128,9 @@
 						<div class="controls back-logo-wrap">
 						     <ul>
 
-                                 <!--{if in_array($payrecord_info.back_pay_code, ['pay_wxpay', 'pay_wxpay_app', 'pay_wxpay_shop', 'pay_wxpay_weapp'])}-->
-                                 <li class="back-logo active" data-type="{$payrecord_info.back_pay_code}" back_money_total="{$payrecord_info.back_money_total}" back_pay_fee="{$payrecord_info.back_pay_fee}">
-                                     <img src="{$pay_wxpay_img}">
+                                 <!--{if $payrecord_info.back_pay_code eq 'pay_wxpay'}-->
+                                 <li class="back-logo active" data-type="pay_wxpay" back_money_total="{$payrecord_info.back_money_total}" back_pay_fee="{$payrecord_info.back_pay_fee}">
+                                     <img src="{$original_img}">
                                      <img class="back-logo-select" src="{$selected_img}">
                                  </li>
                                 <!--{/if}-->
