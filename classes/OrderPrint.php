@@ -54,7 +54,7 @@ class OrderPrint
     }
     
     /**
-     * 打印充值订单小票
+     * 打印退款订单小票
      */
     public function printRefundOrders($type, $order, $store, $payment_record, $auto_print = false)
     { 
@@ -98,6 +98,8 @@ class OrderPrint
         	'refund_time'	      => RC_Time::local_date('Y-m-d H:i:s', $order['refund_time']),			//日期和时间
         	'cashier'			  => $refund_payrecord['action_user_name'],								//收银员
         	
+        	'bonus'  	  		  => ecjia_price_format($order['bonus'], false),						//红包抵扣
+        	'integral_money'  	  => ecjia_price_format($order['integral_money'], false),				//积分抵扣
         	'discount_amount'  	  => ecjia_price_format($order['discount'], false),						//优惠金额
         	'receivables'     	  => ecjia_price_format($receivables, false), 							//应收金额
         	'order_amount'     	  => ecjia_price_format($order_amount, false), 							//实收金额
