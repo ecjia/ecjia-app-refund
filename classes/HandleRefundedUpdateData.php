@@ -12,6 +12,7 @@ use RC_Logger;
 use OrderStatusLog;
 use order_ship;
 use RefundStatusLog;
+use Ecjia\App\Refund\RefundOrder;
 
 
 /**
@@ -239,7 +240,7 @@ class HandleRefundedUpdateData
 			$order_goods 			= self::getOrderGoods($refund_info['order_id']);
 			$total_discount 		= $order_info['discount'] + $order_info['integral_money'] + $order_info['bonus'];
 			$money_paid 			= $refund_info['money_paid'] + $refund_info['surplus'];
-			$refund_total_amount	= Ecjia\App\Refund\RefundOrder::get_back_total_money($refund_info, $refund_way);
+			$refund_total_amount	= RefundOrder::get_back_total_money($refund_info, $refund_way);
 			
 		
 			$user_info = [];
