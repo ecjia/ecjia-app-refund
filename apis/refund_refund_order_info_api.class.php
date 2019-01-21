@@ -79,14 +79,17 @@ class refund_refund_order_info_api extends Component_Event_Api {
 		if (!empty($options['store_id'])) {
 			$db->where('store_id', $options['store_id']);
 		}
+		$info = [];
 		if ($refund_sn) {
             $info = $db->where('refund_sn', $refund_sn)->where('status', '!=', Ecjia\App\Refund\RefundStatus::ORDER_CANCELED)->first();
         } else {
             $info = $db->where('refund_id', $refund_id)->where('status', '!=', Ecjia\App\Refund\RefundStatus::ORDER_CANCELED)->first();
         }
-
-		$info['formated_add_time']		= RC_Time::local_date(ecjia::config('time_format'), $info['add_time']);
-
+		
+        if (!empty($info)) {
+        	$info['formated_add_time']		= RC_Time::local_date(ecjia::config('time_format'), $info['add_time']);
+        }
+        
 		return $info;
 	}
 }
