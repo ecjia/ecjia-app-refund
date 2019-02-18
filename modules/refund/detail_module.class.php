@@ -306,6 +306,8 @@ class refund_detail_module extends api_front implements api_interface {
 				'refund_pay_fee'			=> $refund_order_info['pay_fee'],
 				'pay_code'					=> $refund_order_info['pay_code'],
 				'pay_name'					=> $refund_order_info['pay_name'],
+				'store_id'					=> intval($refund_order_info['store_id']),
+				'store_name'				=> $store_name
 		);
 		return  $arr;
 	}
