@@ -374,7 +374,30 @@ class refund_apply_module extends api_front implements api_interface {
 		$opt = array('status' => '申请退款', 'refund_id' => $refund_id, 'message' => '您的退款申请已提交，等待商家处理！');
 		order_refund::refund_status_log($opt);
 		
-		return array();
+		$refund_order = order_refund::currorder_refund_info($order_id);
+		
+		$refund_info = $this->get_format_refund($refund_order);
+		
+		return $refund_info;
 	}
+	
+	/**
+	 * 返回退款单简单信息
+	 */
+	private function get_format_refund($refund_order) 
+	{
+		$refund_info = [];
+		if (!empty($refund_order)) {
+			$refund_info = array(
+					'refund_id' => intval($refund_order['refund_id']),
+					'refund_sn' => trim($refund_order['refund_sn']),
+					'refund_type'				=> $refund_order['refund_type'],
+					'label_refund_type'			=> $refund_order['refund_type'] == 'refund' ? '仅退款' : '退货退款',
+					'apply_time'				=> empty($refund_order['add_time']) ? '' : RC_Time::local_date('Y-m-d H:i:s', $refund_order['add_time'])
+			);
+		}
+		return $refund_info;
+	}
+	
 }
 // end
