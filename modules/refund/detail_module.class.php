@@ -282,7 +282,7 @@ class refund_detail_module extends api_front implements api_interface {
 				'refund_sn' 				=> $refund_sn,
 				'store_service_phone' 		=> !empty($store_service_phone) ? $store_service_phone : '',
 				'refund_type'				=> $refund_order_info['refund_type'],
-				'label_refund_type'			=> $refund_order_info['refund_type'] == 'refund' ? __('仅退款', 'refund') : _('退货退款', 'refund'),
+				'label_refund_type'			=> $refund_order_info['refund_type'] == 'refund' ? __('仅退款', 'refund') : __('退货退款', 'refund'),
 				'status'					=> $status,
 				'label_status'				=> $label_status,
 				'refund_status'				=> $refund_status,
