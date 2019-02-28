@@ -335,7 +335,7 @@ class refund_detail_module extends api_front implements api_interface {
 	}
 	
 	
-	private function get_refuse_receive_note($refund_id)
+	private function get_refuse_receive_note($refund_id = 0)
 	{
 		$refuse_receive_note = '';
 		if ($refund_id) {
