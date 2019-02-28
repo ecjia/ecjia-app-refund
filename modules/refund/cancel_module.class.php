@@ -199,9 +199,10 @@ class refund_cancel_module extends api_front implements api_interface {
 	private function getBeforeRefundOrderStatus($order_id)
 	{
 		$berore_refund_status = 0;
-		$order_status_arr = RC_DB::table('order_action')->where('order_id', $order_id)->orderBy('log_time', 'desc')->lists('order_status');
-		$refund_key = array_search(OS_RETURNED, $order_status_arr); 
-		$berore_refund_status = $order_status_arr[$refund_key + 1];
+		$order_status_arr = RC_DB::table('order_action')->where('order_id', $order_id)->where('order_status', '!=', OS_RETURNED)->orderBy('log_time', 'desc')->lists('action_id');
+		$refund_key = $order_status_arr['0']; 
+		$order_action_info = RC_DB::table('order_action')->where('action_id', $refund_key)->first();
+		$berore_refund_status = $order_action_info['order_status'];
 		return $berore_refund_status;
 	}
 	
