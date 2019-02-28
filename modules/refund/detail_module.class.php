@@ -272,7 +272,7 @@ class refund_detail_module extends api_front implements api_interface {
 		}
 		
 		//商家拒绝收货后，获取商家拒绝操作备注
-		$refuse_receive_note = $this->get_refuse_receive_note();
+		$refuse_receive_note = $this->get_refuse_receive_note($refund_order_info['refund_id']);
 		$arr = array();
 		$arr = array(
 				'order_sn'					=> $refund_order_info['order_sn'],
