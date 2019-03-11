@@ -166,7 +166,7 @@ class HandleRefundedUpdateData
 				'action_user_name' 		=> empty($refund_result['staff_name']) ? '' : $refund_result['staff_name'],
 				'status' 				=> \Ecjia\App\Refund\Enums\RefundOrderEnum::ORDER_AGREE,
 				'refund_status' 		=> \Ecjia\App\Refund\Enums\RefundPayEnum::PAY_TRANSFERED,
-				'return_status' 		=> Ecjia\App\Refund\RefundStatus::SHIP_CONFIRM_RECV,
+				'return_status' 		=> \Ecjia\App\Refund\Enums\RefundShipEnum::SHIP_CONFIRM_RECV,
 				'action_note' 			=> $action_note,
 				'log_time' 				=> RC_Time::gmtime(),
 		);

@@ -314,19 +314,19 @@ class refund_detail_module extends api_front implements api_interface {
 	
 	private function get_return_status($return_status = 0)
 	{
-		if ($return_status == Ecjia\App\Refund\RefundStatus::SHIP_NOSHIP) {
+		if ($return_status == \Ecjia\App\Refund\Enums\RefundShipEnum::SHIP_NOSHIP) {
 			$return_status 			= 'noneed_ship';
 			$label_return_status	= __('无需退货', 'refund');
-		} elseif ($return_status == Ecjia\App\Refund\RefundStatus::SHIP_UNSHIP) {
+		} elseif ($return_status == \Ecjia\App\Refund\Enums\RefundShipEnum::SHIP_UNSHIP) {
 			$return_status			= 'unship';
 			$label_return_status	= __('买家未发货', 'refund');
-		} elseif ($return_status == Ecjia\App\Refund\RefundStatus::SHIP_SHIPPED) {
+		} elseif ($return_status == \Ecjia\App\Refund\Enums\RefundShipEnum::SHIP_SHIPPED) {
 			$return_status			= 'shipped';
 			$label_return_status	= __('买家发货', 'refund');
-		} elseif ($return_status == Ecjia\App\Refund\RefundStatus::SHIP_CONFIRM_RECV) {
+		} elseif ($return_status == \Ecjia\App\Refund\Enums\RefundShipEnum::SHIP_CONFIRM_RECV) {
 			$return_status			= 'confirm_received';
 			$label_return_status	= __('商家确认收货', 'refund');
-		} elseif ($return_status == Ecjia\App\Refund\RefundStatus::SHIP_UNRECEIVE) {
+		} elseif ($return_status == \Ecjia\App\Refund\Enums\RefundShipEnum::SHIP_UNRECEIVE) {
 			$return_status			= 'unreceived';
 			$label_return_status	= __('商家未收到货', 'refund');
 		}
