@@ -97,7 +97,7 @@ class BuyOrderRefundProcess
      */
     protected function updateRefundOrder()
     {
-        $this->refund_order->refund_status = RefundStatus::PAY_TRANSFERED;
+        $this->refund_order->refund_status = \Ecjia\App\Refund\Enums\RefundPayEnum::PAY_TRANSFERED;
         $this->refund_order->refund_time = RC_Time::gmtime();
         $this->refund_order->save();
     }
@@ -131,7 +131,7 @@ class BuyOrderRefundProcess
             'action_user_id'	=> $this->refund_order->refundPayRecord->action_user_id,
             'action_user_name'	=> $this->refund_order->refundPayRecord->action_user_name,
             'status'		    => \Ecjia\App\Refund\Enums\RefundOrderEnum::ORDER_AGREE,
-            'refund_status'		=> RefundStatus::PAY_TRANSFERED,
+            'refund_status'		=> \Ecjia\App\Refund\Enums\RefundPayEnum::PAY_TRANSFERED,
             'return_status'		=> $this->refund_order->return_status,
             'action_note'		=> $action_note,
             'log_time'			=> RC_Time::gmtime(),

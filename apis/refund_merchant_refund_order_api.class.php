@@ -69,7 +69,7 @@ class refund_merchant_refund_order_api extends Component_Event_Api {
 				if ($row['status'] == \Ecjia\App\Refund\Enums\RefundOrderEnum::ORDER_CANCELED) {
 					$row['service_status_code'] = 'canceled';
 					$row['label_service_status']= __('已取消', 'refund');
-				} elseif (($row['status'] == \Ecjia\App\Refund\Enums\RefundOrderEnum::ORDER_AGREE && $row['refund_status'] == Ecjia\App\Refund\RefundStatus::PAY_TRANSFERED)) {
+				} elseif (($row['status'] == \Ecjia\App\Refund\Enums\RefundOrderEnum::ORDER_AGREE && $row['refund_status'] == \Ecjia\App\Refund\Enums\RefundPayEnum::PAY_TRANSFERED)) {
 					$row['service_status_code'] = 'refunded';
 					$row['label_service_status']= __('已退款', 'refund');
 				}elseif ($row['status'] == \Ecjia\App\Refund\Enums\RefundOrderEnum::ORDER_REFUSED) {

@@ -38,7 +38,7 @@ class refund_merchant_confirm_api extends Component_Event_Api {
 		}
 		
 		$return_status = Ecjia\App\Refund\RefundStatus::SHIP_CONFIRM_RECV;
-		$refund_status = Ecjia\App\Refund\RefundStatus::PAY_UNTRANSFER;
+		$refund_status = \Ecjia\App\Refund\Enums\RefundPayEnum::PAY_UNTRANSFER;
 		
 		$payment_record_id = RC_DB::table('payment_record')->where('order_sn', $refund_info['order_sn'])->pluck('id');
 		

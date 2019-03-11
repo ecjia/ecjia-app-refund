@@ -101,10 +101,10 @@ class refund_detail_module extends api_front implements api_interface {
 			$label_status	= __('拒绝', 'refund');
 		}
 		/*退款状态处理*/
-		if ($refund_order_info['refund_status'] == Ecjia\App\Refund\RefundStatus::PAY_UNTRANSFER) {
+		if ($refund_order_info['refund_status'] == \Ecjia\App\Refund\Enums\RefundPayEnum::PAY_UNTRANSFER) {
 			$refund_status 		= 'checked';
 			$label_refund_status= __('已审核', 'refund');
-		} elseif ($refund_order_info['refund_status'] == Ecjia\App\Refund\RefundStatus::PAY_TRANSFERED) {
+		} elseif ($refund_order_info['refund_status'] == \Ecjia\App\Refund\Enums\RefundPayEnum::PAY_TRANSFERED) {
 			$refund_status 		= 'refunded';
 			$label_refund_status= __('已退款', 'refund');
 		} else {
@@ -342,7 +342,7 @@ class refund_detail_module extends api_front implements api_interface {
 			$refuse_receive_note = RC_DB::table('refund_order_action')
 									->where('refund_id', $refund_id)
 									->where('status', \Ecjia\App\Refund\Enums\RefundOrderEnum::ORDER_AGREE)
-									->where('refund_status', Ecjia\App\Refund\RefundStatus::PAY_NOTRANSFER)
+									->where('refund_status', \Ecjia\App\Refund\Enums\RefundPayEnum::PAY_NOTRANSFER)
 									->where('return_status', \Ecjia\App\Refund\Enums\RefundOrderEnum::ORDER_REFUSED)
 									->pluck('action_note');
 		}
