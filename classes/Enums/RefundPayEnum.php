@@ -11,6 +11,12 @@ namespace Ecjia\App\Refund\Enums;
 
 use Royalcms\Component\Enum\Enum;
 
+/**
+ * Class RefundPayEnum
+ * 打款状态
+ *
+ * @package Ecjia\App\Refund\Enums
+ */
 class RefundPayEnum extends Enum
 {
     /**

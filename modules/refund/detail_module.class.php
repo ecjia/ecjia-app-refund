@@ -87,16 +87,16 @@ class refund_detail_module extends api_front implements api_interface {
 		//店铺地址
 		$store_address = ecjia_region::getRegionName($store_info['city']).ecjia_region::getRegionName($store_info['district']).ecjia_region::getRegionName($store_info['street']).$store_info['address'];
 		/*售后申请状态处理*/
-		if ($refund_order_info['status'] == Ecjia\App\Refund\RefundStatus::ORDER_UNCHECK) {
+		if ($refund_order_info['status'] == \Ecjia\App\Refund\Enums\RefundOrderEnum::ORDER_UNCHECK) {
 			$status 		= 'uncheck';
 			$label_status	= __('待审核', 'refund');
-		} elseif ($refund_order_info['status'] == Ecjia\App\Refund\RefundStatus::ORDER_AGREE) {
+		} elseif ($refund_order_info['status'] == \Ecjia\App\Refund\Enums\RefundOrderEnum::ORDER_AGREE) {
 			$status			= 'agree';
 			$label_status	= __('同意', 'refund');
-		} elseif ($refund_order_info['status'] == Ecjia\App\Refund\RefundStatus::ORDER_CANCELED) {
+		} elseif ($refund_order_info['status'] == \Ecjia\App\Refund\Enums\RefundOrderEnum::ORDER_CANCELED) {
 			$status			= 'canceled';
 			$label_status	= __('已取消', 'refund');
-		} elseif ($refund_order_info['status'] == Ecjia\App\Refund\RefundStatus::ORDER_REFUSED) {
+		} elseif ($refund_order_info['status'] == \Ecjia\App\Refund\Enums\RefundOrderEnum::ORDER_REFUSED) {
 			$status			= 'refused';
 			$label_status	= __('拒绝', 'refund');
 		}
@@ -267,7 +267,7 @@ class refund_detail_module extends api_front implements api_interface {
 		
 		//被拒后返回原因，供重新申请使用
 		$refused_reasons =array();
-		if ($refund_order_info['status'] == Ecjia\App\Refund\RefundStatus::ORDER_REFUSED) {
+		if ($refund_order_info['status'] == \Ecjia\App\Refund\Enums\RefundOrderEnum::ORDER_REFUSED) {
 			$refused_reasons = order_refund::get_one_group_reasons($refund_order_info['refund_reason']);
 		}
 		
@@ -341,9 +341,9 @@ class refund_detail_module extends api_front implements api_interface {
 		if ($refund_id) {
 			$refuse_receive_note = RC_DB::table('refund_order_action')
 									->where('refund_id', $refund_id)
-									->where('status', Ecjia\App\Refund\RefundStatus::ORDER_AGREE)
+									->where('status', \Ecjia\App\Refund\Enums\RefundOrderEnum::ORDER_AGREE)
 									->where('refund_status', Ecjia\App\Refund\RefundStatus::PAY_NOTRANSFER)
-									->where('return_status', Ecjia\App\Refund\RefundStatus::ORDER_REFUSED)
+									->where('return_status', \Ecjia\App\Refund\Enums\RefundOrderEnum::ORDER_REFUSED)
 									->pluck('action_note');
 		}
 		return $refuse_receive_note;

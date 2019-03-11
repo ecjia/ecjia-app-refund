@@ -130,7 +130,7 @@ class BuyOrderRefundProcess
             'action_user_type'	=> $this->refund_order->refundPayRecord->action_user_type,
             'action_user_id'	=> $this->refund_order->refundPayRecord->action_user_id,
             'action_user_name'	=> $this->refund_order->refundPayRecord->action_user_name,
-            'status'		    => RefundStatus::ORDER_AGREE,
+            'status'		    => \Ecjia\App\Refund\Enums\RefundOrderEnum::ORDER_AGREE,
             'refund_status'		=> RefundStatus::PAY_TRANSFERED,
             'return_status'		=> $this->refund_order->return_status,
             'action_note'		=> $action_note,
