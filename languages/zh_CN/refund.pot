@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Ecjia App refund package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ecjia App refund 1.27.4\n"
+"Project-Id-Version: Ecjia App refund 1.28.0\n"
 "Report-Msgid-Bugs-To: https://make.ecjia.com/polyglots/\n"
-"POT-Creation-Date: 2019-03-01 01:48:23+00:00\n"
+"POT-Creation-Date: 2019-03-13 05:24:30+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -167,6 +167,57 @@ msgstr ""
 msgid "调用api文件，refund_order_list，参数无效。"
 msgstr ""
 
+#: classes/Enums/RefundOrderEnum.php:40
+msgid "退款申请"
+msgstr ""
+
+#: classes/Enums/RefundOrderEnum.php:41
+msgid "退款确认"
+msgstr ""
+
+#: classes/Enums/RefundOrderEnum.php:42
+msgid "取消申请"
+msgstr ""
+
+#: classes/Enums/RefundOrderEnum.php:43
+msgid "拒绝退款"
+msgstr ""
+
+#: classes/Enums/RefundPayEnum.php:36
+msgid "无打款请求"
+msgstr ""
+
+#: classes/Enums/RefundPayEnum.php:37
+msgid "待处理打款"
+msgstr ""
+
+#: classes/Enums/RefundPayEnum.php:38
+msgid "已打款"
+msgstr ""
+
+#: classes/Enums/RefundShipEnum.php:42
+#: modules/refund/detail_module.class.php:319
+msgid "无需退货"
+msgstr ""
+
+#: classes/Enums/RefundShipEnum.php:43
+#: modules/refund/detail_module.class.php:322
+msgid "买家未发货"
+msgstr ""
+
+#: classes/Enums/RefundShipEnum.php:44
+#: modules/refund/detail_module.class.php:325
+msgid "买家发货"
+msgstr ""
+
+#: classes/Enums/RefundShipEnum.php:45 merchant.php:549
+msgid "确认收货"
+msgstr ""
+
+#: classes/Enums/RefundShipEnum.php:46 merchant.php:553
+msgid "未收到货"
+msgstr ""
+
 #: classes/Helper.php:59
 msgid "售后订单"
 msgstr ""
@@ -317,14 +368,6 @@ msgstr ""
 msgid "操作成功"
 msgstr ""
 
-#: merchant.php:549
-msgid "确认收货"
-msgstr ""
-
-#: merchant.php:553
-msgid "未收到货"
-msgstr ""
-
 #: modules/refund/apply_module.class.php:68
 msgid "参数错误"
 msgstr ""
@@ -379,18 +422,6 @@ msgstr ""
 #: modules/refund/detail_module.class.php:106
 #: modules/refund/payrecord_module.class.php:114
 msgid "已审核"
-msgstr ""
-
-#: modules/refund/detail_module.class.php:319
-msgid "无需退货"
-msgstr ""
-
-#: modules/refund/detail_module.class.php:322
-msgid "买家未发货"
-msgstr ""
-
-#: modules/refund/detail_module.class.php:325
-msgid "买家发货"
 msgstr ""
 
 #: modules/refund/detail_module.class.php:328
@@ -1263,12 +1294,6 @@ msgstr ""
 #: content/apps/refund/templates/admin/refund_list.dwt.php:106
 #: content/apps/refund/templates/merchant/refund_list.dwt.php:125
 msgid "无"
-msgstr ""
-
-#: content/apps/refund/templates/admin/refund_list.dwt.php:62
-#: content/apps/refund/templates/admin/refund_list.dwt.php:106
-#: content/apps/refund/templates/merchant/refund_list.dwt.php:125
-msgid "已打款"
 msgstr ""
 
 #: content/apps/refund/templates/admin/refund_list.dwt.php:65
