@@ -102,7 +102,7 @@ class admin_cashier_refund_summary_records_module extends api_admin implements a
         $page_row     = new ecjia_page($record_count, $size, 6, '', $page);
         
         $order_list = [];
-        $data = $db->take($size)->skip($page_row->start_id - 1)->select('order_id', 'order_sn', 'refund_id', 'refund_sn', 'pay_name', 'add_time', 'refund_time', RC_DB::raw('(surplus + money_paid) AS total_fee'))->orderBy('refund_time', 'desc')->get();
+        $data = $db->take($size)->skip($page_row->start_id - 1)->select('order_id', 'order_sn', 'refund_id', 'refund_sn', 'pay_name', 'add_time', 'refund_time', RC_DB::raw('(surplus + money_paid) AS total_fee'))->orderBy('add_time', 'desc')->get();
 
         $data       = $this->formated_refund_order_list($data);
         $order_list = $data;
