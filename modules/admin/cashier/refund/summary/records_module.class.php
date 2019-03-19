@@ -74,15 +74,9 @@ class admin_cashier_refund_summary_records_module extends api_admin implements a
         $start_date = $this->requestData('start_date');
         $end_date   = $this->requestData('end_date');
        
-        //日期筛选条件
-        if (!empty($start_date) && !empty($end_date)) {
-            $start_date = RC_Time::local_strtotime($start_date);
-            $end_date   = RC_Time::local_strtotime($end_date) + 86399;
-        }
-
 		$db = RC_DB::table('refund_order as ro')->leftJoin('cashier_record as cr', RC_DB::raw('ro.refund_id'), '=', RC_DB::raw('cr.order_id'));
 		
-		
+		//日期筛选条件
 		if (!empty($start_date) && !empty($end_date)) {
 			$start_time = RC_Time::local_strtotime($start_date);
 			$end_time   = RC_Time::local_strtotime($end_date) + 86399;
