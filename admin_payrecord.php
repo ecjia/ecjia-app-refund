@@ -238,7 +238,7 @@ class admin_payrecord extends ecjia_admin
         
         if ($back_type == 'surplus') {
 
-        	$result = (new Ecjia\App\Payment\Refund\RefundManager($refund_order['order_sn'], null, null))->refund($back_money_total, $_SESSION['admin_name']);
+        	$result = (new Ecjia\App\Payment\Refund\RefundManager($refund_order['order_sn'], null, null))->refundToBalance($back_money_total, $_SESSION['admin_name']);
         	if (is_ecjia_error($result)) {
         		return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         	}
