@@ -83,11 +83,19 @@ class admin_cashier_refund_summary_records_module extends api_admin implements a
 			$db->where(RC_DB::raw('ro.add_time'), '>=', $start_time)->where(RC_DB::raw('ro.add_time'), '<=', $end_time);
 		}
 
+		//统计条件，收银通不区分设备，收银台和POS区分设备
+		$device_type  = Ecjia\App\Cashier\CashierDevice::get_device_type($device['code']);
+		if ($device['code'] == Ecjia\App\Cashier\CashierDevice::CASHIERCODE) {
+			$db->where(RC_DB::raw('cr.device_type'), $device_type);
+		} else {
+			$db->where(RC_DB::raw('cr.mobile_device_id'), $_SESSION['device_id']);
+		}
+		
 		//当前设备上申请的退款，且已退款成功的
 		$result  = $db->where(RC_DB::raw('ro.store_id'), $_SESSION['store_id'])
 			->where(RC_DB::raw('cr.order_type'), 'refund')
 			->where(RC_DB::raw('cr.action'), 'refund')
-			->where(RC_DB::raw('ro.refund_time'), '!=', '0')
+			->where(RC_DB::raw('ro.refund_time'), '!=', 0)
 			->where(RC_DB::raw('ro.refund_status'), \Ecjia\App\Refund\Enums\RefundPayEnum::PAY_TRANSFERED)
 			->where(RC_DB::raw('ro.status'), \Ecjia\App\Refund\Enums\RefundOrderEnum::ORDER_AGREE)
 			->where(RC_DB::raw('ro.referer'), 'ecjia-cashdesk');
