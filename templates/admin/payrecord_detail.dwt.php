@@ -129,16 +129,18 @@
 						     <ul>
 
                                  <!--{if $payrecord_info.back_pay_type eq 'original'}-->
-                                 <li class="back-logo active" data-type="original" back_money_total="{$payrecord_info.back_money_total}" back_pay_fee="{$payrecord_info.back_pay_fee}">
-                                     <img src="{$original_img}">
-                                     <img class="back-logo-select" src="{$selected_img}">
-                                 </li>
+	                                 <li class="back-logo active" data-type="original" back_money_total="{$payrecord_info.back_money_total}" back_pay_fee="{$payrecord_info.back_pay_fee}">
+	                                     <img src="{$original_img}">
+	                                     <img class="back-logo-select" src="{$selected_img}">
+	                                 </li>
                                 <!--{/if}-->
-
-						         <li class="back-logo {if $payrecord_info.back_pay_type neq 'original'}active{/if}" data-type="surplus" back_money_total="{$payrecord_info.back_money_total}" back_pay_fee="{$payrecord_info.back_pay_fee}">
-						             <img src="{$surplus_img}">
-						             <img class="back-logo-select" src="{$selected_img}">
-						         </li>
+								
+								 <!--{if $payrecord_info.back_pay_code neq 'pay_wxpay_merchant'}-->
+							         <li class="back-logo {if $payrecord_info.back_pay_type neq 'original'}active{/if}" data-type="surplus" back_money_total="{$payrecord_info.back_money_total}" back_pay_fee="{$payrecord_info.back_pay_fee}">
+							             <img src="{$surplus_img}">
+							             <img class="back-logo-select" src="{$selected_img}">
+							         </li>
+						         <!--{/if}-->
 						     </ul>
 						     <input name="back_type" value="{if $payrecord_info.back_pay_type eq 'original'}original{else}surplus{/if}" type="hidden">
 						</div>

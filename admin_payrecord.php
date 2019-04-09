@@ -160,7 +160,12 @@ class admin_payrecord extends ecjia_admin
         if (in_array($payrecord_info['back_pay_code'], $pay_original)) {
             $payrecord_info['back_pay_type'] = 'original'; //原路退回
         } else {
-            $payrecord_info['back_pay_type'] = 'surplus';
+        	if ($payrecord_info['back_pay_code'] == 'pay_wxpay_merchant') {
+        		$payrecord_info['back_pay_type'] = 'original';//商家微信支付的只能原路退回
+        	} else {
+        		$payrecord_info['back_pay_type'] = 'surplus';
+        	}
+            
         }
 
         //原路退回，支付手续费退还
@@ -180,6 +185,7 @@ class admin_payrecord extends ecjia_admin
         $payrecord_info['back_shipping_fee_type'] = price_format($payrecord_info['back_shipping_fee']);
         $payrecord_info['back_insure_fee_type']   = price_format($payrecord_info['back_insure_fee']);
         $payrecord_info['back_inv_tax_type']      = price_format($payrecord_info['back_inv_tax']);
+        
         $this->assign('payrecord_info', $payrecord_info);
 
         //售后订单信息
