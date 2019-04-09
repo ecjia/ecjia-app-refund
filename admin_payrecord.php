@@ -232,12 +232,16 @@ class admin_payrecord extends ecjia_admin
 
         //用户表和资金变动表变动
         $refund_order = RC_DB::table('refund_order')->where('refund_id', $refund_id)->first();
+        
         if (empty($refund_order)) {
             return $this->showmessage(__('退款单信息不存在', 'refund'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
         
         if ($back_type == 'surplus') {
-
+			//商家小程序微信支付的，不支持退回余额
+			if ($refund_order['pay_code'] == 'pay_wxpay_merchant') {
+				return $this->showmessage(__('商家微信支付的订单不支持退回余额，请选择原路退回。', 'refund'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+			}
         	$result = (new Ecjia\App\Payment\Refund\RefundManager($refund_order['order_sn'], null, null))->refundToBalance($back_money_total, $_SESSION['admin_name']);
         	if (is_ecjia_error($result)) {
         		return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
