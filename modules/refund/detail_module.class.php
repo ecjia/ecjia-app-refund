@@ -236,14 +236,15 @@ class refund_detail_module extends api_front implements api_interface {
 		$logs = array();
 		if (!empty($refund_logs)) {
 			$labe_order_status = [
-				'apply'                => __('申请退款', 'refund'),
-				'agree'          	   => __('服务单退款申请已处理', 'refund'), //下单
-				'refunded'             => __('退款到账', 'refund'),
+				'refund_apply'         => __('申请退款', 'refund'),
+				'refund_agree'         => __('服务单退款申请已处理', 'refund'), 
+				'refund_success'       => __('退款到账', 'refund'),
 				'confirm_received'     => __('确认收货处理', 'refund'),
 				'return_finished'      => __('订单退货退款已处理', 'refund'),
 				'refund_canceled'	   => __('撤销退款申请', 'refund'),				   
 				'merchant_unconfirmed' => __('无法接单', 'refund'),
 				'returned_goods'	   => __('返还退货商品', 'refund'),
+				'return_agree'         => __('订单退货退款申请已处理', 'refund'), //下单
 			];
 			foreach ($refund_logs as $log) {
 				$logs[] = array(
