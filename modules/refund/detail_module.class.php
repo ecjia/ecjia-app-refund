@@ -290,7 +290,7 @@ class refund_detail_module extends api_front implements api_interface {
 				'order_sn'					=> $refund_order_info['order_sn'],
 				'refund_sn' 				=> $refund_sn,
 				'store_service_phone' 		=> !empty($store_service_phone) ? $store_service_phone : '',
-				'refund_type'				=> $refund_order_info['refund_type'],
+				'refund_type'				=> in_array($refund_order_info['refund_type'], ['refund', 'cancel']) ? 'refund' : $refund_order_info['refund_type'],//cancel自动拒单的类型记录，实际是仅退款
 				'label_refund_type'			=> $refund_order_info['refund_type'] == 'refund' ? __('仅退款', 'refund') : __('退货退款', 'refund'),
 				'status'					=> $status,
 				'label_status'				=> $label_status,
