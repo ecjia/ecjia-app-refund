@@ -165,8 +165,13 @@ class admin extends ecjia_admin {
 			$this->assign('order_data', 'order_data');
 		} 
 		
-		//退费计算
-		$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus']);
+		//退费计算；余额和现金支付的不退换支付手续费
+		if (in_array($refund_info['pay_code'], ['pay_balance', 'pay_cash'])) {
+			$refund_total_amount  = ecjia_price_format(($refund_info['money_paid'] + $refund_info['surplus'] - $refund_info['pay_fee']), false);
+		} else {
+			$refund_total_amount  = ecjia_price_format(($refund_info['money_paid'] + $refund_info['surplus']), false);
+		}
+		
 		$this->assign('refund_total_amount', $refund_total_amount);
 		
 		//送货商品信息
@@ -277,8 +282,12 @@ class admin extends ecjia_admin {
 		
 			$this->assign('order_data', 'order_data');
 		}
-		//退费计算
-		$refund_total_amount  = price_format($refund_info['money_paid'] + $refund_info['surplus']);
+		//退费计算；余额支付和现金支付不退还支付手续费
+		if (in_array($refund_info['pay_code'], ['pay_balance', 'pay_cash'])) {
+			$refund_total_amount  = ecjia_price_format(($refund_info['money_paid'] + $refund_info['surplus'] - $refund_info['pay_fee']), false);
+		} else {
+			$refund_total_amount  = ecjia_price_format(($refund_info['money_paid'] + $refund_info['surplus']), false);
+		}
 		$this->assign('refund_total_amount', $refund_total_amount);
 		
 		//送货商品信息
