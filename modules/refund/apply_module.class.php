@@ -78,6 +78,11 @@ class refund_apply_module extends api_front implements api_interface {
 		if (empty($order_info)) {
 			return new ecjia_error('not_exists_info', __('订单信息不存在！', 'refund'));
 		}
+        RC_Logger::getlogger('info')->info([
+            'file' => __FILE__,
+            'line' => __LINE__,
+            '$_FILES' => $_FILES,
+        ]);
 		
 		//当前订单是否可申请售后
 		if (in_array($order_info['pay_status'], array(PS_UNPAYED))
