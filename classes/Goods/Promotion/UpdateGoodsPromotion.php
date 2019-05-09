@@ -98,8 +98,8 @@ class UpdateGoodsPromotion
 
     public function updateGoodsPromotionLimitNum()
     {
-        if ($this->order_model->orderGoods) {
-			$result = $this->order_model->orderGoods->map(function ($item) {
+        if ($this->order_model->order_goods_collection) {
+			$result = $this->order_model->order_goods_collection->map(function ($item) {
 				$promotion = new \Ecjia\App\Goods\GoodsActivity\GoodsPromotion($item->goods_id, $item->product_id, $this->order_model->user_id);
 				$isPromote = $promotion->isPromote();
 				$promoteInfo = $promotion->getGoodsPromotionInfo();
